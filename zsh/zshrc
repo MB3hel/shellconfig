@@ -169,7 +169,7 @@ fi
 
 # Aliases and functions
 if [ "$(uname -o)" = "Msys" ]; then
-    alias open='$HOME/.zshconfig/msys2_open.sh'
+    alias open='$HOME/.shellconfig/msys2/msys2_open.sh'
 elif [ "$(uname -o)" != "Darwin" ]; then
     open(){
         nohup xdg-open "$*" > /dev/null 2>&1

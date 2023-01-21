@@ -40,3 +40,10 @@ cp "$DIR/template/profile.template" ~/.profile
 cp "$DIR/template/zprofile.template" ~/.zprofile
 cp "$DIR/template/zshrc.template" ~/.zshrc
 
+# Required for MSYS2 setup on windows for native zsh and bash
+if [[ "$(uname -o)" == "Msys" ]]; then
+	mkdir -p ~/bin
+    cp "$DIR/msys2/zsh.bat" ~/bin/zsh.bat
+	cp "$DIR/msys2/bash.bat" ~/bin/bash.bat
+fi
+
