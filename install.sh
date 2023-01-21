@@ -45,5 +45,9 @@ if [[ "$(uname -o)" == "Msys" ]]; then
 	mkdir -p ~/bin
     cp "$DIR/msys2/zsh.bat" ~/bin/zsh.bat
 	cp "$DIR/msys2/bash.bat" ~/bin/bash.bat
+    
+    # Forces msys2 git to work like windows git
+    # Avoids issues since msys2 git used in git plugin of zsh prompt
+    git config --global core.autocrlf true
 fi
 
