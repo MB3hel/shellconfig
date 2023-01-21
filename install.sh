@@ -27,7 +27,7 @@ if [[ ! -d ~/.oh-my-bash ]]; then
 fi
 
 # Move files that have templates to .bak versions
-mv ~/.bashrc ~/bashrc.bak
+mv ~/.bashrc ~/.bashrc.bak
 mv ~/.bash_profile ~/.bash_profile.bak
 mv ~/.profile ~/.profile.bak
 mv ~/.zprofile ~/.zprofile.bak
