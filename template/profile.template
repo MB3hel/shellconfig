@@ -1,11 +1,27 @@
 
-# Extra bin directories
+
+################################################################################
+# Environment variables
+################################################################################
+
+append_path(){
+    case :$PATH:
+        in *:"$1":*) ;;
+        *) PATH="$PATH:$1"
+    esac
+}
+
+prepend_path(){
+    case :$PATH:
+        in *:"$1":*) ;;
+        *) PATH="$1:$PATH"
+    esac
+}
+
 if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+    prepend_path "$HOME/bin"
 fi
 if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
+    prepend_path "$HOME/.local/bin"
 fi
-
-# Other environment vars go below
 
