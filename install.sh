@@ -49,5 +49,11 @@ if [[ "$(uname -o)" == "Msys" ]]; then
     # Forces msys2 git to work like windows git
     # Avoids issues since msys2 git used in git plugin of zsh prompt
     git config --global core.autocrlf true
+    
+    # Override some windows commands
+    # Ex: bash will be wsl bash by default.
+    # This causes problems running scripts
+    mkdir ~/msys2-override-bin/
+    printf '#!/usr/bin/bash\n/usr/bin/bash "$@"' > ~/msys2-override-bin/bash
 fi
 

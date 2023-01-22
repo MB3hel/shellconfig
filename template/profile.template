@@ -24,4 +24,6 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     prepend_path "$HOME/.local/bin"
 fi
-
+if [ -d "$HOME/msys2-override-bin" ] ; then
+    prepend_path "$HOME/msys2-override-bin"
+fi
