@@ -133,16 +133,6 @@ if [ "$(uname -o)" = "Msys"  ]; then
     }
     precmd_functions+=(keep_current_path)
 
-    # Support for MSYS2WINFIRST variable to indicate that windows tools
-    # should be used first (ie windows path version of git before msys2)
-    # Set via custom command to start zsh shell in windows terminal
-    if [ "$MSYS2WINFIRST" = "1" ]; then
-        PATH=${PATH#/usr/local/bin:/usr/bin:/bin:/opt/bin:}
-        PATH=${PATH%/usr/local/bin:/usr/bin:/bin:/opt/bin}
-        PATH=${PATH%:}
-        PATH+=:/usr/local/bin:/usr/bin:/bin:/opt/bin
-    fi
-
     # Fix zsh freeze on window resize when using windows git command
     # Replaces a function used by zsh git plugin 
     # Freeze does not occur when using msys2/git

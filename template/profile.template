@@ -4,6 +4,9 @@
 # Environment variables
 ################################################################################
 
+TR=`which tr`
+GREP=`which grep`
+
 append_path(){
     case :$PATH:
         in *:"$1":*) ;;
@@ -18,6 +21,25 @@ prepend_path(){
     esac
 }
 
+remove_path() {
+  PATH=`echo $PATH | $TR ":" "\n" | $GREP -v "^$1\$" | $GREP -v '^$' | $TR "\n" ":"`
+}
+
+
+# Support for MSYS2WINFIRST variable to indicate that windows tools
+# should be used first (ie windows path version of git before msys2)
+# Set via custom command to start zsh shell in windows terminal
+if [ "$MSYS2WINFIRST" = "1" ]; then
+    remove_path /usr/local/bin
+    remove_path /usr/bin
+    remove_path /bin
+    remove_path /opt/bin
+    append_path /usr/local/bin
+    append_path /usr/bin
+    append_path /bin
+    append_path /opt/bin
+fi
+
 if [ -d "$HOME/bin" ] ; then
     prepend_path "$HOME/bin"
 fi
@@ -27,3 +49,6 @@ fi
 if [ -d "$HOME/msys2-override-bin" ] ; then
     prepend_path "$HOME/msys2-override-bin"
 fi
+
+unset TR
+unset GREP
