@@ -6,6 +6,7 @@
 
 TR=`which tr`
 GREP=`which grep`
+SED=`which sed`
 
 append_path(){
     case :$PATH:
@@ -22,7 +23,7 @@ prepend_path(){
 }
 
 remove_path() {
-  PATH=`echo $PATH | $TR ":" "\n" | $GREP -v "^$1\$" | $GREP -v '^$' | $TR "\n" ":"`
+  PATH=`printf "$PATH" | $TR ":" "\n" | $GREP -v "^$1\$" |  $TR "\n" ":" | $SED 's/:$//'`
 }
 
 
@@ -34,7 +35,7 @@ if [ "$MSYS2WINFIRST" = "1" ]; then
     remove_path /usr/bin
     remove_path /bin
     remove_path /opt/bin
-    append_path /usr/local/bin
+	append_path /usr/local/bin
     append_path /usr/bin
     append_path /bin
     append_path /opt/bin
@@ -52,3 +53,4 @@ fi
 
 unset TR
 unset GREP
+unset SED
