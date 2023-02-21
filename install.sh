@@ -55,5 +55,6 @@ if [[ "$(uname -o)" == "Msys" ]]; then
     # This causes problems running scripts
     mkdir ~/msys2-override-bin/
     printf '#!/usr/bin/bash\n/usr/bin/bash "$@"' > ~/msys2-override-bin/bash
+    printf '#!/usr/bin/bash\n/usr/bin/find "$@"' > ~/msys2-override-bin/find
 fi
 
