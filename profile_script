@@ -61,4 +61,5 @@ unset SED
 ################################################################################
 # Note: since this script is sourced first in ~/.profile
 #       these can be overwritten
-export EDITOR="vim"
+export EDITOR="nvim"
+
