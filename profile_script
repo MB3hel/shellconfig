@@ -55,3 +55,10 @@ fi
 unset TR
 unset GREP
 unset SED
+
+################################################################################
+# Default settings
+################################################################################
+# Note: since this script is sourced first in ~/.profile
+#       these can be overwritten
+export EDITOR="vim"

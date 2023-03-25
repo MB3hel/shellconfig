@@ -182,12 +182,7 @@ elif [ "$(uname -o)" != "Darwin" ]; then
         nohup xdg-open "$*" > /dev/null 2>&1
     }
 fi
-sudovim(){
-    EDITOR=vim sudoedit "$*"
-}
-sudonvim(){
-    EDITOR=nvim sudoedit "$*"
-}
+
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
