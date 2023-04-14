@@ -60,6 +60,11 @@ unset SED
 ################################################################################
 # SSH agent stuff for windows
 ################################################################################
+# This would not be necessary, except that I choose to use MSYS2 ssh
+# This is because windows OpenSSH has issues cloning repos
+# https://github.com/PowerShell/Win32-OpenSSH/issues/1322
+# I finally got fed up and decided that typing my ssh key once per login
+# was Ok. Just make sure ~/.ssh/config has 'AddKeysToAgent yes'
 
 if [ "$(uname -o)" = "Msys"  ]; then
 
