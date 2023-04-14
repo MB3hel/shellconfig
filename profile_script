@@ -65,6 +65,7 @@ unset SED
 # https://github.com/PowerShell/Win32-OpenSSH/issues/1322
 # I finally got fed up and decided that typing my ssh key once per login
 # was Ok. Just make sure ~/.ssh/config has 'AddKeysToAgent yes'
+# Also must make sure GIT_SSH is not set to windows OpenSSH binary
 
 if [ "$(uname -o)" = "Msys"  ]; then
 
