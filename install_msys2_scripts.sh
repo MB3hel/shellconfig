@@ -2,6 +2,11 @@
 
 DIR=$(realpath $(dirname "$0"))
 
+override(){
+    printf "#!/usr/bin/bash\n/usr/bin/$1" > ~/msys2-override-bin/$1
+    printf ' "$@"' >> ~/msys2-override-bin/$1
+}
+
 # Required for MSYS2 setup on windows for native zsh and bash
 if [[ "$(uname -o)" == "Msys" ]]; then
 	mkdir -p ~/bin
@@ -19,6 +24,14 @@ if [[ "$(uname -o)" == "Msys" ]]; then
     if ! [ -d ~/msys2-override-bin/ ]; then
         mkdir ~/msys2-override-bin/
     fi
-    printf '#!/usr/bin/bash\n/usr/bin/bash "$@"' > ~/msys2-override-bin/bash
-    printf '#!/usr/bin/bash\n/usr/bin/find "$@"' > ~/msys2-override-bin/find
+    
+
+    override bash       # Use native bash not wsl wrapper
+    override find       # windows has a find command? It doesn't do what I want.
+
+    # Windows openssh just breaks git clone and other things, so force MSYS2 git and ssh
+    override ssh
+    override ssh-agent
+    override ssh-add
+    override git
 fi
