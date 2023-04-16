@@ -95,6 +95,17 @@ The profile script handles launching an ssh agent. **THE WINDOWS OPENSSH AGENT S
 
 Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to type git key passwords once until logout.
 
+Note: autocrlf is enabled explicitly in global git config. This ensures consistent behavior between native (scoop) git and MSYS2 git.
+
+Sometimes, the shell prompt is slow on windows due to git updating. The following settings seem to help a little
+
+```
+git config --global core.preloadindex=true
+git config --global core.fscache=true
+git config --global pack.window=1
+git config --global gc.auto=256
+```
+
 ### macOS
 
 Nothing special is setup here. macOS runs an agent.
