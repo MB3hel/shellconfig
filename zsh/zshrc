@@ -154,6 +154,11 @@ if [[ -f /etc/debian_chroot ]]; then
     export LANG=en_US.UTF-8
 fi
 
+# ssh connections
+if [ -n "$SSH_TTY" ]; then
+    PROMPT="%F{green}[$(hostname | tr -d '\n')]%f$PROMPT"
+fi
+
 # Theme modifications
 if [ "$ZSH_THEME" = "robbyrussell" ]; then
     PROMPT+="%F{yellow}%% %f"
