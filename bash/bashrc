@@ -174,6 +174,15 @@ if [ "$OSH_THEME" = "minimal" ]; then
     _omb_util_add_prompt_command add_arrow_to_min
 fi
 
+# ssh connections
+if [ -n "$SSH_TTY" ]; then
+    show_host_name(){
+        host_name=$(hostname | tr -d '\n')
+        PS1="${_omb_prompt_green}[${host_name}]${_omb_prompt_reset_color}${PS1}"
+    }
+    _omb_util_add_prompt_command show_host_name
+fi
+
 # Aliases and functions
 if [ "$(uname -o)" = "Msys" ]; then
     alias open='$HOME/.shellconfig/msys2/msys2_open.sh'
