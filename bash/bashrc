@@ -141,6 +141,8 @@ fi
 if [ "$(uname -o)" = "Msys"  ]; then
     # Required for duplicate tab in windows terminal
     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
+
+    alias tmux="script -q -c tmux /dev/null"
 fi
 
 # schroot environments
