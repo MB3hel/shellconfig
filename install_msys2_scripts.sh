@@ -26,12 +26,17 @@ if [[ "$(uname -o)" == "Msys" ]]; then
     fi
     
 
-    override bash       # Use native bash not wsl wrapper
-    override find       # windows has a find command? It doesn't do what I want.
+    # overrides handle with exe wrapper now
+    # Prevents issues with tools trying to run the bash scripts with cmd or powershell (nvim, vscode, etc)
+    cp "$DIR/msys2/override-exes"/*.exe ~/msys2-override-bin
+
+
+    # override bash       # Use native bash not wsl wrapper
+    # override find       # windows has a find command? It doesn't do what I want.
 
     # Windows openssh just breaks git clone and other things, so force MSYS2 git and ssh
-    override ssh
-    override ssh-agent
-    override ssh-add
-    override git
+    # override ssh
+    # override ssh-agent
+    # override ssh-add
+    # override git
 fi
