@@ -10,8 +10,17 @@ override(){
 # Required for MSYS2 setup on windows for native zsh and bash
 if [[ "$(uname -o)" == "Msys" ]]; then
 	mkdir -p ~/bin
-    cp "$DIR/msys2/zsh.bat" ~/bin/zsh.bat
-	cp "$DIR/msys2/bash.bat" ~/bin/bash.bat
+    
+    # Using exe launchers instead to avoid stupid "terminate batch script" behavior
+    # Make sure old bat launchers do not exist though
+    rm ~/bin/zsh.bat 2> /dev/null
+    rm ~/bin/bash.bat 2> /dev/null
+    # cp "$DIR/msys2/zsh.bat" ~/bin/zsh.bat
+	# cp "$DIR/msys2/bash.bat" ~/bin/bash.bat
+
+    cp "$DIR/msys2/zsh.exe" ~/bin/zsh.exe
+	cp "$DIR/msys2/bash.exe" ~/bin/bash.exe
+
     cp "$DIR/msys2/msys2launch" ~/bin/msys2launch     # Launch a normal msys2 isolated environment
     
     # Forces msys2 git to work like windows git
