@@ -67,7 +67,9 @@ unset SED
 # was Ok. Just make sure ~/.ssh/config has 'AddKeysToAgent yes'
 # Also must make sure GIT_SSH is not set to windows OpenSSH binary
 
-if [ "$(uname -o)" = "Msys"  ]; then
+# NOTE: Also used on other systems if ~/.shell_manage_ssh-agent file exists
+
+if [ "$(uname -o)" = "Msys"  ] || [ -f "$HOME/.shell_manage_ssh-agent" ]; then
 
     env=~/.ssh/agent.env
 
