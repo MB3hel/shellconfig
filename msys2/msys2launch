@@ -10,10 +10,10 @@ unset MSYSTEM_CHOST
 unset PROMPT
 unset PATH
 
-if [ "$#" == "1" ]; then
+if [ "$#" == "0" ]; then
     TYPE=mingw64
 else
     TYPE=$1
 fi
 
-~/scoop/apps/msys2/current/msys2_shell.cmd -$1 -defterm -here -no-start
+~/scoop/apps/msys2/current/msys2_shell.cmd -$TYPE -defterm -here -no-start
