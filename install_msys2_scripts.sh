@@ -23,13 +23,16 @@ if [[ "$(uname -o)" == "Msys" ]]; then
     # This causes problems running scripts
     if ! [ -d ~/msys2-override-bin/ ]; then
         mkdir ~/msys2-override-bin/
+    else
+        rm -rf ~/msys2-override-bin/
+        mkdir ~/msys2-override-bin/
     fi
     
 
     # overrides handle with exe wrapper now
     # Prevents issues with tools trying to run the bash scripts with cmd or powershell (nvim, vscode, etc)
     cp "$DIR/msys2/override-exes"/*.exe ~/msys2-override-bin
-
+    echo "THIS DIRECTORY'S CONTENTES WILL BE DELETED BY UPDATES" > ~/msys2-override-bin/WARNING.txt
 
     # override bash       # Use native bash not wsl wrapper
     # override find       # windows has a find command? It doesn't do what I want.
