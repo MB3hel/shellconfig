@@ -104,3 +104,12 @@ fi
 #       these can be overwritten
 export EDITOR="nvim"
 
+
+# Explicitly set backend if using an x11 session (fixes issues when running
+# weston within an x11 session where apps launch in weston instead of x11)
+# Specific apps to be run in weston can override these
+if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+    export GDK_BACKEND=x11
+    export QT_QPA_PLATFORM=xcb
+fi
+
