@@ -100,10 +100,10 @@ Note: autocrlf is enabled explicitly in global git config. This ensures consiste
 Sometimes, the shell prompt is slow on windows due to git updating. The following settings seem to help a little
 
 ```
-git config --global core.preloadindex=true
-git config --global core.fscache=true
-git config --global pack.window=1
-git config --global gc.auto=256
+git config --global core.preloadindex true
+git config --global core.fscache true
+git config --global pack.window 1
+git config --global gc.auto 256
 ```
 
 ### macOS
