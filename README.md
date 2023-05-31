@@ -127,6 +127,8 @@ In the windows setup, there are multiple environments at play (standard windows 
 - Windows path entries
 - MSYS2 commands
 
+*Note that this only impacts the zsh and bash environments. This does not apply to native windows shells.*
+
 
 ## Package Mangers
 
@@ -146,3 +148,124 @@ msys2launch [environment]
 ```
 
 Where `[environment]` is `mingw64`, `mingw32`, or any other MSYS2 environment name.
+
+
+## Windows Native Shell Fixes
+
+Powershell and cmd (even if launched from zsh or bash) should not inherit the path and some other variables from the zsh / bash setup. This can cause issues. The following changes can be made to prevent this (this is not done automatically by the installer)
+
+For powershell, add the following to your profile
+- Windows Powershell (Legacy?): `~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1`
+- Powershell Core: `~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1`
+
+```ps1
+# If launched from MSYS2 zsh / bash setup, some variables will be wrong.
+if ([System.Environment]::GetEnvironmentVariable('MSYSTEM')){
+    # Restore PATH, TMP, and TEMP from the MSYS2 ORIGINAL_ variables
+    $Env:PATH = $Env:ORIGINAL_PATH
+    $Env:TMP = $Env:ORIGINAL_TMP
+    $Env:TEMP = $Env:ORIGINAL_TEMP
+    
+    # Unset all the variables set by MSYS2, zsh, or bash
+    [System.Environment]::SetEnvironmentVariable("_", $null)
+    [System.Environment]::SetEnvironmentVariable("COMP_WORDBREAKS", $null)
+    [System.Environment]::SetEnvironmentVariable("CONFIG_SITE", $null)
+    [System.Environment]::SetEnvironmentVariable("EDITOR", $null)
+    [System.Environment]::SetEnvironmentVariable("HISTFILESIZE", $null)
+    [System.Environment]::SetEnvironmentVariable("HISTIGNORE", $null)
+    [System.Environment]::SetEnvironmentVariable("HISTSIZE", $null)
+    [System.Environment]::SetEnvironmentVariable("HOME", $null)
+    [System.Environment]::SetEnvironmentVariable("HOSTNAME", $null)
+    [System.Environment]::SetEnvironmentVariable("INFOPATH", $null)
+    [System.Environment]::SetEnvironmentVariable("LANG", $null)
+    [System.Environment]::SetEnvironmentVariable("LC_CTYPE", $null)
+    [System.Environment]::SetEnvironmentVariable("LESS", $null)
+    [System.Environment]::SetEnvironmentVariable("LOGNAME", $null)
+    [System.Environment]::SetEnvironmentVariable("LS_COLORS", $null)
+    [System.Environment]::SetEnvironmentVariable("LSCOLORS", $null)
+    [System.Environment]::SetEnvironmentVariable("MANPATH", $null)
+    [System.Environment]::SetEnvironmentVariable("MSYS2_PATH_TYPE", $null)
+    [System.Environment]::SetEnvironmentVariable("MSYS2WINFIRST", $null)
+    [System.Environment]::SetEnvironmentVariable("MSYSCON", $null)
+    [System.Environment]::SetEnvironmentVariable("MSYSTEM", $null)
+    [System.Environment]::SetEnvironmentVariable("MSYSTEM_CARCH", $null)
+    [System.Environment]::SetEnvironmentVariable("MSYSTEM_CHOST", $null)
+    [System.Environment]::SetEnvironmentVariable("MSYSTEM_PREFIX", $null)
+    [System.Environment]::SetEnvironmentVariable("OLDPWD", $null)
+    [System.Environment]::SetEnvironmentVariable("ORIGINAL_PATH", $null)
+    [System.Environment]::SetEnvironmentVariable("ORIGINAL_TEMP", $null)
+    [System.Environment]::SetEnvironmentVariable("ORIGINAL_TMP", $null)
+    [System.Environment]::SetEnvironmentVariable("OSH", $null)
+    [System.Environment]::SetEnvironmentVariable("PAGER", $null)
+    [System.Environment]::SetEnvironmentVariable("PKG_CONFIG_PATH", $null)
+    [System.Environment]::SetEnvironmentVariable("PRINTER", $null)
+    [System.Environment]::SetEnvironmentVariable("PROMPT", $null)
+    [System.Environment]::SetEnvironmentVariable("PS1", $null)
+    [System.Environment]::SetEnvironmentVariable("PWD", $null)
+    [System.Environment]::SetEnvironmentVariable("SHELL", $null)
+    [System.Environment]::SetEnvironmentVariable("SHLVL", $null)
+    [System.Environment]::SetEnvironmentVariable("TERM", $null)
+    [System.Environment]::SetEnvironmentVariable("USER", $null)
+    [System.Environment]::SetEnvironmentVariable("ZSH", $null)
+}  
+```
+
+For cmd, create `~/init.cmd` with the following
+
+```bat
+@echo off
+
+@rem If launched from MSYS2 zsh / bash setup, some variables will be wrong.
+if NOT "%MSYSTEM%" == "" (
+    @rem Restore PATH, TMP, and TEMP from the MSYS2 ORIGINAL_ variables
+    set "PATH=%ORIGINAL_PATH%"
+    set "TEMP=%ORIGINAL_TEMP%"
+    set "TMP=%ORIGINAL_TMP%"
+    
+    @rem Unset all the variables set by MSYS2, zsh, or bash
+    set "_="
+    set "COMP_WORDBREAKS="
+    set "CONFIG_SITE="
+    set "EDITOR="
+    set "HISTFILESIZE="
+    set "HISTIGNORE="
+    set "HISTSIZE="
+    set "HOME="
+    set "HOSTNAME="
+    set "INFOPATH="
+    set "LANG="
+    set "LC_CTYPE="
+    set "LESS="
+    set "LOGNAME="
+    set "LS_COLORS="
+    set "LSCOLORS="
+    set "MANPATH="
+    set "MSYS2_PATH_TYPE="
+    set "MSYS2WINFIRST="
+    set "MSYSCON="
+    set "MSYSTEM="
+    set "MSYSTEM_CARCH="
+    set "MSYSTEM_CHOST="
+    set "MSYSTEM_PREFIX="
+    set "OLDPWD="
+    set "ORIGINAL_PATH="
+    set "ORIGINAL_TEMP="
+    set "ORIGINAL_TMP="
+    set "OSH="
+    set "PAGER="
+    set "PKG_CONFIG_PATH="
+    set "PRINTER="
+    set "PROMPT="
+    set "PS1="
+    set "PWD="
+    set "SHELL="
+    set "SHLVL="
+    set "TERM="
+    set "USER="
+    set "ZSH="
+)
+```
+
+Then run the following in cmd to register init.cmd as an auto run script
+
+`reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "%"USERPROFILE"%\init.cmd" /f`

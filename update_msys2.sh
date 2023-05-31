@@ -2,24 +2,22 @@
 
 DIR=$(realpath $(dirname "$0"))
 
-override(){
-    printf "#!/usr/bin/bash\n/usr/bin/$1" > ~/msys2-override-bin/$1
-    printf ' "$@"' >> ~/msys2-override-bin/$1
-}
-
 # Required for MSYS2 setup on windows for native zsh and bash
 if [[ "$(uname -o)" == "Msys" ]]; then
-	mkdir -p ~/bin
+    mkdir -p ~/bin
     
     # Using exe launchers instead to avoid stupid "terminate batch script" behavior
     # Make sure old bat launchers do not exist though
     rm ~/bin/zsh.bat 2> /dev/null
     rm ~/bin/bash.bat 2> /dev/null
-    # cp "$DIR/msys2/zsh.bat" ~/bin/zsh.bat
-	# cp "$DIR/msys2/bash.bat" ~/bin/bash.bat
-
-    cp "$DIR/msys2/zsh.exe" ~/bin/zsh.exe
-	cp "$DIR/msys2/bash.exe" ~/bin/bash.exe
+    
+    # Write exe launchers if they don't alredy exist
+    if [ ! -f ~/bin/zsh.exe ]; then
+        cp "$DIR/msys2/zsh.exe" ~/bin/zsh.exe
+    fi
+    if [ ! -f ~/bin/bash.exe ]; then
+        cp "$DIR/msys2/bash.exe" ~/bin/bash.exe
+    fi
 
     cp "$DIR/msys2/msys2launch" ~/bin/msys2launch     # Launch a normal msys2 isolated environment
     
@@ -42,13 +40,4 @@ if [[ "$(uname -o)" == "Msys" ]]; then
     # Prevents issues with tools trying to run the bash scripts with cmd or powershell (nvim, vscode, etc)
     cp "$DIR/msys2/override-exes"/*.exe ~/msys2-override-bin
     echo "THIS DIRECTORY'S CONTENTES WILL BE DELETED BY UPDATES" > ~/msys2-override-bin/WARNING.txt
-
-    # override bash       # Use native bash not wsl wrapper
-    # override find       # windows has a find command? It doesn't do what I want.
-
-    # Windows openssh just breaks git clone and other things, so force MSYS2 git and ssh
-    # override ssh
-    # override ssh-agent
-    # override ssh-add
-    # override git
 fi
