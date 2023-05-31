@@ -93,7 +93,7 @@ git pull
 
 ### Windows
 
-Enable the OpenSSH agent in windows services. 
+Enable the OpenSSH agent in windows services. Then run `git config --global core.sshCommand C:\WINDOWS\System32\OpenSSH\ssh.exe`. If you have manually installed a newer build of OpenSSH-Win32 using the msi installer, run `git config --global core.sshCommand '"C:/Program Files/OpenSSH/ssh.exe"'` instead.
 
 Note: autocrlf is enabled explicitly in global git config. This ensures consistent behavior between native (scoop) git and MSYS2 git.
 
