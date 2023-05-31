@@ -21,7 +21,7 @@ Works on Windows, macOS, and Linux (probably &ast;BSD too)
 git clone git@github.com:MB3hel/shellconfig.git ~/.shellconfig
 cd ~/.shellconfig
 ./install.sh
-./install_msys2_scripts.sh
+./update_msys2.sh
 ```
 
 ### Update
@@ -29,7 +29,7 @@ cd ~/.shellconfig
 ```sh
 cd ~/.shellconfig
 git pull
-./install_msys2_scripts.sh
+./update_msys2.sh
 ```
 
 
@@ -77,9 +77,11 @@ git pull
 ```
 
 
-## Environment Variables
+## Environment Variables (Linux / macOS / Unix)
 
-*On windows, this method will not set variables system wide. Just for zsh and bash shells. On macOS and Linux, this is "system-wide" on a per-user basis.*
+*On windows, this method will not set variables system wide. Just for zsh and bash shells. Use windows methods instead.*
+
+*On macOS and Linux, this is "system-wide" on a per-user basis.*
 
 - Use `~/.profile` for environment variables (shared with all shells; must use sh syntax). This has access to `append_path`, `prepend_path`, and `remove_path` functions. They should be used to modify the PATH.
 - `~/.zprofile` and `~/.bash_profile` can be edited for shell-specific vars or syntax. Both of these files source `.profile`. 
@@ -91,13 +93,11 @@ git pull
 
 ### Windows
 
-The profile script handles launching an ssh agent. **THE WINDOWS OPENSSH AGENT SERVICE SHOULD BE DISABLED**. Windows OpenSSH has issues that prevent cloning git repos ([see here](https://github.com/PowerShell/Win32-OpenSSH/issues/1322)). As such, these scripts replace `git`, `ssh`, `ssh-agent`, and `ssh-add` commands with the MSYS2 ones (by using `~/msys2-override/bin`). Thus, an agent is launched and used in any native zsh or bash shell.
-
-Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to type git key passwords once until logout.
+Enable the OpenSSH agent in windows services. 
 
 Note: autocrlf is enabled explicitly in global git config. This ensures consistent behavior between native (scoop) git and MSYS2 git.
 
-Sometimes, the shell prompt is slow on windows due to git updating. The following settings seem to help a little
+Sometimes, the shell prompt is slow on windows due to git. The following settings seem to help a little
 
 ```
 git config --global core.preloadindex true
@@ -108,21 +108,21 @@ git config --global gc.auto 256
 
 ### macOS
 
-Nothing special is setup here. macOS runs an agent.
-
-Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to type git key passwords once until logout.
+Nothing special is setup here. macOS runs an agent. Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to type git key passwords once until logout.
 
 
 ### Linux
 
-I typically use gnome, which runs an ssh agent, prompts for keys, and keeps them until logout. Thus, nothing special is setup here.
+I typically use gnome, which runs an ssh agent, prompts for keys, and keeps them until logout. Thus, nothing special is setup here. 
+
+For environments where the desktop does not manage an ssh agent create the file `~/.shell_manage_ssh-agent`. This will cause the profile script to manage an agent. Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to type git key passwords once until logout.
 
 
 ## Windows Command Priority
 
 In the windows setup, there are multiple environments at play (standard windows and MSYS2). The path is modified to have the following priorities
 
-- `~/msys2-override/bin`: For wrappers such as `bash` and `find` to override windows commands with MSYS2 ones
+- `~/msys2-override/bin`: For wrappers such as `bash` and `find` to override windows commands with MSYS2 ones (*note: the content of this directory will be deleted and re-written when running update_msys2.sh*)
 - The default profile prepends `~/bin` and `~/.local/bin` to the path if they exist (so they have higher priority)
 - Windows path entries
 - MSYS2 commands
@@ -130,7 +130,7 @@ In the windows setup, there are multiple environments at play (standard windows 
 
 ## Package Mangers
 
-- Windows: scoop and MSYS2 pacman
+- Windows: scoop and MSYS2 pacman (typically, native windows tools from scoop are preferred when available)
 - macOS: Brew
 - Linux: Native system package manager
 

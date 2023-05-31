@@ -58,18 +58,10 @@ unset SED
 
 
 ################################################################################
-# SSH agent stuff for windows
+# SSH agent management (enabled if ~/.shell_manage_ssh-agent exists)
 ################################################################################
-# This would not be necessary, except that I choose to use MSYS2 ssh
-# This is because windows OpenSSH has issues cloning repos
-# https://github.com/PowerShell/Win32-OpenSSH/issues/1322
-# I finally got fed up and decided that typing my ssh key once per login
-# was Ok. Just make sure ~/.ssh/config has 'AddKeysToAgent yes'
-# Also must make sure GIT_SSH is not set to windows OpenSSH binary
 
-# NOTE: Also used on other systems if ~/.shell_manage_ssh-agent file exists
-
-if [ "$(uname -o)" = "Msys"  ] || [ -f "$HOME/.shell_manage_ssh-agent" ]; then
+if [ -f "$HOME/.shell_manage_ssh-agent" ]; then
 
     env=~/.ssh/agent.env
 
@@ -103,13 +95,3 @@ fi
 # Note: since this script is sourced first in ~/.profile
 #       these can be overwritten
 export EDITOR="nvim"
-
-
-# Explicitly set backend if using an x11 session (fixes issues when running
-# weston within an x11 session where apps launch in weston instead of x11)
-# Specific apps to be run in weston can override these
-if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-    export GDK_BACKEND=x11
-    export QT_QPA_PLATFORM=xcb
-fi
-
