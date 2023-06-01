@@ -29,6 +29,8 @@ Then in windows terminal or another terminal emulator, use the following command
 - zsh: `pwsh.exe -noprofile -executionpolicy bypass C:\Users\mbehe\bin\zsh-launcher.ps1`
 - bash: `pwsh.exe -noprofile -executionpolicy bypass C:\Users\mbehe\bin\bash-launcher.ps1`
 
+Finally, see the instructions in "Windows Native Shell Fixes" section and follow them.
+
 
 ### Update
 
