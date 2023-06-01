@@ -26,8 +26,8 @@ cd ~/.shellconfig
 
 Then in windows terminal or another terminal emulator, use the following command line for zsh and bash (change `pwsh.exe` to `powershell.exe` if you don't have powershell core installed)
 
-- zsh: `pwsh.exe -noprofile -executionpolicy bypass C:\Users\mbehe\bin\zsh-launcher.ps1`
-- bash: `pwsh.exe -noprofile -executionpolicy bypass C:\Users\mbehe\bin\bash-launcher.ps1`
+- zsh: `pwsh.exe -noprofile -executionpolicy bypass C:\Users\<USERNAME>\bin\zsh-launcher.ps1`
+- bash: `pwsh.exe -noprofile -executionpolicy bypass C:\Users\<USERNAME>\bin\bash-launcher.ps1`
 
 Finally, see the instructions in "Windows Native Shell Fixes" section and follow them.
 
