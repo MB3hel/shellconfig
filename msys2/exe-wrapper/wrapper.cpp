@@ -16,6 +16,9 @@ int main(int argc, char *argv[]){
     std::string userprofile = std::getenv("USERPROFILE");
     replace_all(userprofile, "\\", "/");
 
+    // Makes init.cmd (see readme) keep msys path when using system() call
+    _putenv("MSYSPRESERVE=1");
+
     std::string cmd = "";
     cmd += userprofile;
     cmd += "/scoop/apps/msys2/current/usr/bin/";

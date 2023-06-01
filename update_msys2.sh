@@ -6,18 +6,15 @@ DIR=$(realpath $(dirname "$0"))
 if [[ "$(uname -o)" == "Msys" ]]; then
     mkdir -p ~/bin
     
-    # Using exe launchers instead to avoid stupid "terminate batch script" behavior
-    # Make sure old bat launchers do not exist though
+    # Remove any old launchers
     rm ~/bin/zsh.bat 2> /dev/null
     rm ~/bin/bash.bat 2> /dev/null
+    rm ~/bin/zsh.exe 2> /dev/null
+    rm ~/bin/bash.exe 2> /dev/null
     
-    # Write exe launchers if they don't alredy exist
-    if [ ! -f ~/bin/zsh.exe ]; then
-        cp "$DIR/msys2/zsh.exe" ~/bin/zsh.exe
-    fi
-    if [ ! -f ~/bin/bash.exe ]; then
-        cp "$DIR/msys2/bash.exe" ~/bin/bash.exe
-    fi
+    # Write new launchers
+    cp "$DIR/msys2/zsh-launcher.ps1" ~/bin/
+    cp "$DIR/msys2/bash-launcher.ps1" ~/bin/
 
     cp "$DIR/msys2/msys2launch" ~/bin/msys2launch     # Launch a normal msys2 isolated environment
     

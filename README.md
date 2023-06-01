@@ -24,6 +24,12 @@ cd ~/.shellconfig
 ./update_msys2.sh
 ```
 
+Then in windows terminal or another terminal emulator, use the following command line for zsh and bash (change `pwsh.exe` to `powershell.exe` if you don't have powershell core installed)
+
+- zsh: `pwsh.exe -noprofile -executionpolicy bypass C:\Users\mbehe\bin\zsh-launcher.ps1`
+- bash: `pwsh.exe -noprofile -executionpolicy bypass C:\Users\mbehe\bin\bash-launcher.ps1`
+
+
 ### Update
 
 ```sh
@@ -129,7 +135,6 @@ In the windows setup, there are multiple environments at play (standard windows 
 
 *Note that this only impacts the zsh and bash environments. This does not apply to native windows shells.*
 
-
 ## Package Mangers
 
 - Windows: scoop and MSYS2 pacman (typically, native windows tools from scoop are preferred when available)
@@ -217,52 +222,56 @@ For cmd, create `~/init.cmd` with the following
 
 @rem If launched from MSYS2 zsh / bash setup, some variables will be wrong.
 if NOT "%MSYSTEM%" == "" (
-    @rem Restore PATH, TMP, and TEMP from the MSYS2 ORIGINAL_ variables
-    set "PATH=%ORIGINAL_PATH%"
-    set "TEMP=%ORIGINAL_TEMP%"
-    set "TMP=%ORIGINAL_TMP%"
     
-    @rem Unset all the variables set by MSYS2, zsh, or bash
-    set "_="
-    set "COMP_WORDBREAKS="
-    set "CONFIG_SITE="
-    set "EDITOR="
-    set "HISTFILESIZE="
-    set "HISTIGNORE="
-    set "HISTSIZE="
-    set "HOME="
-    set "HOSTNAME="
-    set "INFOPATH="
-    set "LANG="
-    set "LC_CTYPE="
-    set "LESS="
-    set "LOGNAME="
-    set "LS_COLORS="
-    set "LSCOLORS="
-    set "MANPATH="
-    set "MSYS2_PATH_TYPE="
-    set "MSYS2WINFIRST="
-    set "MSYSCON="
-    set "MSYSTEM="
-    set "MSYSTEM_CARCH="
-    set "MSYSTEM_CHOST="
-    set "MSYSTEM_PREFIX="
-    set "OLDPWD="
-    set "ORIGINAL_PATH="
-    set "ORIGINAL_TEMP="
-    set "ORIGINAL_TMP="
-    set "OSH="
-    set "PAGER="
-    set "PKG_CONFIG_PATH="
-    set "PRINTER="
-    set "PROMPT="
-    set "PS1="
-    set "PWD="
-    set "SHELL="
-    set "SHLVL="
-    set "TERM="
-    set "USER="
-    set "ZSH="
+    @rem allow MSYSPRESERVE=1 to prevent this. Used for override exes.
+    if NOT "%MSYSPRESERVE%" == "1" (
+        @rem Restore PATH, TMP, and TEMP from the MSYS2 ORIGINAL_ variables
+        set "PATH=%ORIGINAL_PATH%"
+        set "TEMP=%ORIGINAL_TEMP%"
+        set "TMP=%ORIGINAL_TMP%"
+        
+        @rem Unset all the variables set by MSYS2, zsh, or bash
+        set "_="
+        set "COMP_WORDBREAKS="
+        set "CONFIG_SITE="
+        set "EDITOR="
+        set "HISTFILESIZE="
+        set "HISTIGNORE="
+        set "HISTSIZE="
+        set "HOME="
+        set "HOSTNAME="
+        set "INFOPATH="
+        set "LANG="
+        set "LC_CTYPE="
+        set "LESS="
+        set "LOGNAME="
+        set "LS_COLORS="
+        set "LSCOLORS="
+        set "MANPATH="
+        set "MSYS2_PATH_TYPE="
+        set "MSYS2WINFIRST="
+        set "MSYSCON="
+        set "MSYSTEM="
+        set "MSYSTEM_CARCH="
+        set "MSYSTEM_CHOST="
+        set "MSYSTEM_PREFIX="
+        set "OLDPWD="
+        set "ORIGINAL_PATH="
+        set "ORIGINAL_TEMP="
+        set "ORIGINAL_TMP="
+        set "OSH="
+        set "PAGER="
+        set "PKG_CONFIG_PATH="
+        set "PRINTER="
+        set "PROMPT="
+        set "PS1="
+        set "PWD="
+        set "SHELL="
+        set "SHLVL="
+        set "TERM="
+        set "USER="
+        set "ZSH="
+    )
 )
 ```
 
