@@ -133,11 +133,7 @@ if [ "$(uname -o)" = "Msys"  ]; then
     keep_current_path() {
         printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"
     }
-    precmd_functions+=(keep_current_path)
-
-    # Fix tmux (workaround for any terminal that is not MinTTY)
-    # Due to a bug going back to how Cygwin + MinTTY work
-    alias tmux="script -q -c tmux /dev/null"   
+    precmd_functions+=(keep_current_path) 
 fi
 
 # schroot environments
@@ -162,9 +158,7 @@ if [ "$ZSH_THEME" = "robbyrussell" ]; then
 fi
 
 # Aliases and functions
-if [ "$(uname -o)" = "Msys" ]; then
-    alias open='$HOME/.shellconfig/msys2/msys2_open.sh'
-elif [ "$(uname -o)" != "Darwin" ]; then
+if [ "$(uname -o)" != "Darwin" ]; then
     open(){
         nohup xdg-open "$*" > /dev/null 2>&1
     }

@@ -62,11 +62,8 @@ OSH_THEME="minimal"
 
 # To disable the uses of "sudo" by oh-my-bash, please set "false" to
 # this variable.  The default behavior for the empty value is "true".
-if [ "$(uname -o)" = "Msys" ]; then
-    OMB_USE_SUDO=false
-else
-    OMB_USE_SUDO=true
-fi
+OMB_USE_SUDO=true
+
 # Which completions would you like to load? (completions can be found in ~/.oh-my-bash/completions/*)
 # Custom completions may be added to ~/.oh-my-bash/custom/completions/
 # Example format: completions=(ssh git bundler gem pip pip3)
@@ -141,8 +138,6 @@ fi
 if [ "$(uname -o)" = "Msys"  ]; then
     # Required for duplicate tab in windows terminal
     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
-
-    alias tmux="script -q -c tmux /dev/null"
 fi
 
 # schroot environments
@@ -186,9 +181,7 @@ if [ -n "$SSH_TTY" ]; then
 fi
 
 # Aliases and functions
-if [ "$(uname -o)" = "Msys" ]; then
-    alias open='$HOME/.shellconfig/msys2/msys2_open.sh'
-elif [ "$(uname -o)" != "Darwin" ]; then
+if [ "$(uname -o)" != "Darwin" ]; then
     open(){
         nohup xdg-open "$*" > /dev/null 2>&1
     }
