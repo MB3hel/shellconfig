@@ -33,11 +33,11 @@ __prompt_cmd () {
     local colors=$(__use_colors)
 
     # Arrow at start of prompt
-    local arrow="→"
+    local arrow="➜"
     if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
-        arrow="%F{red}→%f"
+        arrow="%F{red}➜%f"
     elif [ $colors = yes ]; then
-        arrow="%F{green}→%f"
+        arrow="%F{green}➜%f"
     fi
 
     # Git branch and status

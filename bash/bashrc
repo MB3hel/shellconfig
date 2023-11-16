@@ -31,11 +31,11 @@ __prompt_cmd () {
     local colors=$(__use_colors)
 
     # Arrow at start of prompt
-    local arrow="→"
+    local arrow="➜"
     if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
-        arrow="\[\033[01;31m\]→\[\033[00m\]"
+        arrow="\[\033[01;31m\]➜\[\033[00m\]"
     elif [ $colors = yes ]; then
-        arrow="\[\033[01;32m\]→\[\033[00m\]"
+        arrow="\[\033[01;32m\]➜\[\033[00m\]"
     fi
 
     # Git branch and status
