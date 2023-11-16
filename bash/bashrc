@@ -1,194 +1,84 @@
-# Enable the subsequent settings only in interactive sessions
-# case $- in
-#     *i*) ;;
-#       *) return;;
-# esac
+# Directory of this script
+DIR=$(dirname "$BASH_SOURCE")
 
-# Path to your oh-my-bash installation.
-export OSH="$HOME/.oh-my-bash"
+################################################################################
+# Tab completion
+################################################################################
+# From git source tree contrib/completion directory
+. "$DIR/git-completion.bash"
+################################################################################
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-bash is loaded.
-OSH_THEME="minimal"
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_OSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.  One of the following values can
-# be used to specify the timestamp format.
-# * 'mm/dd/yyyy'     # mm/dd/yyyy + time
-# * 'dd.mm.yyyy'     # dd.mm.yyyy + time
-# * 'yyyy-mm-dd'     # yyyy-mm-dd + time
-# * '[mm/dd/yyyy]'   # [mm/dd/yyyy] + [time] with colors
-# * '[dd.mm.yyyy]'   # [dd.mm.yyyy] + [time] with colors
-# * '[yyyy-mm-dd]'   # [yyyy-mm-dd] + [time] with colors
-# If not set, the default value is 'yyyy-mm-dd'.
-# HIST_STAMPS='yyyy-mm-dd'
-
-# Uncomment the following line if you do not want OMB to overwrite the existing
-# aliases by the default OMB aliases defined in lib/*.sh
-# OMB_DEFAULT_ALIASES="check"
-
-# Would you like to use another custom folder than $OSH/custom?
-# OSH_CUSTOM=/path/to/new-custom-folder
-
-# To disable the uses of "sudo" by oh-my-bash, please set "false" to
-# this variable.  The default behavior for the empty value is "true".
-OMB_USE_SUDO=true
-
-# Which completions would you like to load? (completions can be found in ~/.oh-my-bash/completions/*)
-# Custom completions may be added to ~/.oh-my-bash/custom/completions/
-# Example format: completions=(ssh git bundler gem pip pip3)
-# Add wisely, as too many completions slow down shell startup.
-completions=(
-    git
-    ssh
-)
-
-# Which aliases would you like to load? (aliases can be found in ~/.oh-my-bash/aliases/*)
-# Custom aliases may be added to ~/.oh-my-bash/custom/aliases/
-# Example format: aliases=(vagrant composer git-avh)
-# Add wisely, as too many aliases slow down shell startup.
-aliases=()
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-bash/plugins/*)
-# Custom plugins may be added to ~/.oh-my-bash/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-    git
-)
-
-# Which plugins would you like to conditionally load? (plugins can be found in ~/.oh-my-bash/plugins/*)
-# Custom plugins may be added to ~/.oh-my-bash/custom/plugins/
-# Example format: 
-#  if [ "$DISPLAY" ] || [ "$SSH" ]; then
-#      plugins+=(tmux-autoattach)
-#  fi
-
-source "$OSH"/oh-my-bash.sh
-
-# User configuration
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-bash libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-bash
-# users are encouraged to define aliases within the OSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias bashconfig="mate ~/.bashrc"
-# alias ohmybash="mate ~/.oh-my-bash"
-
-
-# WSL specific things
-if type "wslpath" > /dev/null 2>&1 ; then
-    # Required for duplicate tab in windows terminal
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
-
-    # Must set WSLENV to have "USERPROFILE/p" in the list on windows
-    WINHOME="$USERPROFILE"
+################################################################################
+# Determine if to use colors
+################################################################################
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+    xterm-256color) color_prompt=yes;;
+esac
+if [ "$color_prompt" = yes ]; then
+    export CLICOLOR=1
 fi
+################################################################################
 
-# MSYS2 specific things
-if [ "$(uname -o)" = "Msys"  ]; then
-    # Required for duplicate tab in windows terminal
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
-fi
+################################################################################
+# Prompt
+################################################################################
+# From https://gist.github.com/henrik/31631
+# Using instead of git-prompt.sh from git itself because this is "faster"
+# meaning requires fewer git commands. This is important on windows w/ MSYS2.
+function __git_is_dirty {
+    [[ -z $(git status --porcelain 2> /dev/null) ]] || echo "*"
+}
+function __git_branch_name {
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/"
+}
 
-# schroot environments
-if [[ -f /etc/debian_chroot ]]; then
-    
-    # Show name in schroots
-    show_schroot_name(){
-        chroot_name=$(cat /etc/debian_chroot)
-        PS1="($chroot_name)$PS1"
-    }
-    _omb_util_add_prompt_command show_schroot_name
-
-    # Fixes issues with calculating line width
-    export LANG=en_US.UTF-8
-fi
-
-# Theme modifications
-if [ "$OSH_THEME" = "minimal" ]; then
-    add_dollar_to_min(){
-        PS1+="${_omb_prompt_yellow}\$${_omb_prompt_reset_color} "
-    }
-    add_arrow_to_min(){
-        if [ $? -ne 0 ]; then
-            PS1="${_omb_prompt_red}→${_omb_prompt_reset_color} ${PS1}"
+function prompt_cmd() {
+    if [ $? -ne 0 ]; then
+        arrow="\[\033[01;91m\]→\[\033[00m\]"
+    else
+        arrow="\[\033[01;92m\]→\[\033[00m\]"
+    fi
+    git_branch="$(__git_branch_name)"
+    git_addon=""
+    if [ ! -z "$git_branch" ]; then
+        git_dirty="$(__git_is_dirty)"
+        git_addon=" (${git_branch}${git_dirty})"
+        unset git_dirty
+    fi
+    if [ "$color_prompt" = yes ]; then
+        # Different color for windows system (makes it easier to distinguish from WSL)
+        if [ "$MSYSTEM" = "MSYS2" ]; then
+            export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[00;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\033[01;36m\]${git_addon}\[\033[00m\]\n\$ "
         else
-            PS1="${_omb_prompt_green}→${_omb_prompt_reset_color} ${PS1}"
+            export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\033[01;36m\]${git_addon}\[\033[00m\]\n\$ "
         fi
-    }
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'echo -en "\033]0; $(dirs +0) \a"'
-    _omb_util_add_prompt_command add_dollar_to_min
-    _omb_util_add_prompt_command add_arrow_to_min
-fi
+    else
+        export PS1='NOCOLOR $'
+    fi
+    unset arrow
+    unset git_branch
+    unset git_addon
+}
+export PROMPT_COMMAND=prompt_cmd
+################################################################################
 
-# ssh connections
-if [ -n "$SSH_TTY" ]; then
-    show_host_name(){
-        host_name=$(hostname | tr -d '\n')
-        PS1="${_omb_prompt_green}[${host_name}]${_omb_prompt_reset_color}${PS1}"
-    }
-    _omb_util_add_prompt_command show_host_name
-fi
 
-# Aliases and functions
-if [ "$(uname -o)" != "Darwin" ]; then
+################################################################################
+# Default Aliases / Functions
+################################################################################
+alias ls='ls --color=auto'
+alias la='ls -A --color=auto'
+alias ll='ls -alF --color=auto'
+
+if [ "$(uname -o)" = "Msys" ]; then
+    open() {
+        target=$(echo -n "$1" | sed 's#/#\\#g')
+        start "" "$target"
+    }
+elif [ "$(uname -o)" != "Darwin" ]; then
     open(){
         nohup xdg-open "$*" > /dev/null 2>&1
     }
 fi
-
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-unset CDPATH
+################################################################################
