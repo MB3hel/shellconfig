@@ -1,37 +1,14 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Directory this script is in
-DIR=$(realpath $(dirname "$0"))
-
-# Check for curl, zsh, and bash
-if ! type "curl" > /dev/null; then
-    echo "curl must be installed first."
-    exit 1
-fi
-if ! type "zsh" > /dev/null; then
-    echo "zsh must be installed first."
-    exit 1
-fi
-if ! type "bash" > /dev/null; then
-    echo "bash must be installed first."
-    exit 1
-fi
-
-# Install oh my zsh and oh my bash
-if [[ ! -d ~/.oh-my-zsh ]]; then
-    export RUNZSH='no'
-    curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | zsh -s --
-fi
-if [[ ! -d ~/.oh-my-bash ]]; then
-    curl https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh | bash -s -- --unattended
-fi
+DIR="$(dirname "$0")"
 
 # Move files that have templates to .bak versions
-mv ~/.bashrc ~/.bashrc.bak
-mv ~/.bash_profile ~/.bash_profile.bak
-mv ~/.profile ~/.profile.bak
-mv ~/.zprofile ~/.zprofile.bak
-mv ~/.zshrc ~/.zshrc.bak
+mv ~/.bashrc ~/.bashrc.bak 2> /dev/null
+mv ~/.bash_profile ~/.bash_profile.bak 2> /dev/null
+mv ~/.profile ~/.profile.bak 2> /dev/null
+mv ~/.zprofile ~/.zprofile.bak 2> /dev/null
+mv ~/.zshrc ~/.zshrc.bak 2> /dev/null
 
 # Install templates
 cp "$DIR/template/bash_profile.template" ~/.bash_profile
@@ -40,3 +17,12 @@ cp "$DIR/template/profile.template" ~/.profile
 cp "$DIR/template/zprofile.template" ~/.zprofile
 cp "$DIR/template/zshrc.template" ~/.zshrc
 
+# MSYS2 specific things for windows
+if [ "$(uname -o)" = "Msys"  ]; then
+    if [ ! -d ~/bin ]; then
+        mkdir ~/bin
+    fi
+    cp "$DIR"/msys2launchers/bin/sh.exe "$HOME"/bin/
+    cp "$DIR"/msys2launchers/bin/bash.exe "$HOME"/bin/
+    cp "$DIR"/msys2launchers/bin/zsh.exe "$HOME"/bin/
+fi
