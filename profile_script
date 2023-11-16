@@ -46,22 +46,24 @@ unset SED
 # On windows, SSH_AUTH_SOCK isn't used
 # Just assume ssh agent is running as a service on windows
 # On other systems, launch an agent if SSH_AUTH_SOCK is not set
-if [ "$(uname -o)" != "Msys" ]; then
+# If SSH_AUTH_SOCK is set before the shell starts, assume it's environment
+# such as Gnome, or macOS, etc
+if [ "$(uname -o)" != "Msys" ] && [ ! "$SSH_AUTH_SOCK" ]; then
     __ssh_agent_env=~/.ssh/agent.env
 
-    agent_load_env () { test -f "$__ssh_agent_env" && . "$__ssh_agent_env" >| /dev/null ; }
+    __ssh_agent_load_env () { test -f "$__ssh_agent_env" && . "$__ssh_agent_env" >| /dev/null ; }
 
-    agent_start () {
+    __ssh_agent_start () {
         (umask 077; ssh-agent >| "$__ssh_agent_env")
         . "$__ssh_agent_env" >| /dev/null ; }
 
-    agent_load_env
+    __ssh_agent_load_env
 
     # agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2=agent not running
     agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
 
     if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
-        agent_start
+        __ssh_agent_start
     fi
 
     unset __ssh_agent_env
