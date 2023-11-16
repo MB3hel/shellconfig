@@ -74,20 +74,18 @@ fi
 ################################################################################
 # Aliases
 ################################################################################
-# Want to unset MSYS2 variables before launching cmd, powershell, or pwsh
-# Do via functions invoking these shells
-# This isn't a perfect solution because abolute paths would still cause issues
-# but the other option would be init scripts / modifications to profile scripts
-# for powershell, pwsh, and cmd. Not really worth the trouble.
-# Either launch the shell using alias. Or don't launch it from unix shells!
+# With MSYS2, need to restore some variables to original state before 
+# launching windows shells. Otherwise, things will break.
 if [ "$(uname -o)" = "Msys" ]; then
-    __cmd () {
-        /usr/bin/cmd "$@"
+    __winshell () {
+        PATH="$ORIGINAL_PATH" TMP="$ORIGINAL_TMP" TEMP="$ORIGINAL_TEMP" "$@"
     }
-    alias cmd=__cmd
-    alias cmd.exe=cmd
-    alias powershell.exe=powershell
-    alias pwsh.exe=pwsh
+    alias cmd="__winshell cmd"
+    alias cmd.exe="__winshell cmd"
+    alias powershell="__winshell powershell"
+    alias powershell.exe="__winshell powershell"
+    alias pwsh="__winshell pwsh"
+    alias pwsh.exe="__winshell pwsh"
 fi
 ################################################################################
 
