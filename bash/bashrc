@@ -62,15 +62,15 @@ __prompt_cmd () {
     if [ "$colors" = yes ]; then
         # Different color for windows system (makes it easier to distinguish from WSL)
         if [ "$(__os_name)" = "Msys" ]; then
-            export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[00;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]${git_addon}\n\$ "
+            PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[00;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]${git_addon}\n\$ "
         else
-            export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]${git_addon}\n\$ "
+            PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]${git_addon}\n\$ "
         fi
     else
-        export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \u@\h:\W${git_addon}\n\$ "
+        PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \u@\h:\W${git_addon}\n\$ "
     fi
 }
-export PROMPT_COMMAND=__prompt_cmd
+PROMPT_COMMAND=__prompt_cmd
 
 # Makes duplicate tab work in windows terminal
 if [ "$(uname -o)" = "Msys"  ]; then

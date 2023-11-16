@@ -65,12 +65,12 @@ __prompt_cmd () {
     if [ "$colors" = yes ]; then
         # Different color for windows system (makes it easier to distinguish from WSL)
         if [ "$(__os_name)" = "Msys" ]; then
-            export PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %F{yellow}%n@%m%f:%F{blue}%1~%f${git_addon}${NL}%% "
+            PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %F{yellow}%n@%m%f:%F{blue}%1~%f${git_addon}${NL}%% "
         else
-            export PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %F{green}%n@%m%f:%F{blue}%1~%f${git_addon}${NL}%% "
+            PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %F{green}%n@%m%f:%F{blue}%1~%f${git_addon}${NL}%% "
         fi
     else
-        export PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %n@%m:%1~${git_addon}${NL}%% "
+        PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %n@%m:%1~${git_addon}${NL}%% "
     fi
 }
 precmd_functions+=(__prompt_cmd)

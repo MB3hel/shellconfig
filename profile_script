@@ -72,6 +72,26 @@ fi
 ################################################################################
 
 ################################################################################
+# Aliases
+################################################################################
+# Want to unset MSYS2 variables before launching cmd, powershell, or pwsh
+# Do via functions invoking these shells
+# This isn't a perfect solution because abolute paths would still cause issues
+# but the other option would be init scripts / modifications to profile scripts
+# for powershell, pwsh, and cmd. Not really worth the trouble.
+# Either launch the shell using alias. Or don't launch it from unix shells!
+if [ "$(uname -o)" = "Msys" ]; then
+    __cmd () {
+        /usr/bin/cmd "$@"
+    }
+    alias cmd=__cmd
+    alias cmd.exe=cmd
+    alias powershell.exe=powershell
+    alias pwsh.exe=pwsh
+fi
+################################################################################
+
+################################################################################
 # Default settings
 ################################################################################
 # Note: since this script is sourced first in ~/.profile
