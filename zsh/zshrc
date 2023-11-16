@@ -23,6 +23,12 @@ __use_colors () {
 __os_name () {
     uname -o 2> /dev/null || printf "Unknown"
 }
+if [ "$(__use_colors)" = yes ]; then
+    # Support .dircolors file in home
+    if command -v dircolors &> /dev/null; then
+        test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    fi
+fi
 ################################################################################
 
 ################################################################################
