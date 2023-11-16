@@ -2,6 +2,24 @@
 DIR=$(dirname "${(%):-%N}")
 
 ################################################################################
+# History settings
+################################################################################
+# Preserve history
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
+
+# Search history with up/down keys
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
+################################################################################
+
+################################################################################
 # Tab completion
 ################################################################################
 # From git source tree contrib/completion directory
