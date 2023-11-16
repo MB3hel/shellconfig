@@ -11,62 +11,51 @@ DIR=$(dirname "$BASH_SOURCE")
 ################################################################################
 # Determine if to use colors
 ################################################################################
-function __color_prompt {
+__use_colors () {
     case "$TERM" in
         xterm-color) printf "yes";;
         xterm-256color) printf "yes";;
         *) printf "no";;
     esac
 }
-
-if [ "$(__color_prompt)" = yes ]; then
-    export CLICOLOR=1
-else
-    export CLICOLOR=0
-fi
-color_prompt=no
+__os_name () {
+    uname -o 2> /dev/null || printf "Unknown"
+}
 ################################################################################
 
 ################################################################################
 # Prompt
 ################################################################################
-# Based on https://gist.github.com/henrik/31631
-# Using instead of git-prompt.sh from git itself because this is "faster"
-# meaning requires fewer git commands. This is important on windows w/ MSYS2.
-function __git_is_dirty {
-    if [ "$(__color_prompt)" = yes ]; then
-        [[ -z $(git status --porcelain 2> /dev/null) ]] || echo " \033[01;31m\]✗\[\033[00m\]"
-    else
-        [[ -z $(git status --porcelain 2> /dev/null) ]] || echo " ✗"
-    fi
-}
-function __git_branch_name {
-    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/"
-}
+__prompt_cmd () {
+    local lasterr=$?
+    local colors=$(__use_colors)
 
-function prompt_cmd() {
-    lasterr=$?
-    if [ "$(__color_prompt)" != yes ]; then
-        arrow="→"
-    elif [ $lasterr -ne 0 ]; then
+    # Arrow at start of prompt
+    local arrow="→"
+    if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
         arrow="\[\033[01;91m\]→\[\033[00m\]"
-    else
+    elif [ $colors = yes ]; then
         arrow="\[\033[01;92m\]→\[\033[00m\]"
     fi
-    git_branch="$(__git_branch_name)"
-    git_addon=""
+
+    # Git branch and status
+    local git_branch="$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")"
+    local git_str=""
+    local git_addon=""
     if [ ! -z "$git_branch" ]; then
-        git_dirty="$(__git_is_dirty)"
-        if [ "$(__color_prompt)" = yes ]; then
+        local git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || echo " ✗")"
+        if [ $colors = yes ]; then
+            git_dirty="\[\033[01;31m\]${git_dirty}\[\033[00m\]"
             git_addon=" \[\033[01;36m\]git:(${git_branch}\[\033[00m\]${git_dirty}\[\033[01;36m\])\[\033[00m\]"
         else
             git_addon=" git:(${git_branch}${git_dirty})"
         fi
-        unset git_dirty
     fi
-    if [ "$(__color_prompt)" = yes ]; then
+
+    # Main prompt
+    if [ "$colors" = yes ]; then
         # Different color for windows system (makes it easier to distinguish from WSL)
-        if [ "$MSYSTEM" = "MSYS2" ]; then
+        if [ "$(__os_name)" = "Msys" ]; then
             export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[00;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]${git_addon}\n\$ "
         else
             export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]${git_addon}\n\$ "
@@ -74,12 +63,8 @@ function prompt_cmd() {
     else
         export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \u@\h:\w${git_addon}\n\$ "
     fi
-    unset arrow
-    unset git_branch
-    unset git_addon
-    unset lasterr
 }
-export PROMPT_COMMAND=prompt_cmd
+export PROMPT_COMMAND=__prompt_cmd
 
 # Makes duplicate tab work in windows terminal
 if [ "$(uname -o)" = "Msys"  ]; then
@@ -91,22 +76,32 @@ fi
 ################################################################################
 # Default Aliases / Functions
 ################################################################################
-if [ "$(__color_prompt)" = yes ]; then
-    alias ls='ls --color=auto'
-    alias la='ls -A --color=auto'
-    alias ll='ls -alF --color=auto'
+# Color settings for ls
+if [ "$(__use_colors)" = yes ]; then
+    alias ls='ls --color=always'
+    alias la='ls -A --color=always'
+    alias ll='ls -alF --color=always'
 else
-    alias la='ls -A'
-    alias ll='ls -alF'
+    alias ls='ls --color=never'
+    alias la='ls -A --color=never'
+    alias ll='ls -alF --color=never'
 fi
-if [ "$(uname -o)" = "Msys" ]; then
-    open() {
-        target=$(echo -n "$1" | sed 's#/#\\#g')
-        start "" "$target"
-    }
-elif [ "$(uname -o)" != "Darwin" ]; then
-    open(){
-        nohup xdg-open "$*" > /dev/null 2>&1
-    }
-fi
+
+# open function like macos
+case "$(__os_name)" in
+    "Msys") 
+        open() {
+            target=$(echo -n "$1" | sed 's#/#\\#g')
+            start "" "$target"
+        }
+    ;;
+    "Darwin")
+        # Not needed b/c already exists on macos
+    ;;
+    *)
+        open(){
+            nohup xdg-open "$*" > /dev/null 2>&1
+        }
+    ;;
+esac
 ################################################################################
