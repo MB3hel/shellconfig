@@ -11,13 +11,20 @@ DIR=$(dirname "$BASH_SOURCE")
 ################################################################################
 # Determine if to use colors
 ################################################################################
-case "$TERM" in
-    xterm-color) color_prompt=yes;;
-    xterm-256color) color_prompt=yes;;
-esac
-if [ "$color_prompt" = yes ]; then
+function __color_prompt {
+    case "$TERM" in
+        xterm-color) printf "yes";;
+        xterm-256color) printf "yes";;
+        *) printf "no";;
+    esac
+}
+
+if [ "$(__color_prompt)" = yes ]; then
     export CLICOLOR=1
+else
+    export CLICOLOR=0
 fi
+color_prompt=no
 ################################################################################
 
 ################################################################################
@@ -27,14 +34,21 @@ fi
 # Using instead of git-prompt.sh from git itself because this is "faster"
 # meaning requires fewer git commands. This is important on windows w/ MSYS2.
 function __git_is_dirty {
-    [[ -z $(git status --porcelain 2> /dev/null) ]] || echo " \033[01;31m\]✗\[\033[00m\]"
+    if [ "$(__color_prompt)" = yes ]; then
+        [[ -z $(git status --porcelain 2> /dev/null) ]] || echo " \033[01;31m\]✗\[\033[00m\]"
+    else
+        [[ -z $(git status --porcelain 2> /dev/null) ]] || echo " ✗"
+    fi
 }
 function __git_branch_name {
     git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/"
 }
 
 function prompt_cmd() {
-    if [ $? -ne 0 ]; then
+    lasterr=$?
+    if [ "$(__color_prompt)" != yes ]; then
+        arrow="→"
+    elif [ $lasterr -ne 0 ]; then
         arrow="\[\033[01;91m\]→\[\033[00m\]"
     else
         arrow="\[\033[01;92m\]→\[\033[00m\]"
@@ -43,10 +57,14 @@ function prompt_cmd() {
     git_addon=""
     if [ ! -z "$git_branch" ]; then
         git_dirty="$(__git_is_dirty)"
-        git_addon=" \[\033[01;36m\]git:(${git_branch}\[\033[00m\]${git_dirty}\[\033[01;36m\])\[\033[00m\]"
+        if [ "$(__color_prompt)" = yes ]; then
+            git_addon=" \[\033[01;36m\]git:(${git_branch}\[\033[00m\]${git_dirty}\[\033[01;36m\])\[\033[00m\]"
+        else
+            git_addon=" git:(${git_branch}${git_dirty})"
+        fi
         unset git_dirty
     fi
-    if [ "$color_prompt" = yes ]; then
+    if [ "$(__color_prompt)" = yes ]; then
         # Different color for windows system (makes it easier to distinguish from WSL)
         if [ "$MSYSTEM" = "MSYS2" ]; then
             export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[00;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]${git_addon}\n\$ "
@@ -54,11 +72,12 @@ function prompt_cmd() {
             export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]${git_addon}\n\$ "
         fi
     else
-        export PS1='NOCOLOR $'
+        export PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \u@\h:\w${git_addon}\n\$ "
     fi
     unset arrow
     unset git_branch
     unset git_addon
+    unset lasterr
 }
 export PROMPT_COMMAND=prompt_cmd
 
@@ -72,10 +91,14 @@ fi
 ################################################################################
 # Default Aliases / Functions
 ################################################################################
-alias ls='ls --color=auto'
-alias la='ls -A --color=auto'
-alias ll='ls -alF --color=auto'
-
+if [ "$(__color_prompt)" = yes ]; then
+    alias ls='ls --color=auto'
+    alias la='ls -A --color=auto'
+    alias ll='ls -alF --color=auto'
+else
+    alias la='ls -A'
+    alias ll='ls -alF'
+fi
 if [ "$(uname -o)" = "Msys" ]; then
     open() {
         target=$(echo -n "$1" | sed 's#/#\\#g')
