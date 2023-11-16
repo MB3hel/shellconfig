@@ -43,15 +43,17 @@ unset SED
 # SSH agent management (enabled if ~/.shell_manage_ssh-agent exists)
 ################################################################################
 
-if [ -f "$HOME/.shell_manage_ssh-agent" ]; then
+# On windows, SSH_AUTH_SOCK isn't used
+# Just assume ssh agent is running as a service on windows
+# On other systems, launch an agent if SSH_AUTH_SOCK is not set
+if [ "$(uname -o)" != "Msys" ]; then
+    __ssh_agent_env=~/.ssh/agent.env
 
-    env=~/.ssh/agent.env
-
-    agent_load_env () { test -f "$env" && . "$env" >| /dev/null ; }
+    agent_load_env () { test -f "$__ssh_agent_env" && . "$__ssh_agent_env" >| /dev/null ; }
 
     agent_start () {
-        (umask 077; ssh-agent >| "$env")
-        . "$env" >| /dev/null ; }
+        (umask 077; ssh-agent >| "$__ssh_agent_env")
+        . "$__ssh_agent_env" >| /dev/null ; }
 
     agent_load_env
 
@@ -60,13 +62,9 @@ if [ -f "$HOME/.shell_manage_ssh-agent" ]; then
 
     if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
         agent_start
-        ssh-add
-    elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
-        ssh-add
     fi
 
-    unset env
-
+    unset __ssh_agent_env
 fi
 
 ################################################################################
