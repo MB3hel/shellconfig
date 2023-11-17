@@ -23,6 +23,7 @@ cd ~/.shellconfig
 - Extract the tarball to `C:\Users\USERNAME\standalonemsys2`
 - Launch `msys2.exe`
 - Install zsh using `pacman -S zsh`
+- Edit `/etc/nsswitch.conf` to set `db_home` to `windows`
 - Clone and install this repo using commands in the Linux / Unix section
 - You probably want `%USERPROFILE%\bin` in your path
 - Add windows terminal profiles
