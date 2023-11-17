@@ -32,50 +32,65 @@ fi
 ################################################################################
 # Prompt
 ################################################################################
-__prompt_cmd () {
-    local lasterr=$?
+__prompt_git_label () {
     local colors=$(__use_colors)
-
-    # Arrow at start of prompt
-    local arrow="➜"
-    if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
-        arrow="\[\033[01;31m\]➜\[\033[00m\]"
-    elif [ $colors = yes ]; then
-        arrow="\[\033[01;32m\]➜\[\033[00m\]"
-    fi
-
-    # Git branch and status
     local git_branch="$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")"
     local git_str=""
     local git_addon=""
     if [ ! -z "$git_branch" ]; then
         local git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || echo " ✗")"
         if [ $colors = yes ]; then
-            git_dirty="\[\033[01;31m\]${git_dirty}\[\033[00m\]"
-            git_addon=" \[\033[01;36m\]git:(${git_branch}\[\033[00m\]${git_dirty}\[\033[01;36m\])\[\033[00m\]"
+            git_dirty="\e[01;31m${git_dirty}\e[00m"
+            git_addon=" \e[01;36mgit:(${git_branch}\e[00m${git_dirty}\e[01;36m)\e[00m"
         else
             git_addon=" git:(${git_branch}${git_dirty})"
         fi
     fi
-
-    # Main prompt
-    if [ "$colors" = yes ]; then
-        # Different color for windows system (makes it easier to distinguish from WSL)
-        if [ "$(__os_name)" = "Msys" ]; then
-            PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[00;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]${git_addon}\n\$ "
-        else
-            PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]${git_addon}\n\$ "
-        fi
-    else
-        PS1="\n${debian_chroot:+($debian_chroot)}${arrow} \u@\h:\W${git_addon}\n\$ "
-    fi
+    printf "$git_addon"
 }
-PROMPT_COMMAND=__prompt_cmd
 
-# Makes duplicate tab work in windows terminal
-if [ "$(uname -o)" = "Msys"  ]; then
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
+# Note: anything printed here gets printed BEFORE
+# Additions by external programs such as python's venv prefix
+__prompt_cmd_func () {
+    # Can only get $? correctly for the first function that is a prompt command
+    local lasterr=$?
+    local colors=$(__use_colors)
+
+    # Makes duplicate tab work in windows terminal
+    if [ "$(__os_name)" = "Msys"  ]; then
+        PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
+    fi
+
+    # Newline before prompt
+    printf "\n"
+
+    # Arrow at start of prompt
+    local arrow="➜"
+    if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
+        arrow="\e[01;31m➜\e[0m"
+    elif [ $colors = yes ]; then
+        arrow="\e[01;32m➜\e[0m"
+    fi
+    printf "$arrow"
+}
+
+# Main prompt
+# Things here should be after whatever external programs append
+# to the prompt (eg python venv)
+if [ "$(__use_colors)" = yes ]; then
+    # Different color for windows system (makes it easier to distinguish from WSL)
+    if [ "$(__os_name)" = "FAKE" ]; then
+        PS1="${debian_chroot:+($debian_chroot)}\[\e[00;33m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$(__prompt_git_label)"
+        PS1="$PS1"$'\n$ '
+    else
+        PS1="${debian_chroot:+($debian_chroot)}\[\e[00;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$(__prompt_git_label)"
+        PS1="$PS1"$'\n$ '
+    fi
+else
+    # TODO
+    true
 fi
+PROMPT_COMMAND=__prompt_cmd_func
 ################################################################################
 
 
