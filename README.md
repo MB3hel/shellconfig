@@ -19,11 +19,13 @@ cd ~/.shellconfig
 
 *Note: This is done using MSYS2. It is done using an isolated install of MSYS2. You should probably leave this MSSY2 install to a base one with only base utils. Installing python, git, etc in MSYS2 is discouraged. The idea is to use native windows tools (installed using scoop or other means) from a bash/zsh shell. Using the standalone MSYS2 used by this for anything else is discouraged. If you need MSYS2 to build software, install it normally (installer, scoop, etc) and use the standard install's environments for that.*
 
+- Install git on windows (natively on windows)
 - Download MSYS2 base package tarball from latest release on [GitHub](https://github.com/msys2/msys2-installer/releases)
 - Extract the tarball to `C:\Users\USERNAME\standalonemsys2`
 - Launch `msys2.exe`
 - Install zsh using `pacman -S zsh`
 - Edit `/etc/nsswitch.conf` to set `db_home` to `windows`
+- Edit `msys2.ini` and set `MSYS2_PATH_TYPE=inherit`
 - Close and re-open `msys2.exe`
 - Clone and install this repo using commands in the Linux / Unix section
 - You probably want `%USERPROFILE%\bin` in your path
