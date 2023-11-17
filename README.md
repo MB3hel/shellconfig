@@ -4,7 +4,7 @@ My Unix shell configurations using [Oh My Zsh](https://ohmyz.sh/) and [Oh My Bas
 
 
 
-## Install
+## Install Linux, macOS, BSD
 
 - Linux prerequisites: zsh and curl
 - macOS prerequisites: brew and newer bash installed from brew
@@ -14,6 +14,36 @@ git clone git@github.com:MB3hel/shellconfig.git ~/.shellconfig
 cd ~/.shellconfig
 ./install.sh
 ```
+
+## Install Windows
+
+*Note: This is done using MSYS2. It is done using an isolated install of MSYS2. You should probably leave this MSSY2 install to a base one with only base utils. Installing python, git, etc in MSYS2 is discouraged. The idea is to use native windows tools (installed using scoop or other means) from a bash/zsh shell. Using the standalone MSYS2 used by this for anything else is discouraged. If you need MSYS2 to build software, install it normally (installer, scoop, etc) and use the standard install's environments for that.*
+
+- Download MSYS2 base package tarball from latest release on [GitHub](https://github.com/msys2/msys2-installer/releases)
+- Extract the tarball to `C:\Users\USERNAME\standalonemsys2`
+- Launch `msys2.exe`
+- Install zsh using `pacman -S zsh`
+- Clone and install this repo using commands in the Linux / Unix section
+- You probably want `%USERPROFILE%\bin` in your path
+- Add windows terminal profiles
+    ```
+    {
+        "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37a}",
+        "commandline": "%USERPROFILE%\\bin\\bash.exe",
+        "name": "bash (native)",
+        "startingDirectory": "%USERPROFILE%",
+        "bellStyle": "none",
+        "closeOnExit": "always"
+    },
+    {
+        "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37b}",
+        "commandline": "%USERPROFILE%\\bin\\zsh.exe",
+        "name": "zsh (native)",
+        "startingDirectory": "%USERPROFILE%",
+        "bellStyle": "none",
+        "closeOnExit": "always"
+    }
+    ```
 
 ## Shell Startup Files
 
