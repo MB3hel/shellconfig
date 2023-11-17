@@ -41,7 +41,7 @@ __prompt_git_label () {
         local git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || echo " ✗")"
         if [ $colors = yes ]; then
             git_dirty="\e[01;31m${git_dirty}\e[00m"
-            git_addon=" \e[01;36mgit:(${git_branch}\e[00m${git_dirty}\e[01;36m)\e[00m"
+            git_addon=" \e[01;36m(${git_branch}\e[00m${git_dirty}\e[01;36m)\e[00m"
         else
             git_addon=" git:(${git_branch}${git_dirty})"
         fi
@@ -71,7 +71,7 @@ __prompt_cmd_func () {
     elif [ $colors = yes ]; then
         arrow="\e[01;32m➜\e[0m"
     fi
-    printf "$arrow"
+    printf "$arrow "
 }
 
 # Main prompt
