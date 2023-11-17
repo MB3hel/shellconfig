@@ -26,10 +26,11 @@ fi
 # Tab completion
 ################################################################################
 # System provided completions
-source /etc/profile.d/bash_completion.sh
-
-# Msys2 won't have git completions b/c git is not installed using MSYS2
-# TODO
+if [ -f /etc/profile.d/bash_completion.sh ]; then
+    source /etc/profile.d/bash_completion.sh
+elif [ -f /usr/local/share/bash-completion/bash_completion.sh ]; then
+    source /usr/local/share/bash-completion/bash_completion.sh
+fi
 ################################################################################
 
 ################################################################################
@@ -106,7 +107,7 @@ fi
 case "$(__os_name)" in
     "Msys") 
         open() {
-            target=$(echo -n "$1" | sed 's#/#\\#g')
+            target=$(cygpath -w "$1")
             start "" "$target"
         }
     ;;

@@ -136,7 +136,7 @@ fi
 case "$(__os_name)" in
     "Msys") 
         open() {
-            target=$(echo -n "$1" | sed 's#/#\\#g')
+            target=$(cygpath -w "$1")
             start "" "$target"
         }
     ;;
