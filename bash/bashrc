@@ -106,15 +106,21 @@ fi
 ################################################################################
 # Default Aliases / Functions
 ################################################################################
-# Color settings for ls
+# Color settings for commands
 if [ "$(__use_colors)" = yes ]; then
     alias ls='ls --color=always'
     alias la='ls -A --color=always'
     alias ll='ls -alF --color=always'
+    alias grep='grep --color=always'
+    alias fgrep='fgrep --color=always'
+    alias egrep='egrep --color=always'
 else
     alias ls='ls --color=never'
     alias la='ls -A --color=never'
     alias ll='ls -alF --color=never'
+    alias grep='grep --color=never'
+    alias fgrep='fgrep --color=never'
+    alias egrep='egrep --color=never'
 fi
 
 # open function like macos
