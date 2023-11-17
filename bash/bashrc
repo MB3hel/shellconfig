@@ -60,32 +60,28 @@ __prompt_arrow () {
     local colors=$(__use_colors)
     local arrow="→"
     if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
-        arrow="\001\e[01;31m\002➜\001\e[00m\002"
+        arrow="\001\e[01;31m\002${arrow}\001\e[00m\002"
     elif [ $colors = yes ]; then
-        arrow="\001\e[01;32m\002➜\001\e[00m\002"
+        arrow="\001\e[01;32m\002${arrow}\001\e[00m\002"
     fi
     printf "$arrow"
-}
-
-__prompt_cmd_func () {
-    # Makes duplicate tab work in windows terminal
-    if [ "$(__os_name)" = "Msys"  ]; then
-        # printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"
-        true
-    fi
 }
 
 if [ "$(__use_colors)" = yes ]; then
     # Different color for windows system (makes it easier to distinguish from WSL)
     if [ "$(__os_name)" = "Msys" ]; then
-        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\[\e[00;33m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$(__prompt_git_label)\$ "
+        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\[\e[01;33m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$(__prompt_git_label)\$ "
     else
-        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\[\e[00;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$(__prompt_git_label)\$ "
+        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\[\e[01;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$(__prompt_git_label)\$ "
     fi
 else
     PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\u@\h:\W]\$(__prompt_git_label)\$ "
 fi
-PROMPT_COMMAND=__prompt_cmd_func
+
+if [ "$(uname -o)" = "Msys"  ]; then
+    # Required for duplicate tab in windows terminal
+    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
+fi
 ################################################################################
 
 

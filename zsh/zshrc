@@ -52,49 +52,61 @@ fi
 ################################################################################
 # Prompt
 ################################################################################
-__prompt_cmd () {
-    local lasterr=$?
+# Notes on colors:
+#   \e = \033 (also works in printf, etc)
+#   \[ = \001 (ONLY works in PS1)
+#   \] = \002 (ONLY works in PS1)
+#   colors format: \e[00;31m
+#   end color: \e[00m
+#
+#   In zsh, usually %B/%F{color_name}   and %f%b are used instead
+#   however, raw escapes can be used if they are inside %{ %} to allow readline to determine
+#   how long the prompt is.
+#   Thus, for substitutions in prompt, printf must output %{COLOR_CODE_HERE%}. Note that % is
+#   format escape in prinf though, so have to use %% for literal '%' to be output
+
+# Enables paremeter expansion / substitution in prompt
+setopt PROMPT_SUBST
+
+__prompt_git_label () {
     local colors=$(__use_colors)
-
-    # Arrow at start of prompt
-    local arrow="➜"
-    if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
-        arrow="%F{red}➜%f"
-    elif [ $colors = yes ]; then
-        arrow="%F{green}➜%f"
-    fi
-
-    # Git branch and status
     local git_branch="$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")"
-    local git_str=""
-    local git_addon=""
+    local git_dirty=""
     if [ ! -z "$git_branch" ]; then
-        local git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || echo " ✗")"
+        git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
         if [ $colors = yes ]; then
-            git_dirty="%F{red}${git_dirty}%f"
-            git_addon=" %F{cyan}git:(${git_branch}%f${git_dirty}%F{cyan})%f"
+            printf "(%%{\e[01;36m%%}${git_branch}%%{\e[00m%%}%%{\e[01;31m%%}${git_dirty}%%{\e[00m%%})"
         else
-            git_addon=" git:(${git_branch}${git_dirty})"
+            printf "(${git_branch}${git_dirty})"
         fi
-    fi
-
-    # Main prompt
-    local NL=$'\n'
-    if [ "$colors" = yes ]; then
-        # Different color for windows system (makes it easier to distinguish from WSL)
-        if [ "$(__os_name)" = "Msys" ]; then
-            PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %F{yellow}%n@%m%f:%F{blue}%1~%f${git_addon}${NL}%% "
-        else
-            PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %F{green}%n@%m%f:%F{blue}%1~%f${git_addon}${NL}%% "
-        fi
-    else
-        PS1="${NL}${debian_chroot:+($debian_chroot)}${arrow} %n@%m:%1~${git_addon}${NL}%% "
     fi
 }
-precmd_functions+=(__prompt_cmd)
 
-# Makes duplicate tab work in windows terminal
+__prompt_arrow () {
+    local lasterr=$?
+    local colors=$(__use_colors)
+    local arrow="→"
+    if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
+        arrow="%%{\e[01;31m%%}${arrow}%%{\e[00m%%}"
+    elif [ $colors = yes ]; then
+        arrow="%%{\e[01;32m%%}${arrow}%%{\e[00m%%}"
+    fi
+    printf "$arrow"
+}
+
+if [ "$(__use_colors)" = yes ]; then
+    # Different color for windows system (makes it easier to distinguish from WSL)
+    if [ "$(__os_name)" = "Msys" ]; then
+        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%B%F{yellow}%n@%m%f%b:%B%F{blue}%1~%f%b]\$(__prompt_git_label)%% "
+    else
+        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%B%F{green}%n@%m%f%b:%B%F{blue}%1~%f%b]\$(__prompt_git_label)%% "
+    fi
+else
+    PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%n@%m:%1~]\$(__prompt_git_label)%% "
+fi
+
 if [ "$(uname -o)" = "Msys"  ]; then
+    # Required for duplicate tab in windows terminal
     keep_current_path() {
         printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"
     }
