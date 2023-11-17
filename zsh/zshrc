@@ -22,10 +22,11 @@ bindkey "^[[B" down-line-or-beginning-search
 ################################################################################
 # Tab completion
 ################################################################################
-# From git source tree contrib/completion directory
-zstyle ':completion:*:*:git:*' script "$DIR/../bash/git-completion.bash"
+# Load compinit module
 autoload -Uz compinit && compinit
-autoload -U colors && colors
+
+# Apply Oh-My-Zsh style completion
+source "$DIR"/completion.zsh
 ################################################################################
 
 ################################################################################
@@ -42,6 +43,8 @@ __os_name () {
     uname -o 2> /dev/null || printf "Unknown"
 }
 if [ "$(__use_colors)" = yes ]; then
+    autoload -U colors && colors
+
     # Support .dircolors file in home
     if command -v dircolors &> /dev/null; then
         test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
