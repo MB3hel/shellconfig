@@ -31,6 +31,20 @@ if [ -f /etc/profile.d/bash_completion.sh ]; then
 elif [ -f /usr/local/share/bash-completion/bash_completion.sh ]; then
     source /usr/local/share/bash-completion/bash_completion.sh
 fi
+
+# Git completions not provided by MSYS2 on windows b/c it's not MSYS2 git.
+if [ "$(__os_name)" = "Msys" ]; then
+    git_exe="$(which git 2> /dev/null)"
+    if [[ "$git_exe" = *"/scoop/"* ]]; then
+        git_exe="$(scoop which git)"        
+    fi
+    git_dir="$(cygpath -u "$(dirname "$(dirname "$git_exe")")")"
+    git_dir="$(echo "$git_dir" | sed 's#~#'"$HOME"'#g')"
+    completion_file="$(find "$git_dir/" | grep git-completion.bash)"
+    if [ ! -z "$completion_file" ]; then
+        source "$completion_file"
+    fi
+fi
 ################################################################################
 
 ################################################################################
