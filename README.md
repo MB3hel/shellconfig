@@ -48,6 +48,7 @@ cd ~/.shellconfig
         "closeOnExit": "always"
     }
     ```
+- As a note, any process started from one of these shells on windows will inherit the MSYS2 environment. If this is a problem, use `winlaunch command`.
 
 ## Shell Startup Files
 
