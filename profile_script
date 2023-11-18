@@ -64,15 +64,9 @@ fi
 # With MSYS2, need to restore some variables to original state before 
 # launching windows shells. Otherwise, things will break.
 if [ "$(uname -o)" = "Msys" ]; then
-    __winshell () {
+    winlaunch () {
         PATH="$ORIGINAL_PATH" TMP="$ORIGINAL_TMP" TEMP="$ORIGINAL_TEMP" "$@"
     }
-    alias cmd="__winshell cmd"
-    alias cmd.exe="__winshell cmd"
-    alias powershell="__winshell powershell"
-    alias powershell.exe="__winshell powershell"
-    alias pwsh="__winshell pwsh"
-    alias pwsh.exe="__winshell pwsh"
 fi
 ################################################################################
 
