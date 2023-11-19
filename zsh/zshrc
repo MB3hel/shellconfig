@@ -139,6 +139,14 @@ case "$(__os_name)" in
         # Not needed b/c already exists on macos
     ;;
     *)
+        if type "wslpath" > /dev/null 2>&1; then
+            # Linux via WSL
+            openwin(){
+                target=$(wslpath -w "$1")
+                cmd.exe /c start "" "$target" > /dev/null 2>&1
+            }
+        fi
+        # Linux, FreeBSD, etc
         open(){
             nohup xdg-open "$*" > /dev/null 2>&1
         }
