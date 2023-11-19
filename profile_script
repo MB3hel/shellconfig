@@ -43,12 +43,10 @@ unset SED
 # SSH agent management (enabled if ~/.shell_manage_ssh-agent exists)
 ################################################################################
 
-# On windows, SSH_AUTH_SOCK isn't used
-# Just assume ssh agent is running as a service on windows
-# On other systems, launch an agent if SSH_AUTH_SOCK is not set
+# Launch an agent if SSH_AUTH_SOCK is not set
 # If SSH_AUTH_SOCK is set before the shell starts, assume it's environment
-# such as Gnome, or macOS, etc
-if [ "$(uname -o)" != "Msys" ] && [ ! "$SSH_AUTH_SOCK" ]; then
+# managed ssh agent such as Gnome, or macOS, etc
+if [ ! "$SSH_AUTH_SOCK" ]; then
     # Launch agent now
     eval `ssh-agent` > /dev/null
 
@@ -56,18 +54,6 @@ if [ "$(uname -o)" != "Msys" ] && [ ! "$SSH_AUTH_SOCK" ]; then
     trap 'ssh-agent -k > /dev/null 2>&1' EXIT
 fi
 
-################################################################################
-
-################################################################################
-# Aliases
-################################################################################
-# With MSYS2, need to restore some variables to original state before 
-# launching windows shells. Otherwise, things will break.
-if [ "$(uname -o)" = "Msys" ]; then
-    winlaunch () {
-        PATH="$ORIGINAL_PATH" TMP="$ORIGINAL_TMP" TEMP="$ORIGINAL_TEMP" "$@"
-    }
-fi
 ################################################################################
 
 ################################################################################

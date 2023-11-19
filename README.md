@@ -1,10 +1,9 @@
 # Shell Config
 
-My Unix shell configurations using [Oh My Zsh](https://ohmyz.sh/) and [Oh My Bash](https://ohmybash.nntoan.com/).
+My Unix shell configurations.
 
 
-
-## Install Linux, macOS, BSD
+## Install
 
 - Linux prerequisites: zsh and curl
 - macOS prerequisites: brew and newer bash installed from brew
@@ -14,41 +13,6 @@ git clone git@github.com:MB3hel/shellconfig.git ~/.shellconfig
 cd ~/.shellconfig
 ./install.sh
 ```
-
-## Install Windows
-
-*Note: This is done using MSYS2. It is done using an isolated install of MSYS2. You should probably leave this MSSY2 install to a base one with only base utils. Installing python, git, etc in MSYS2 is discouraged. The idea is to use native windows tools (installed using scoop or other means) from a bash/zsh shell. Using the standalone MSYS2 used by this for anything else is discouraged. If you need MSYS2 to build software, install it normally (installer, scoop, etc) and use the standard install's environments for that.*
-
-- Install git on windows (natively on windows)
-- Download MSYS2 base package tarball from latest release on [GitHub](https://github.com/msys2/msys2-installer/releases)
-- Extract the tarball to `C:\Users\USERNAME\standalonemsys2`
-- Launch `msys2.exe`
-- Install zsh using `pacman -S zsh`
-- Edit `/etc/nsswitch.conf` to set `db_home` to `windows`
-- Edit `msys2.ini` and set `MSYS2_PATH_TYPE=inherit`
-- Close and re-open `msys2.exe`
-- Clone and install this repo using commands in the Linux / Unix section
-- You probably want `%USERPROFILE%\bin` in your path
-- Add windows terminal profiles
-    ```
-    {
-        "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37a}",
-        "commandline": "%USERPROFILE%\\bin\\bash.exe",
-        "name": "bash (native)",
-        "startingDirectory": "%USERPROFILE%",
-        "bellStyle": "none",
-        "closeOnExit": "always"
-    },
-    {
-        "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37b}",
-        "commandline": "%USERPROFILE%\\bin\\zsh.exe",
-        "name": "zsh (native)",
-        "startingDirectory": "%USERPROFILE%",
-        "bellStyle": "none",
-        "closeOnExit": "always"
-    }
-    ```
-- As a note, any process started from one of these shells on windows will inherit the MSYS2 environment. If this is a problem, use `winlaunch command`.
 
 ## Shell Startup Files
 
@@ -119,9 +83,7 @@ Some notes about login vs interactive shells
 
 ## SSH Agent
 
-On Windows, the SSH agent runs as a system service with a constant pipe. As such, `SSH_AUTH_SOCK` is not used by OpenSSH on windows. Thus, these scripts do not manage an SSH agent on windows. It is always assumed that the OS has one running as a system service.
-
-For other systems (macOS, Linux, BSD) these scripts *may* launch / manage an SSH agent. If the environment defines `SSH_AUTH_SOCK` before starting a login shell (before `~/.profile` is sourced), these scripts will not launch / manage an agent. This occurs on macOS and Liunx when logging into the GNOME desktop.
+These scripts *may* launch / manage an SSH agent. If the environment defines `SSH_AUTH_SOCK` before starting a login shell (before `~/.profile` is sourced), these scripts will not launch / manage an agent. This occurs on macOS and Liunx when logging into the GNOME desktop.
 
 If the environment does not provide an SSH agent, `SSH_AUTH_SOCK` will not be defined when `~/.profile` is sourced. In this case, the shell manages an SSH agent. This occurs on Linux / BSD with console logins, Xfce sessions, or other contexts in which the environment does not provide an SSH agent.
 

@@ -16,17 +16,3 @@ cp "$DIR/template/bashrc.template" ~/.bashrc
 cp "$DIR/template/profile.template" ~/.profile
 cp "$DIR/template/zprofile.template" ~/.zprofile
 cp "$DIR/template/zshrc.template" ~/.zshrc
-
-# MSYS2 specific things for windows
-if [ "$(uname -o)" = "Msys"  ]; then
-    if [ ! -d ~/bin ]; then
-        mkdir ~/bin
-    fi
-    cp "$DIR"/msys2launchers/bin/sh.exe "$HOME"/bin/
-    cp "$DIR"/msys2launchers/bin/bash.exe "$HOME"/bin/
-    cp "$DIR"/msys2launchers/bin/zsh.exe "$HOME"/bin/
-
-    # This defines PROMPT which then gets exported
-    # making a mess of things if launching cmd from zsh
-    mv /etc/zsh/zshenv /etc/zsh/zshenv.bak 2> /dev/null
-fi

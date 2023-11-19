@@ -31,20 +31,6 @@ if [ -f /etc/profile.d/bash_completion.sh ]; then
 elif [ -f /usr/local/share/bash-completion/bash_completion.sh ]; then
     source /usr/local/share/bash-completion/bash_completion.sh
 fi
-
-# Git completions not provided by MSYS2 on windows b/c it's not MSYS2 git.
-if [ "$(__os_name)" = "Msys" ]; then
-    git_exe="$(which git 2> /dev/null)"
-    if [[ "$git_exe" = *"/scoop/"* ]]; then
-        git_exe="$(scoop which git)"        
-    fi
-    git_dir="$(cygpath -u "$(dirname "$(dirname "$git_exe")")")"
-    git_dir="$(echo "$git_dir" | sed 's#~#'"$HOME"'#g')"
-    completion_file="$(find "$git_dir/" | grep git-completion.bash)"
-    if [ ! -z "$completion_file" ]; then
-        source "$completion_file"
-    fi
-fi
 ################################################################################
 
 ################################################################################
@@ -86,20 +72,11 @@ __prompt_arrow () {
 }
 
 if [ "$(__use_colors)" = yes ]; then
-    # Different color for windows system (makes it easier to distinguish from WSL)
-    if [ "$(__os_name)" = "Msys" ]; then
-        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\[\e[01;33m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$(__prompt_git_label)\$ "
-    else
-        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\[\e[01;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$(__prompt_git_label)\$ "
-    fi
+    PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\[\e[01;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$(__prompt_git_label)\$ "
 else
     PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[\u@\h:\W]\$(__prompt_git_label)\$ "
 fi
 
-if [ "$(uname -o)" = "Msys"  ]; then
-    # Required for duplicate tab in windows terminal
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
-fi
 if type "wslpath" > /dev/null; then
     # Required for duplicate tab in windows terminal
     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
@@ -129,12 +106,6 @@ fi
 
 # open function like macos
 case "$(__os_name)" in
-    "Msys") 
-        open() {
-            target=$(cygpath -w "$1")
-            start "" "$target"
-        }
-    ;;
     "Darwin")
         # Not needed b/c already exists on macos
     ;;

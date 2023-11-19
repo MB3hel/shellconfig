@@ -98,23 +98,11 @@ __prompt_arrow () {
 }
 
 if [ "$(__use_colors)" = yes ]; then
-    # Different color for windows system (makes it easier to distinguish from WSL)
-    if [ "$(__os_name)" = "Msys" ]; then
-        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%B%F{yellow}%n@%m%f%b:%B%F{blue}%1~%f%b]\$(__prompt_git_label)%% "
-    else
-        PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%B%F{green}%n@%m%f%b:%B%F{blue}%1~%f%b]\$(__prompt_git_label)%% "
-    fi
+    PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%B%F{green}%n@%m%f%b:%B%F{blue}%1~%f%b]\$(__prompt_git_label)%% "
 else
     PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%n@%m:%1~]\$(__prompt_git_label)%% "
 fi
 
-if [ "$(uname -o)" = "Msys"  ]; then
-    # Required for duplicate tab in windows terminal
-    keep_current_path() {
-        printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"
-    }
-    precmd_functions+=(keep_current_path) 
-fi
 if type "wslpath" > /dev/null; then
     # Required for duplicate tab in windows terminal
     keep_current_path() {
@@ -147,12 +135,6 @@ fi
 
 # open function like macos
 case "$(__os_name)" in
-    "Msys") 
-        open() {
-            target=$(cygpath -w "$1")
-            start "" "$target"
-        }
-    ;;
     "Darwin")
         # Not needed b/c already exists on macos
     ;;
