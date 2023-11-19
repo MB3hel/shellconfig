@@ -72,6 +72,7 @@ This repo provides "base files" for each of the following.
 
 Some notes about login vs interactive shells
 
+- WSL starts a login shell (when using `wsl -d DistroName`)
 - Starting a terminal with bash / zsh using MSYS2 on windows is a login interactive shell
 - macOS: Terminal app runs shells as login and interactive.
 - Linux Desktop:
