@@ -100,6 +100,10 @@ if [ "$(uname -o)" = "Msys"  ]; then
     # Required for duplicate tab in windows terminal
     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
 fi
+if type "wslpath" > /dev/null; then
+    # Required for duplicate tab in windows terminal
+    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
+fi
 ################################################################################
 
 
