@@ -43,14 +43,14 @@ unset SED
 # SSH agent management (enabled if ~/.shell_manage_ssh-agent exists)
 ################################################################################
 
-# Launch an agent if SSH_AUTH_SOCK is not set
+# Launch an agent if SSH_AUTH_SOCK is not set or if the agent is inactive (2)
 # If SSH_AUTH_SOCK is set before the shell starts, assume it's environment
 # managed ssh agent such as Gnome, or macOS, etc
-if [ ! "$SSH_AUTH_SOCK" ]; then
-    # Launch agent now
-    eval `ssh-agent` > /dev/null
+if [ ! "$SSH_AUTH_SOCK" ] || [ $(ssh-add -l >| /dev/null 2>&1; echo $?) = 2 ]; then
+    # Luanch agent now
+     eval `ssh-agent` > /dev/null
 
-    # Kill SSH agent on logout
+    # Kill SSH agent on logout of this shell
     trap 'ssh-agent -k > /dev/null 2>&1' EXIT
 fi
 
