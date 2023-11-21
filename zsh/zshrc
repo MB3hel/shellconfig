@@ -118,12 +118,12 @@ fi
 ################################################################################
 # Color settings for commands
 if [ "$(__use_colors)" = yes ]; then
-    alias ls='ls --color=always'
-    alias la='ls -A --color=always'
-    alias ll='ls -alF --color=always'
-    alias grep='grep --color=always'
-    alias fgrep='fgrep --color=always'
-    alias egrep='egrep --color=always'
+    alias ls='ls --color=auto'
+    alias la='ls -A --color=auto'
+    alias ll='ls -alF --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
 else
     alias ls='ls --color=never'
     alias la='ls -A --color=never'
