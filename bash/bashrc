@@ -1,15 +1,10 @@
-# Enable the subsequent settings only in interactive sessions
-# case $- in
-#     *i*) ;;
-#       *) return;;
-# esac
 
 # Path to your oh-my-bash installation.
 export OSH="$HOME/.oh-my-bash"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-bash is loaded.
-OSH_THEME="minimal"
+OSH_THEME="custom"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -58,71 +53,25 @@ OSH_THEME="minimal"
 # OMB_DEFAULT_ALIASES="check"
 
 # Would you like to use another custom folder than $OSH/custom?
-# OSH_CUSTOM=/path/to/new-custom-folder
+OSH_CUSTOM=$HOME/.shellconfig/bash/custom/
 
 # To disable the uses of "sudo" by oh-my-bash, please set "false" to
 # this variable.  The default behavior for the empty value is "true".
 OMB_USE_SUDO=true
 
-# Which completions would you like to load? (completions can be found in ~/.oh-my-bash/completions/*)
-# Custom completions may be added to ~/.oh-my-bash/custom/completions/
-# Example format: completions=(ssh git bundler gem pip pip3)
-# Add wisely, as too many completions slow down shell startup.
+# Completions to load
 completions=(
     git
     ssh
 )
 
-# Which aliases would you like to load? (aliases can be found in ~/.oh-my-bash/aliases/*)
-# Custom aliases may be added to ~/.oh-my-bash/custom/aliases/
-# Example format: aliases=(vagrant composer git-avh)
-# Add wisely, as too many aliases slow down shell startup.
-aliases=()
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-bash/plugins/*)
-# Custom plugins may be added to ~/.oh-my-bash/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
+# Active plugins
 plugins=(
     git
 )
 
-# Which plugins would you like to conditionally load? (plugins can be found in ~/.oh-my-bash/plugins/*)
-# Custom plugins may be added to ~/.oh-my-bash/custom/plugins/
-# Example format: 
-#  if [ "$DISPLAY" ] || [ "$SSH" ]; then
-#      plugins+=(tmux-autoattach)
-#  fi
-
+# Load Oh-My-Bash
 source "$OSH"/oh-my-bash.sh
-
-# User configuration
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-bash libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-bash
-# users are encouraged to define aliases within the OSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias bashconfig="mate ~/.bashrc"
-# alias ohmybash="mate ~/.oh-my-bash"
 
 
 # WSL specific things
@@ -171,24 +120,6 @@ if [ "$OSH_THEME" = "minimal" ]; then
     _omb_util_add_prompt_command add_arrow_to_min
 fi
 
-# ssh connections
-if [ -n "$SSH_TTY" ]; then
-    show_host_name(){
-        host_name=$(hostname | tr -d '\n')
-        PS1="${_omb_prompt_green}[${host_name}]${_omb_prompt_reset_color}${PS1}"
-    }
-    _omb_util_add_prompt_command show_host_name
-fi
 
-# Aliases and functions
-if [ "$(uname -o)" != "Darwin" ]; then
-    open(){
-        nohup xdg-open "$*" > /dev/null 2>&1
-    }
-fi
-
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
 
 unset CDPATH
