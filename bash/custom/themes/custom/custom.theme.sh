@@ -24,10 +24,11 @@ PS1+="\$(scm_prompt_info)"
 PS1+="\$ "
 
 # These are echoed. Use _term colors and make sure to use \001 and \002 as described above!
-SCM_THEME_PROMPT_PREFIX="(\001${_omb_term_cyan}\002"
+SCM_THEME_PROMPT_PREFIX="(\001${_omb_term_bold}\002\001${_omb_term_teal}\002" 
 SCM_THEME_PROMPT_SUFFIX="\001${_omb_term_reset}\002)"
 SCM_THEME_PROMPT_DIRTY=" \001${_omb_term_red}\002✗"
 SCM_THEME_PROMPT_CLEAN=""
+SCM_GIT_SHOW_MINIMAL_INFO=true
 
 function _omb_theme_prompt_arrow {
     if [ $? -ne 0 ]; then
