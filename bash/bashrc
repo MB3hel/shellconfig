@@ -74,14 +74,7 @@ plugins=(
 source "$OSH"/oh-my-bash.sh
 
 
-# WSL specific things
-# if type "wslpath" > /dev/null 2>&1 ; then
-#     # Required for duplicate tab in windows terminal
-#     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
 
-#     # Must set WSLENV to have "USERPROFILE/p" in the list on windows
-#     WINHOME="$USERPROFILE"
-# fi
 
 
 
