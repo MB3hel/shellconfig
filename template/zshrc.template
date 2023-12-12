@@ -2,5 +2,4 @@
 # Load generic zsh configuration
 . ~/.shellconfig/zsh/zshrc
 
-# System specific Environment Variables & other settings below
-
+# zsh specific stuff below. Environment vars should go in ~/.profile

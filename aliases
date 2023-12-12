@@ -1,0 +1,2 @@
+# This script is sourced AFTER shell RC scripts (bashrc / zshrc)
+# Unlike profile, which is sourced before.

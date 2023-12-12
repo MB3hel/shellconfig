@@ -1,2 +1,2 @@
 source ~/.profile
-source ~/.bashrc
+[[ $- == *i* ]] && source ~/.bashrc
