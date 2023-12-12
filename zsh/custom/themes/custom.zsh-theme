@@ -3,7 +3,7 @@ if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
     PROMPT+="($chroot_name)"
 fi
-PROMPT+='$(venv_prompt_info)'
+PROMPT+='$(_omz_theme_prompt_venv)'
 PROMPT+="[%{$fg_bold[green]%}%n@%m:%{$fg_bold[blue]%}%1~%{$reset_color%}]"
 PROMPT+='$(git_prompt_info)'
 PROMPT+="%% "
@@ -24,7 +24,7 @@ fi
 # Placed between arrow and rest of prompt
 # Also has no space
 export VIRTUAL_ENV_DISABLE_PROMPT=1
-venv_prompt_info(){
+_omz_theme_prompt_venv(){
     if [ -n "$VIRTUAL_ENV" ]; then
         venv_name="${VIRTUAL_ENV##*/}"
         printf "($venv_name)"

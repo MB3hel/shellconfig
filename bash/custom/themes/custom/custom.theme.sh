@@ -18,7 +18,7 @@ if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
     PS1+="($chroot_name)"
 fi
-# TODO: venv
+PS1+="\$(_omb_theme_prompt_venv)"
 PS1+="[${_omb_prompt_bold_green}\u@\h:${_omb_prompt_bold_navy}\W${_omb_prompt_normal}]"
 PS1+="\$(scm_prompt_info)"
 PS1+="\$ "
@@ -37,3 +37,15 @@ function _omb_theme_prompt_arrow {
         echo -ne "\001${_omb_term_bold}\002\001${_omb_term_green}\002➜\001${_omb_term_reset}\002"
     fi
 }
+
+# Custom prompt part for python venv
+# Placed between arrow and rest of prompt
+# Also has no space
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+_omb_theme_prompt_venv(){
+    if [ -n "$VIRTUAL_ENV" ]; then
+        venv_name="${VIRTUAL_ENV##*/}"
+        printf "($venv_name)"
+    fi
+}
+
