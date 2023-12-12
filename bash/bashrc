@@ -73,9 +73,10 @@ plugins=(
 # Load Oh-My-Bash
 source "$OSH"/oh-my-bash.sh
 
+# Support .dircolors file in home like bash on many distros
+test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)"
 
-
-
-
+# Load aliases shared among all shells
+source $HOME/.shellconfig/aliases
 
 unset CDPATH
