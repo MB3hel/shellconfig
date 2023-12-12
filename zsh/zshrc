@@ -70,8 +70,8 @@ plugins=(git)
 # Load Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
 
-# Load aliases shared among all shells
-source $HOME/.shellconfig/aliases
-
 # Support .dircolors file in home like bash on many distros
 test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)"
+
+# Load aliases shared among all shells
+source $HOME/.shellconfig/aliases
