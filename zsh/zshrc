@@ -1,20 +1,14 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
 # Support .dircolors file in home like bash on many distros
 test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Path to store custom oh-my-zsh stuff at
-ZSH_CUSTOM=$HOME/.shellconfig/zsh/custom/
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-
 ZSH_THEME="custom"
 
 # Set list of themes to pick from when loading at random
@@ -70,7 +64,7 @@ ZSH_THEME="custom"
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+ZSH_CUSTOM=$HOME/.shellconfig/zsh/custom/
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
@@ -79,89 +73,9 @@ ZSH_THEME="custom"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 
-# WSL specific things
-if type "wslpath" > /dev/null; then
-    plugins+=ssh-agent
-fi
-
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# WSL specific things
-if type "wslpath" > /dev/null; then
-    # Required for duplicate tab in windows terminal
-    # Note: Feature does not work if distro run by WT using Distro.exe (eg Ubuntu.exe)
-    # Must launch with wsl.exe -d Distro (eg wsl.exe -d Ubuntu)
-    keep_current_path() { printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")" }
-    precmd_functions+=(keep_current_path)     
-
-    # Must set WSLENV to have "USERPROFILE/p" in the list on windows
-    WINHOME="$USERPROFILE"
-fi
-
-# MSYS2 specific things
-if [ "$(uname -o)" = "Msys"  ]; then
-    # Required for duplicate tab in windows terminal
-    keep_current_path() {
-        printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"
-    }
-    precmd_functions+=(keep_current_path) 
-fi
-
-# schroot environments
-if [[ -f /etc/debian_chroot ]]; then
-    
-    # Show name in schroots
-    chroot_name=$(cat /etc/debian_chroot)
-    PROMPT="($chroot_name)$PROMPT"
-
-    # Fixes issues with calculating line width
-    export LANG=en_US.UTF-8
-fi
-
-# ssh connections
-if [ -n "$SSH_TTY" ]; then
-    PROMPT="%F{green}[$(hostname | tr -d '\n')]%f$PROMPT"
-fi
-
-# Theme modifications
-if [ "$ZSH_THEME" = "robbyrussell" ]; then
-    PROMPT+="%F{yellow}%% %f"
-fi
-
-# Aliases and functions
-if [ "$(uname -o)" != "Darwin" ]; then
-    open(){
-        nohup xdg-open "$*" > /dev/null 2>&1
-    }
-fi
-
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
+# NOTE: Most of what would be here can be shared in zsh, bash, and POSIX shells. 
+# Thus it is in profile_script

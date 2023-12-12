@@ -72,8 +72,30 @@ fi
 ################################################################################
 
 ################################################################################
-# Default settings
+# Default settings, aliases, and functions
 ################################################################################
 # Note: since this script is sourced first in ~/.profile
 #       these can be overwritten
 export EDITOR="nvim"
+export LANG=en_US.UTF-8
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+case "$(uname -o)" in
+    "Darwin")
+        # Not needed b/c already exists on macos
+    ;;
+    *)
+        if type "wslpath" > /dev/null 2>&1; then
+            # Linux via WSL
+            openwin(){
+                target=$(wslpath -w "$1")
+                cmd.exe /c start "" "$target" > /dev/null 2>&1
+            }
+        fi
+        # Linux, FreeBSD, etc
+        open(){
+            nohup xdg-open "$*" > /dev/null 2>&1
+        }
+    ;;
+esac
