@@ -72,22 +72,15 @@ fi
 ################################################################################
 
 ################################################################################
-# Default settings, aliases, and functions
+# Default settings
 ################################################################################
 # Note: since this script is sourced first in ~/.profile
 #       these can be overwritten
 export EDITOR="nvim"
 export LANG=en_US.UTF-8
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-if [ "$(uname -o)" != "Darwin" ]; then
-    alias open='xdg-open'
-fi
-if type "wslpath" > /dev/null 2>&1; then
-    # Linux via WSL
-    openwin(){
-        target=$(wslpath -w "$1")
-        cmd.exe /c start "" "$target" > /dev/null 2>&1
-    }
+
+# Aliases are normally loaded by bashrc / zshrc. But if not bash or zsh
+# this won't happen. Thus, load them here.
+if [ -z "$ZSH_VERSION" ] && [ -z "$BASH_VERSION" ]; then
+    . $HOME/.shellconfig/aliases
 fi

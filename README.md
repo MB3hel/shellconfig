@@ -57,6 +57,8 @@ This behavior essentially defines the following
 
 - Login shells (interactive or not) source `~/.profile`
 - Interactive shells (login or not) source their rc file
+- Sourced in order: `~/.profile` -> shell rc file
+- Also adds an aliases file sourced after any of the above
 
 This repo provides "base files" for each of the following.
 

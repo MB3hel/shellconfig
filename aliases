@@ -1,2 +1,23 @@
 # This script is sourced AFTER shell RC scripts (bashrc / zshrc)
 # Unlike profile, which is sourced before.
+# This means that these aliases will overwrite any defined 
+# by oh-my-zsh, oh-my-bash, AND any defined in bashrc / zshrc.
+
+# Note: this file may also be loaded by the profile script
+# If the shell is not bash or zsh. This is likely sh in such as case.
+# Thus, MAINTAIN POSIX SHELL COMPATABILITY in this file!
+
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias hello='true'
+if [ "$(uname -o)" != "Darwin" ]; then
+    alias open='xdg-open'
+fi
+if type "wslpath" > /dev/null 2>&1; then
+    # Linux via WSL
+    openwin(){
+        target=$(wslpath -w "$1")
+        cmd.exe /c start "" "$target" > /dev/null 2>&1
+    }
+fi
