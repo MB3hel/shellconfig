@@ -75,50 +75,13 @@ source "$OSH"/oh-my-bash.sh
 
 
 # WSL specific things
-if type "wslpath" > /dev/null 2>&1 ; then
-    # Required for duplicate tab in windows terminal
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
+# if type "wslpath" > /dev/null 2>&1 ; then
+#     # Required for duplicate tab in windows terminal
+#     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
 
-    # Must set WSLENV to have "USERPROFILE/p" in the list on windows
-    WINHOME="$USERPROFILE"
-fi
-
-# MSYS2 specific things
-if [ "$(uname -o)" = "Msys"  ]; then
-    # Required for duplicate tab in windows terminal
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
-fi
-
-# schroot environments
-if [[ -f /etc/debian_chroot ]]; then
-    
-    # Show name in schroots
-    show_schroot_name(){
-        chroot_name=$(cat /etc/debian_chroot)
-        PS1="($chroot_name)$PS1"
-    }
-    _omb_util_add_prompt_command show_schroot_name
-
-    # Fixes issues with calculating line width
-    export LANG=en_US.UTF-8
-fi
-
-# Theme modifications
-if [ "$OSH_THEME" = "minimal" ]; then
-    add_dollar_to_min(){
-        PS1+="${_omb_prompt_yellow}\$${_omb_prompt_reset_color} "
-    }
-    add_arrow_to_min(){
-        if [ $? -ne 0 ]; then
-            PS1="${_omb_prompt_red}→${_omb_prompt_reset_color} ${PS1}"
-        else
-            PS1="${_omb_prompt_green}→${_omb_prompt_reset_color} ${PS1}"
-        fi
-    }
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'echo -en "\033]0; $(dirs +0) \a"'
-    _omb_util_add_prompt_command add_dollar_to_min
-    _omb_util_add_prompt_command add_arrow_to_min
-fi
+#     # Must set WSLENV to have "USERPROFILE/p" in the list on windows
+#     WINHOME="$USERPROFILE"
+# fi
 
 
 
