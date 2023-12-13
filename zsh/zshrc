@@ -72,15 +72,17 @@ fi
 setopt PROMPT_SUBST
 
 __prompt_git_label () {
-    local colors=$(__use_colors)
-    local git_branch="$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")"
-    local git_dirty=""
-    if [ ! -z "$git_branch" ]; then
-        git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
-        if [ $colors = yes ]; then
-            printf "(%%{\e[01;36m%%}${git_branch}%%{\e[00m%%}%%{\e[01;31m%%}${git_dirty}%%{\e[00m%%})"
-        else
-            printf "(${git_branch}${git_dirty})"
+    if [ -d .git ]; then
+        local colors=$(__use_colors)
+        local git_branch="$(git rev-parse --abbrev-ref HEAD)"
+        local git_dirty=""
+        if [ ! -z "$git_branch" ]; then
+            git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
+            if [ $colors = yes ]; then
+                printf "(%%{\e[01;36m%%}${git_branch}%%{\e[00m%%}%%{\e[01;31m%%}${git_dirty}%%{\e[00m%%})"
+            else
+                printf "(${git_branch}${git_dirty})"
+            fi
         fi
     fi
 }

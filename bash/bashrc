@@ -47,7 +47,7 @@ fi
 #   printf, etc have to use \001 and \002
 __prompt_git_label () {
     local colors=$(__use_colors)
-    local git_branch="$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")"
+    local git_branch="$(git rev-parse --abbrev-ref HEAD)"
     local git_dirty=""
     if [ ! -z "$git_branch" ]; then
         git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
