@@ -69,12 +69,19 @@ case $TERM in
     xterm*) plugins+=(xterm) ;;
 esac
 
+# Must be after xterm if xterm is included, otherwise xterm breaks for some reason.
+plugins+=(bash-preexec)
+
 # Load Oh-My-Bash
 source "$OSH"/oh-my-bash.sh
 
 # Make duplicate tab work in windows terminal using WSL
-if type "wslpath" > /dev/null 2>&1 ; then
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
+if type "wslpath" > /dev/null 2>&1; then
+    keep_current_path() {
+        printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+    }
+    # Note: Requires bash-preexec
+    precmd_functions+=(keep_current_path)
 fi
 
 # Load aliases shared among all shells

@@ -78,6 +78,7 @@ fi
 #       these can be overwritten
 export EDITOR="nvim"
 export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 # Aliases are normally loaded by bashrc / zshrc. But if not bash or zsh
 # this won't happen. Thus, load them here.
