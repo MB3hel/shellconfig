@@ -60,15 +60,10 @@ OSH_CUSTOM=$HOME/.shellconfig/bash/custom/
 OMB_USE_SUDO=true
 
 # Completions to load
-completions=(
-    git
-    ssh
-)
+completions=(git ssh)
 
 # Active plugins
-plugins=(
-    git
-)
+plugins=()
 
 # Load Oh-My-Bash
 source "$OSH"/oh-my-bash.sh

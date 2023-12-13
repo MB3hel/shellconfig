@@ -65,7 +65,7 @@ ZSH_THEME="custom"
 ZSH_CUSTOM=$HOME/.shellconfig/zsh/custom/
 
 # Active plugins
-plugins=(git)
+plugins=()
 
 # Load Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
