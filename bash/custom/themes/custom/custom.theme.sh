@@ -30,11 +30,6 @@ SCM_THEME_PROMPT_DIRTY=" \001${_omb_term_red}\002✗"
 SCM_THEME_PROMPT_CLEAN=""
 SCM_GIT_SHOW_MINIMAL_INFO=true
 
-if type "wslpath" > /dev/null 2>&1 ; then
-    # Required for duplicate tab in windows terminal
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
-fi
-
 function _omb_theme_prompt_arrow {
     if [ $? -ne 0 ]; then
         echo -ne "\001${_omb_term_bold}\002\001${_omb_term_red}\002➜\001${_omb_term_reset}\002"

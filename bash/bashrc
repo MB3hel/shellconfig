@@ -71,6 +71,11 @@ source "$OSH"/oh-my-bash.sh
 # Support .dircolors file in home like bash on many distros
 test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)"
 
+# Make duplicate tab work in windows terminal using WSL
+if type "wslpath" > /dev/null 2>&1 ; then
+    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
+fi
+
 # Load aliases shared among all shells
 source $HOME/.shellconfig/aliases
 

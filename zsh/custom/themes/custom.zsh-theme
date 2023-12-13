@@ -12,14 +12,6 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%})"
 ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg[red]%}%1{✗%}"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
-if type "wslpath" > /dev/null 2>&1; then
-    # Required for duplicate tab in windows terminal
-    keep_current_path() {
-        printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
-    }
-    precmd_functions+=(keep_current_path)
-fi
-
 # Custom prompt part for python venv
 # Placed between arrow and rest of prompt
 # Also has no space

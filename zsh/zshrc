@@ -73,5 +73,13 @@ source $ZSH/oh-my-zsh.sh
 # Support .dircolors file in home like bash on many distros
 test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)"
 
+# Make duplicate tab work in windows terminal using WSL
+if type "wslpath" > /dev/null 2>&1; then
+    keep_current_path() {
+        printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+    }
+    precmd_functions+=(keep_current_path)
+fi
+
 # Load aliases shared among all shells
 source $HOME/.shellconfig/aliases
