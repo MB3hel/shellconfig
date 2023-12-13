@@ -34,24 +34,20 @@ fi
 # Load compinit module
 autoload -Uz compinit && compinit
 
-# Apply Oh-My-Zsh style completion
+# Apply Oh-My-Zsh completion
 source "$DIR"/completion.zsh
 ################################################################################
 
 ################################################################################
 # Determine if to use colors
 ################################################################################
-__use_colors () {
-    case "$TERM" in
-        xterm-color) printf "yes";;
-        xterm-256color) printf "yes";;
-        *) printf "no";;
-    esac
-}
-__os_name () {
-    uname -o 2> /dev/null || printf "Unknown"
-}
-if [ "$(__use_colors)" = yes ]; then
+case "$TERM" in
+    xterm-color) ;;
+    xterm-256color) ;;
+    *) export NO_COLOR=1 ;;
+esac
+
+if [ -z "$NO_COLOR" ]; then
     autoload -U colors && colors
 
     # Support .dircolors file in home
@@ -64,33 +60,20 @@ fi
 ################################################################################
 # Prompt
 ################################################################################
-# Notes on colors:
-#   \e = \033 (also works in printf, etc)
-#   \[ = \001 (ONLY works in PS1)
-#   \] = \002 (ONLY works in PS1)
-#   colors format: \e[00;31m
-#   end color: \e[00m
-#
-#   In zsh, usually %B/%F{color_name}   and %f%b are used instead
-#   however, raw escapes can be used if they are inside %{ %} to allow readline to determine
-#   how long the prompt is.
-#   Thus, for substitutions in prompt, printf must output %{COLOR_CODE_HERE%}. Note that % is
-#   format escape in prinf though, so have to use %% for literal '%' to be output
 
 # Enables paremeter expansion / substitution in prompt
 setopt PROMPT_SUBST
 
-__prompt_git_label () {
+__prompt_vcs_label () {
     if [ -d .git ]; then
-        local colors=$(__use_colors)
         local git_branch="$(git symbolic-ref --short HEAD)"
         local git_dirty=""
         if [ ! -z "$git_branch" ]; then
-            git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
-            if [ $colors = yes ]; then
-                printf "(%%{\e[01;36m%%}${git_branch}%%{\e[00m%%}%%{\e[01;31m%%}${git_dirty}%%{\e[00m%%})"
+            git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || echo -ne " ✗")"
+            if [ -z "$NO_COLOR" ]; then
+                echo -n "(%{$fg_bold[cyan]%}${git_branch}%{$reset_color%}%{$fg_bold[red]%}${git_dirty}%{$reset_color%})"
             else
-                printf "(${git_branch}${git_dirty})"
+                echo -n "(${git_branch}${git_dirty})"
             fi
         fi
     fi
@@ -98,26 +81,25 @@ __prompt_git_label () {
 
 __prompt_arrow () {
     local lasterr=$?
-    local colors=$(__use_colors)
     local arrow="→"
-    if [ $colors = yes ] && [ $lasterr -ne 0 ]; then
-        arrow="%%{\e[01;31m%%}${arrow}%%{\e[00m%%}"
-    elif [ $colors = yes ]; then
-        arrow="%%{\e[01;32m%%}${arrow}%%{\e[00m%%}"
+    if [ -z "$NO_COLOR" ] && [ $lasterr -ne 0 ]; then
+        arrow="%{$fg_bold[red]%}${arrow}%{$reset_color%}"
+    elif [ -z "$NO_COLOR" ]; then
+        arrow="%{$fg_bold[green]%}${arrow}%{$reset_color%}"
     fi
-    printf "$arrow"
+    echo -n "$arrow"
 }
 
-if [ "$(__use_colors)" = yes ]; then
-    PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%B%F{green}%n@%m%f%b:%B%F{blue}%1~%f%b]\$(__prompt_git_label)%% "
+if [ -z "$NO_COLOR" ]; then
+    PS1="\$(__prompt_arrow)[%{$fg_bold[green]%}%n@%m%{$reset_color%}:%{$fg_bold[blue]%}%1~%{$reset_color%}]\$(__prompt_vcs_label)%% "
 else
-    PS1="${debian_chroot:+($debian_chroot)}\$(__prompt_arrow)[%n@%m:%1~]\$(__prompt_git_label)%% "
+    PS1="\$(__prompt_arrow)[%n@%m:%1~]\$(__prompt_vcs_label)%% "
 fi
 
 if type "wslpath" > /dev/null 2>&1; then
     # Required for duplicate tab in windows terminal
     keep_current_path() {
-        printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+        echo -ne "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
     }
     precmd_functions+=(keep_current_path)
 fi
@@ -127,40 +109,5 @@ fi
 ################################################################################
 # Default Aliases / Functions
 ################################################################################
-# Color settings for commands
-if [ "$(__use_colors)" = yes ]; then
-    alias ls='ls --color=auto'
-    alias la='ls -A --color=auto'
-    alias ll='ls -alF --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-else
-    alias ls='ls --color=never'
-    alias la='ls -A --color=never'
-    alias ll='ls -alF --color=never'
-    alias grep='grep --color=never'
-    alias fgrep='fgrep --color=never'
-    alias egrep='egrep --color=never'
-fi
-
-# open function like macos
-case "$(__os_name)" in
-    "Darwin")
-        # Not needed b/c already exists on macos
-    ;;
-    *)
-        if type "wslpath" > /dev/null 2>&1; then
-            # Linux via WSL
-            openwin(){
-                target=$(wslpath -w "$1")
-                cmd.exe /c start "" "$target" > /dev/null 2>&1
-            }
-        fi
-        # Linux, FreeBSD, etc
-        open(){
-            nohup xdg-open "$*" > /dev/null 2>&1
-        }
-    ;;
-esac
+source ~/.shellconfig/aliases
 ################################################################################

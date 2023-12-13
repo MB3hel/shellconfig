@@ -1,0 +1,13 @@
+
+if [ -z "$NO_COLOR" ]; then
+    alias ls='ls --color=auto'
+    alias la='ls -A --color=auto'
+    alias ll='ls -alF --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+else
+    alias ls='ls'
+    alias la='ls -A'
+    alias ll='ls -alF'
+fi
