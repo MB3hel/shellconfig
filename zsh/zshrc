@@ -74,7 +74,7 @@ setopt PROMPT_SUBST
 __prompt_git_label () {
     if [ -d .git ]; then
         local colors=$(__use_colors)
-        local git_branch="$(git rev-parse --abbrev-ref HEAD)"
+        local git_branch="$(git symbolic-ref --short HEAD)"
         local git_dirty=""
         if [ ! -z "$git_branch" ]; then
             git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"

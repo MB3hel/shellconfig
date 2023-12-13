@@ -46,15 +46,17 @@ fi
 #   how long the prompt is. In PS1 this is done usie \[ and \] but in 
 #   printf, etc have to use \001 and \002
 __prompt_git_label () {
-    local colors=$(__use_colors)
-    local git_branch="$(git rev-parse --abbrev-ref HEAD)"
-    local git_dirty=""
-    if [ ! -z "$git_branch" ]; then
-        git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
-        if [ $colors = yes ]; then
-            printf "(\001\e[01;36m\002${git_branch}\001\e[00m\002\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
-        else
-            printf "(${git_branch}${git_dirty})"
+    if [ -d .git ]; then
+        local colors=$(__use_colors)
+        local git_branch="$(git symbolic-ref --short HEAD)"
+        local git_dirty=""
+        if [ ! -z "$git_branch" ]; then
+            git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
+            if [ $colors = yes ]; then
+                printf "(\001\e[01;36m\002${git_branch}\001\e[00m\002\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
+            else
+                printf "(${git_branch}${git_dirty})"
+            fi
         fi
     fi
 }
