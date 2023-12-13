@@ -65,6 +65,10 @@ completions=(git ssh)
 # Active plugins
 plugins=()
 
+case $TERM in
+    xterm*) plugins+=(xterm) ;;
+esac
+
 # Load Oh-My-Bash
 source "$OSH"/oh-my-bash.sh
 

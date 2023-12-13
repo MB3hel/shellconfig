@@ -10,12 +10,10 @@
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias hello='true'
 if [ "$(uname -o)" != "Darwin" ]; then
     alias open='xdg-open'
 fi
 if type "wslpath" > /dev/null 2>&1; then
-    # Linux via WSL
     openwin(){
         target=$(wslpath -w "$1")
         cmd.exe /c start "" "$target" > /dev/null 2>&1
