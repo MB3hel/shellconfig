@@ -80,4 +80,8 @@ fi
 # Load aliases shared among all shells
 source $HOME/.shellconfig/aliases
 
+# Use arrow keys to search history
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
 unset CDPATH
