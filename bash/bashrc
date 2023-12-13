@@ -60,7 +60,7 @@ OSH_CUSTOM=$HOME/.shellconfig/bash/custom/
 OMB_USE_SUDO=true
 
 # Completions to load
-completions=(git ssh)
+completions=()
 
 # Active plugins
 plugins=()
@@ -71,9 +71,6 @@ esac
 
 # Load Oh-My-Bash
 source "$OSH"/oh-my-bash.sh
-
-# Support .dircolors file in home like bash on many distros
-test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)"
 
 # Make duplicate tab work in windows terminal using WSL
 if type "wslpath" > /dev/null 2>&1 ; then

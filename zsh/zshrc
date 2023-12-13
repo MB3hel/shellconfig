@@ -70,9 +70,6 @@ plugins=()
 # Load Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
 
-# Support .dircolors file in home like bash on many distros
-test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)"
-
 # Make duplicate tab work in windows terminal using WSL
 if type "wslpath" > /dev/null 2>&1; then
     keep_current_path() {
