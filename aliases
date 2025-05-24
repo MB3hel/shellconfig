@@ -12,6 +12,7 @@ alias la='ls -A'
 alias l='ls -CF'
 if [ "$(uname -o)" != "Darwin" ]; then
     alias open='xdg-open'
+    alias trash='gio trash'
 fi
 if type "wslpath" > /dev/null 2>&1; then
     openwin(){
