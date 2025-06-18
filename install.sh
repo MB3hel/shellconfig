@@ -39,4 +39,5 @@ cp "$DIR/template/bashrc.template" ~/.bashrc
 cp "$DIR/template/profile.template" ~/.profile
 cp "$DIR/template/zprofile.template" ~/.zprofile
 cp "$DIR/template/zshrc.template" ~/.zshrc
-
+mkdir -p ~/.config/plasma-workspace/env/
+cp "$DIR/template/plasmaenv.sh.template" ~/.config/plasma-workspace/env/profile.sh

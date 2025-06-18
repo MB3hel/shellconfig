@@ -1,0 +1,5 @@
+# Plasma on wayland does not source profile (like what used to happen with
+# GNOME wayland). However, plasma can run scripts to set env vars on startup
+# This is linked to one and used to ensure plasma wayland logins have env vars
+# set in profile like any other login (x11, gnome, ssh, tty, etc) would
+. $HOME/.profile
