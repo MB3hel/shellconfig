@@ -3,3 +3,13 @@
 # This is linked to one and used to ensure plasma wayland logins have env vars
 # set in profile like any other login (x11, gnome, ssh, tty, etc) would
 . $HOME/.profile
+
+
+# On plasma, setup to use GUI askpass that integrates with kde wallet
+# If systemd is used by plasma to start ssh-agent this will work similar to
+# how gnome does by default
+if type ksshaskpass > /dev/null 2>&1; then
+    export SSH_ASKPASS=ksshaskpass
+    export SSH_ASKPASS_REQUIRE=prefer
+fi
+
