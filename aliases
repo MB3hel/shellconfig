@@ -20,3 +20,9 @@ if type "wslpath" > /dev/null 2>&1; then
         cmd.exe /c start "" "$target" > /dev/null 2>&1
     }
 fi
+
+# Pickup changes to SSH agent when attaching to tmux from new login
+fixssh(){
+    eval `tmux showenv -s SSH_AUTH_SOCK`
+    eval `tmux showenv -s SSH_AGENT_PID`
+}

@@ -89,10 +89,10 @@ Some notes about login vs interactive shells
 
 These scripts *may* launch / manage an SSH agent. If the environment defines `SSH_AUTH_SOCK` before starting a login shell (before `~/.profile` is sourced), these scripts will not launch / manage an agent. This occurs on macOS and Liunx when logging into the GNOME desktop.
 
-If the environment does not provide an SSH agent, `SSH_AUTH_SOCK` will not be defined when `~/.profile` is sourced. In this case, the shell manages an SSH agent. This occurs on Linux / BSD with console logins, Xfce sessions, or other contexts in which the environment does not provide an SSH agent.
+If the environment does not provide an SSH agent, `SSH_AUTH_SOCK` will not be defined when `~/.profile` is sourced. In this case, the login shell manages an SSH agent. This occurs on Linux / BSD with console logins, Xfce sessions, or other contexts in which the environment does not provide an SSH agent.
+
+Essentially, unless the login starts an SSH agent, the intial login SHELL will. Any subsequent shells (login or not) will share the same SSH agent. This also means that shells that can "switch" between different logins (eg tmux detach and re-attach) will need to change SSH agents to their new logins. There is a `fixssh` function to do this.
 
 Note that I intentionally avoid using solutions that share / re-use agents across login shells.
-
-By using this agent environment file, multiple shells can use the same agent (even for sepearte logins of the same user) and shells can reuse the agent if it was started before logging out and back in (same user).
 
 Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to unlock keys once until log out.
