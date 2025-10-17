@@ -45,7 +45,7 @@ The setup in this repo is as follows. Only user files are considered. This is fa
 - `sh`:
     - `~/.profile`
 - `bash` login:
-    - `~/.bash_profile`: Sources `~/.bash_profile`. Also sources `~/.bashrc` if interactive too.
+    - `~/.bash_profile`: Sources `~/.profile`. Also sources `~/.bashrc` if interactive too.
 - `bash` interactive (non login)
     - `~/.bashrc`
 - `zsh` login (interactive or not):
@@ -80,6 +80,7 @@ Some notes about login vs interactive shells
 - Linux Desktop:
     - Starting desktop (X11 or wayland) uses a login shell (thus `~/.profile` is sourced for GUI session)
     - Shell in terminal emulator is usually interactive non-login
+    - Tmux by default starts login interactive shells (though my config switches this to nonlogin)
 - Linux Console: Runs an interactive login shell
 - SSH: Runs a login interactive shell (same as logging into console on Linux)
 
