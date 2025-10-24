@@ -70,6 +70,11 @@ plugins=()
 # Load Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
 
+# Load colors again (profile does this, but oh my zsh breaks)
+if type dircolors > /dev/null 2>&1 && [ -f ~/.dircolors ]; then
+    eval `dircolors ~/.dircolors`
+fi
+
 # Make duplicate tab work in windows terminal using WSL
 if type "wslpath" > /dev/null 2>&1; then
     keep_current_path() {
