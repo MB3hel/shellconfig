@@ -1,4 +1,11 @@
 
+# On windows, cmd will set PROMPT and this will break oh my bash
+# So if running under MSYS2 (which may have been invoked via a launcher
+# using cmd.exe) clear prompt FIRST!
+if [ "$(uname -o)" = "Msys" ]; then
+    unset PROMPT
+fi
+
 # Path to your oh-my-bash installation.
 export OSH="$HOME/.oh-my-bash"
 

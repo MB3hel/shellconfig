@@ -15,14 +15,25 @@ if [ "$(uname -o)" != "Darwin" ]; then
     alias trash='gio trash'
 fi
 if type "wslpath" > /dev/null 2>&1; then
+    # Use inside WSL to open a file in the WINDOWS program not the LINUX program for that file type
     openwin(){
         target=$(wslpath -w "$1")
         cmd.exe /c start "" "$target" > /dev/null 2>&1
     }
 fi
+if [ "$(uname -o)" = "Msys" ]; then
+    # In MSYS2 sometimes we need to launch without the environment changes made by MSYS2
+    # Note that the ORIGINAL_ variables are set by MSYS2 not by this profile script
+    winlaunch(){
+        PROMPT= PS1= PATH="$ORIGINAL_PATH" TMP="$ORIGINAL_TMP" TEMP="$ORIGINAL_TEMP" "$@"
+    }
+fi
 
 # Pickup changes to SSH agent when attaching to tmux from new login
+# This does nothing on windows. SSH_AUTH_SOCK not used on windows
 fixssh(){
-    eval `tmux showenv -s SSH_AUTH_SOCK`
-    eval `tmux showenv -s SSH_AGENT_PID`
+    if [ "$(uname -o)" != "Msys" ]; then
+        eval `tmux showenv -s SSH_AUTH_SOCK`
+        eval `tmux showenv -s SSH_AGENT_PID`
+    fi
 }

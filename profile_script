@@ -46,7 +46,9 @@ unset SED
 # Launch an agent if SSH_AUTH_SOCK is not set
 # If SSH_AUTH_SOCK is set before the shell starts, assume it's environment
 # managed ssh agent such as Gnome, or macOS, etc
-if [ -z "$SSH_AUTH_SOCK" ]; then
+# Note that on windows SSH_AUTH_SOCK is not used. So we just always assume ssh-agent is running
+# as a service on windows and don't ever attempt to start it.
+if [ -z "$SSH_AUTH_SOCK" ] && [ "$(uname -o)" != "Msys" ]; then
     # Luanch agent now
      eval `ssh-agent` > /dev/null
 
