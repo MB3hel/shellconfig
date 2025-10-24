@@ -1,3 +1,7 @@
+# Use ssh-agent systemd service in plasma instead of letting the login shell manage it
+systemctl --user start ssh-agent
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/openssh_agent"
+
 # Plasma on wayland does not source profile (like what used to happen with
 # GNOME wayland). However, plasma can run scripts to set env vars on startup
 # This is linked to one and used to ensure plasma wayland logins have env vars
