@@ -70,7 +70,7 @@ plugins=()
 # Load Oh-My-Zsh
 source $ZSH/oh-my-zsh.sh
 
-# Load colors again (profile does this, but oh my zsh breaks)
+# Load ls colors AFTER on my zsh
 if type dircolors > /dev/null 2>&1 && [ -f ~/.dircolors ]; then
     eval `dircolors ~/.dircolors`
 fi

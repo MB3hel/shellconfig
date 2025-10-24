@@ -75,7 +75,7 @@ plugins+=(bash-preexec)
 # Load Oh-My-Bash
 source "$OSH"/oh-my-bash.sh
 
-# Load colors again (profile does this, but oh my zsh breaks)
+# Load ls colors AFTER on my bash
 if type dircolors > /dev/null 2>&1 && [ -f ~/.dircolors ]; then
     eval `dircolors ~/.dircolors`
 fi

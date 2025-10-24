@@ -65,11 +65,6 @@ export EDITOR="nvim"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
-# Colors for ls from user config file
-if type dircolors > /dev/null 2>&1 && [ -f ~/.dircolors ]; then
-    eval `dircolors ~/.dircolors`
-fi
-
 # Aliases are normally loaded by bashrc / zshrc. But if not bash or zsh
 # this won't happen. Thus, load them here.
 if [ -z "$ZSH_VERSION" ] && [ -z "$BASH_VERSION" ]; then
