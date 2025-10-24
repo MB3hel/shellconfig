@@ -18,13 +18,15 @@ cd ~/.shellconfig
 
 [Useful Diagrams](https://medium.com/@rajsek/zsh-bash-startup-files-loading-order-bashrc-zshrc-etc-e30045652f2e)
 
+`sh` (usually either `dash`, `ash`, or `bash` in POSIX compliance mode):
+
 - `sh`: Usually either `dash`, `ash`, or `bash` in POSIX compliance mode
     - Sources `/etc/profile`
     - Sources `~/.profile`
 - `bash` login shells (interactive or not)
     - Sources `/etc/profile`
     - Sources the first found of: `~/.bash_profile`, `~/.bash_login`, `~/.profile` (in that order)
-- `bash` interactive shells (non-login)
+- `bash` interactive shells (non-login ONLY)
     - Sources `/etc/bash.bashrc`
     - Sources `~/.bashrc`
 - `bash` non-interactive and non-login (eg running a script)
@@ -56,7 +58,7 @@ The setup in this repo is as follows. Only user files are considered. This is fa
 This behavior essentially defines the following
 
 - Login shells (interactive or not) source `~/.profile`
-- Interactive shells (login or not) source their rc file
+- Interactive shells (login or not) source their own rc file
 - Sourced in order: `~/.profile` -> shell rc file
 
 This repo provides "base files" for each of the following.
@@ -87,12 +89,12 @@ Some notes about login vs interactive shells
 
 ## SSH Agent
 
-These scripts *may* launch / manage an SSH agent. If the environment defines `SSH_AUTH_SOCK` before starting a login shell (before `~/.profile` is sourced), these scripts will not launch / manage an agent. This occurs on macOS and Liunx when logging into the GNOME desktop.
+These scripts *may* launch / manage an SSH agent. If the environment defines `SSH_AUTH_SOCK` before starting a login shell (before `~/.profile` is sourced), these scripts will not launch / manage an agent. This occurs on macOS or on Linux when logging into some GUI desktops (eg GNOME).
 
-If the environment does not provide an SSH agent, `SSH_AUTH_SOCK` will not be defined when `~/.profile` is sourced. In this case, the login shell manages an SSH agent. This occurs on Linux / BSD with console logins, Xfce sessions, or other contexts in which the environment does not provide an SSH agent.
+If the environment does not provide an SSH agent, `SSH_AUTH_SOCK` will not be defined when `~/.profile` is sourced. In this case, the login shell manages an SSH agent. This occurs on Linux / BSD with console logins, reomte console logins (eg ssh, telnet), Xfce sessions, or other contexts in which the environment does not provide an SSH agent.
 
 Essentially, unless the login starts an SSH agent, the intial login SHELL will. Any subsequent shells (login or not) will share the same SSH agent. This also means that shells that can "switch" between different logins (eg tmux detach and re-attach) will need to change SSH agents to their new logins. There is a `fixssh` function to do this.
 
-Note that I intentionally avoid using solutions that share / re-use agents across login shells.
+Note that I intentionally avoid using solutions that share / re-use agents across login shells. User logout (termination of the login shell) that started the agent will terminate the agent and force the next login to unlock keys again.
 
 Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to unlock keys once until log out.
