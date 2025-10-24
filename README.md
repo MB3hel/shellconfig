@@ -18,7 +18,7 @@ cd ~/.shellconfig
 
 On windows, a standalone msys2 install (separate from msys2 installed by scoop or via msys2 installer) is used to provide a minimal and clean unix-like environment on windows including bash and zsh shells. While you can install packages in this environment using `pacman` it is recommended to install as few packages as possible. It is intended that this is used to provide a "native" bash or zsh for windows (meaning the native windows commands should be used not pacman packages). Even tools such as python, git, vim, etc should be installed using native windows methods (eg scoop pacakge manager) not pacman.
 
-The standalone msys2 environment will coexist with other msys2 environments (eg one installed using scoop). As such, scoop's mingw64, ucrt64, etc commands will still work as expected.
+The standalone msys2 environment will coexist with other msys2 environments (eg one installed using scoop). As such, scoop's mingw64, ucrt64, etc commands will still work as expected from windows shells. However, if launching from the native bash or zsh shell, use winlaunch
 
 Note that when you run windows commands from the "native" bash and zsh shells, the MSYS2 enviroment changes (eg PATH) are preserved unless using `winlaunch`. Eg `winlaunch cmd` to launch a clean cmd shell from bash or zsh. If you keep the set of packages in the standalone msys2 environment minimal, this should rarely be necessary.
 

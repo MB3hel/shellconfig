@@ -25,7 +25,7 @@ if [ "$(uname -o)" = "Msys" ]; then
     # In MSYS2 sometimes we need to launch without the environment changes made by MSYS2
     # Note that the ORIGINAL_ variables are set by MSYS2 not by this profile script
     winlaunch(){
-        PROMPT= PS1= PATH="$ORIGINAL_PATH" TMP="$ORIGINAL_TMP" TEMP="$ORIGINAL_TEMP" "$@"
+        HOME= PROMPT= PS1= PATH="$ORIGINAL_PATH" TMP="$ORIGINAL_TMP" TEMP="$ORIGINAL_TEMP" "$@"
     }
 fi
 
