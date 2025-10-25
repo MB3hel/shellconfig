@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <string>
 #include <cstdlib>
 
@@ -13,8 +14,18 @@ static inline void replace_all(std::string &str, const std::string& from, const 
     }
 }
 
+BOOL WINAPI consoleHandler(DWORD signal){
+    switch(signal){
+    case CTRL_C_EVENT:
+        // Ignore
+        return TRUE;
+    };
+    return FALSE;
+}
 
 int main(int argc, char *argv[]){
+    SetConsoleCtrlHandler(consoleHandler, TRUE);
+
     std::string userprofile = std::getenv("USERPROFILE");
     replace_all(userprofile, "\\", "/");
 
