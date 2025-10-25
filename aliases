@@ -27,6 +27,18 @@ if [ "$(uname -o)" = "Msys" ]; then
     winlaunch(){
         HOME= PROMPT= PS1= PATH="$ORIGINAL_PATH" TMP="$ORIGINAL_TMP" TEMP="$ORIGINAL_TEMP" "$@"
     }
+
+    # Workaround for tmux bug:
+    #     https://github.com/microsoft/terminal/issues/5132#issuecomment-1009022843
+    #     https://github.com/alacritty/alacritty/issues/1687#issuecomment-1282482768
+    # This seems to not always be needed. Mostly an issue when attaching to existing tmux
+    # that was started either from mintty or remote SSH session
+    # Later trying to attach from windows terminal will break things
+    tmux(){
+        # ORIG_TERM="$TERM"
+        # ORIG_TERM="$ORIG_TERM" script -q -O /dev/null -c "tmux ${@}"
+        script -q -O /dev/null -c "tmux ${@}"
+    }
 fi
 
 # Pickup changes to SSH agent when attaching to tmux from new login
