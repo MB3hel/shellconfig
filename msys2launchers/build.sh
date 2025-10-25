@@ -8,3 +8,5 @@ compile bash
 compile zsh
 compile sh
 
+gcc src/recycler.c -o bin/recycler -lole32 -lshell32 -municode
+

@@ -10,7 +10,18 @@
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-if [ "$(uname -o)" != "Darwin" ]; then
+if [ "$(uname -o)" = "Msys" ]; then
+    alias open=msys2_open.sh 
+    trash(){
+        if [ $# -lt 1 ]; then
+            echo "$0 item1 [item2 [item3 ...]]"
+        else
+            for f in "$@"; do
+                recycler.exe "$(cygpath -w "$f")"
+            done
+        fi
+    }
+elif [ "$(uname -o)" != "Darwin" ]; then
     alias open='xdg-open'
     alias trash='gio trash'
 fi
