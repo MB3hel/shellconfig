@@ -25,7 +25,24 @@ if [ "$(uname -o)" = "Msys" ]; then
     # In MSYS2 sometimes we need to launch without the environment changes made by MSYS2
     # Note that the ORIGINAL_ variables are set by MSYS2 not by this profile script
     winlaunch(){
-        HOME= PROMPT= PS1= PATH="$ORIGINAL_PATH" TMP="$ORIGINAL_TMP" TEMP="$ORIGINAL_TEMP" "$@"
+        # In subshell so unset won't impact caller
+        (
+            unset HOME
+            unset MSYS2_PATH_TYPE
+            unset MSYSTEM
+            unset MSYSTEM_PREFIX
+            unset MSYSTEM_CARCH
+            unset MSYSTEM_CHOST
+            unset PROMPT
+            unset PS1
+            export PATH="$ORIGINAL_PATH"
+            export TMP="$ORIGINAL_TMP"
+            export TEMP="$ORIGINAL_TEMP"
+            unset ORIGINAL_PATH
+            unset ORIGINAL_TMP
+            unset ORIGINAL_TEMP
+            "$@"
+        )
     }
 
     # Workaround for tmux bug:
