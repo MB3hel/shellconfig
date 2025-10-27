@@ -70,21 +70,21 @@ if [ "$(uname -o)" = "Msys" ]; then
 
     create_wlalias(){
         if type $1 > /dev/null 2>&1; then
-            alias $1="winlaunch \"$(which $1)\""
+            alias $(basename "$1")="winlaunch \"$(which $1)\""
         fi
     }
 
     # The following windows commands are known to need winlaunch
-    create_wlalias cmd              # Windows cmd shell
-    create_wlalias powershell       # Windows powershell
-    create_wlalias pwsh             # Powershell core
-    create_wlalias ucrt64           # MSYS2 launcher from scoop
-    create_wlalias mingw64          # MSYS2 launcher from scoop
-    create_wlalias mingw32          # MSYS2 launcher from scoop
-    create_wlalias clang64          # MSYS2 launcher from scoop
-    create_wlalias clang32          # MSYS2 launcher from scoop
-    create_wlalias clangarm64       # MSYS2 launcher from scoop
-    create_wlalias msys2            # MSYS2 launcher from scoop
+    create_wlalias /c/Windows/System32/cmd  # Windows cmd shell
+    create_wlalias powershell               # Windows powershell
+    create_wlalias pwsh                     # Powershell core
+    create_wlalias ucrt64                   # MSYS2 launcher from scoop
+    create_wlalias mingw64                  # MSYS2 launcher from scoop
+    create_wlalias mingw32                  # MSYS2 launcher from scoop
+    create_wlalias clang64                  # MSYS2 launcher from scoop
+    create_wlalias clang32                  # MSYS2 launcher from scoop
+    create_wlalias clangarm64               # MSYS2 launcher from scoop
+    create_wlalias msys2                    # MSYS2 launcher from scoop
 fi
 
 # Pickup changes to SSH agent when attaching to tmux from new login
