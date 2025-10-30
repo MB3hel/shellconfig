@@ -13,13 +13,22 @@
 # \[ = \001 and \] = \002 but \[ and \] only work directly in PS1 not in echo
 # So echo needs to output \001 and \002 around color settings
 
+# Generally, use green color for username and hostname
+# But on windows (MSYS2 native) use yellow so it is different
+# from WSL
+PCOLOR="${_omb_prompt_bold_green}"
+if [ "$(uname -o)" = "Msys" ]; then
+    PCOLOR="${_omb_prompt_olive}"
+fi
+
+
 PS1="\$(_omb_theme_prompt_arrow)"
 if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
     PS1+="($chroot_name)"
 fi
 PS1+="\$(_omb_theme_prompt_venv)"
-PS1+="[${_omb_prompt_bold_green}\u@\h:${_omb_prompt_bold_navy}\W${_omb_prompt_normal}]"
+PS1+="[$PCOLOR\u@\h:${_omb_prompt_bold_navy}\W${_omb_prompt_normal}]"
 PS1+="\$(scm_prompt_info)"
 PS1+="\$ "
 

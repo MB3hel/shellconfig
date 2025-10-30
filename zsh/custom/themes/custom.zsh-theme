@@ -1,10 +1,18 @@
+# Generally, use green color for username and hostname
+# But on windows (MSYS2 native) use yellow so it is different
+# from WSL
+PCOLOR="$fg[green]"
+if [ "$(uname -o)" = "Msys" ]; then
+    PCOLOR="$fg[yellow]"
+fi
+
 PROMPT="%(?:%{$fg_bold[green]%}%1{➜%}:%{$fg_bold[red]%}%1{➜%})%{$reset_color%}"
 if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
     PROMPT+="($chroot_name)"
 fi
 PROMPT+='$(_omz_theme_prompt_venv)'
-PROMPT+="[%{$fg_bold[green]%}%n@%m:%{$fg_bold[blue]%}%1~%{$reset_color%}]"
+PROMPT+="[%{$PCOLOR%}%n@%m:%{$fg_bold[blue]%}%1~%{$reset_color%}]"
 PROMPT+='$(git_prompt_info)'
 PROMPT+="%% "
 ZSH_THEME_GIT_PROMPT_PREFIX="(%{$fg_bold[cyan]%}"
