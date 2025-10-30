@@ -6,7 +6,9 @@ if [ "$(uname -o)" = "Msys" ]; then
     PCOLOR="$fg[yellow]"
 fi
 
-PROMPT="%(?:%{$fg_bold[green]%}%1{➜%}:%{$fg_bold[red]%}%1{➜%})%{$reset_color%}"
+# ➜      originally used this one, but windows terminal doesn't like
+# →      better in windows terminal
+PROMPT="%(?:%{$fg_bold[green]%}%1{→%}:%{$fg_bold[red]%}%1{→%})%{$reset_color%}"
 if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
     PROMPT+="($chroot_name)"

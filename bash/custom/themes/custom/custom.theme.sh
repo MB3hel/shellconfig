@@ -39,11 +39,14 @@ SCM_THEME_PROMPT_DIRTY=" \001${_omb_term_red}\002✗"
 SCM_THEME_PROMPT_CLEAN=""
 SCM_GIT_SHOW_MINIMAL_INFO=true
 
+
+# ➜      originally used this one, but windows terminal doesn't like
+# →      better in windows terminal
 function _omb_theme_prompt_arrow {
     if [ $? -ne 0 ]; then
-        echo -ne "\001${_omb_term_bold}\002\001${_omb_term_red}\002➜\001${_omb_term_reset}\002"
+        echo -ne "\001${_omb_term_bold}\002\001${_omb_term_red}\002→\001${_omb_term_reset}\002"
     else
-        echo -ne "\001${_omb_term_bold}\002\001${_omb_term_green}\002➜\001${_omb_term_reset}\002"
+        echo -ne "\001${_omb_term_bold}\002\001${_omb_term_green}\002→\001${_omb_term_reset}\002"
     fi
 }
 
