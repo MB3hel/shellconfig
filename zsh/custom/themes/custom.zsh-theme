@@ -1,7 +1,7 @@
 # Generally, use green color for username and hostname
 # But on windows (MSYS2 native) use yellow so it is different
 # from WSL
-PCOLOR="$fg[green]"
+PCOLOR="$fg_bold[green]"
 if [ "$(uname -o)" = "Msys" ]; then
     PCOLOR="$fg[yellow]"
 fi
