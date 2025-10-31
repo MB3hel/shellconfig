@@ -36,7 +36,7 @@ PS1+="\$ "
 SCM_THEME_PROMPT_PREFIX="(\001${_omb_term_bold}\002\001${_omb_term_teal}\002" 
 SCM_THEME_PROMPT_SUFFIX="\001${_omb_term_reset}\002)"
 SCM_THEME_PROMPT_DIRTY=" \001${_omb_term_red}\002✗"
-SCM_THEME_PROMPT_CLEAN=""
+SCM_THEME_PROMPT_CLEAN="\001\002"   # OMB does not respect empty string, so, do this insead
 SCM_GIT_SHOW_MINIMAL_INFO=true
 
 
