@@ -57,7 +57,10 @@ install-template "$DIR/template/zshrc.template" ~/.zshrc
 # Templates for plasma desktop
 if [ "$(uname -o)" != "Msys" ] && [ "$(uname -o)" != "Darwin" ]; then
     mkdir -p ~/.config/plasma-workspace/env/
-    install-template "$DIR/template/plasmaenv.sh.template" ~/.config/plasma-workspace/env/profile.sh
+    install-template "$DIR/template/plasma_profile.sh.template" ~/.config/plasma-workspace/env/plasma_profile.sh
+    mkdir -p ~/.config/plasma-workspace/shutdown/
+    install-template "$DIR/template/plasma_logout.sh.template" ~/.config/plasma-workspace/shutdown/plasma_logout.sh
+    chmod +x ~/.config/plasma-workspace/shutdown/plasma_logout.sh
 fi
 
 # Extras for MSYS2 on windows

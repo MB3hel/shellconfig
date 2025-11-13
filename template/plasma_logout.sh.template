@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
+
+. $HOME/.shellconfig/plasma_logout

@@ -1,6 +1,16 @@
-# Use ssh-agent systemd service in plasma instead of letting the login shell manage it
-systemctl --user start ssh-agent
-export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/openssh_agent"
+
+# Due to how plasma sources this file, we can't use the 'normal' way of
+# managing the ssh agent used in the standard profile script. This is because
+# the exit hook will run once plasma is done with this env script
+# Instead, we need to start the agent and use a shutdown file to kill it
+if [ -z "$SSH_AUTH_SOCK" ] && [ "$(uname -o)" != "Msys" ]; then
+    # Luanch agent now
+    eval `ssh-agent` > /dev/null
+    
+    # Set this so the shutdown script knows it should kill the agent
+    export SSH_AGENT_STARTED_BY_PLASMA_ENV=1
+fi
+
 
 # Plasma on wayland does not source profile (like what used to happen with
 # GNOME wayland). However, plasma can run scripts to set env vars on startup
