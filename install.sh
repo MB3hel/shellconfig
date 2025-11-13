@@ -41,7 +41,9 @@ install-template(){
 
     # Otherwise backup the original and install the template
     echo "Install $2"
-    mv "$2" "$2.bak"
+    if [ -f "$2" ]; then
+        mv "$2" "$2.bak"
+    fi
     cp "$1" "$2"
 }
 
