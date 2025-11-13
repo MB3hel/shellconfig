@@ -47,6 +47,25 @@ install-template(){
     cp "$1" "$2"
 }
 
+# Install a link if nothing already exists
+# This is not often used in this repo as most files are templates to pull in changes
+# directly from this repo as it is pulled, but to allow per-machine modifications
+# Some files don't support this though
+# $1 = target (absolute paths only)
+# $2 = destination (link name)
+install-link(){
+    if [ -f "$2" ] && [ "$(readlink "$2")" = "$1" ]; then
+        echo "Skip    $2 (already linked)"
+        return 0
+    fi
+
+    echo "Link    $2"
+    if [ -f "$2" ]; then
+        mv "$2" "$2.bak"
+    fi
+    ln -s "$1" "$2"
+}
+
 # Install shell config templates
 install-template "$DIR/template/bash_profile.template" ~/.bash_profile
 install-template "$DIR/template/bashrc.template" ~/.bashrc
@@ -61,6 +80,8 @@ if [ "$(uname -o)" != "Msys" ] && [ "$(uname -o)" != "Darwin" ]; then
     mkdir -p ~/.config/plasma-workspace/shutdown/
     install-template "$DIR/template/plasma_logout.sh.template" ~/.config/plasma-workspace/shutdown/plasma_logout.sh
     chmod +x ~/.config/plasma-workspace/shutdown/plasma_logout.sh
+    mkdir -p ~/.local/share/konsole/
+    install-link "$DIR/konsole_tango.colorscheme" ~/.local/share/konsole/Tango.colorscheme
 fi
 
 # Extras for MSYS2 on windows
