@@ -62,7 +62,7 @@ fi
 if [ "$(uname -o)" = "Msys" ]; then
     # Really no good way to do this via script due to how windows does user and system PATH vars
     # Just do it manually
-    echo "Make sure $DIR/msys2launchers is in your path"
+    echo "Make sure $(cygpath -w "$DIR/msys2launchers/bin") is in your path"
 
     # MSYS2's default zshenv defines PROMPT which makes a mess of things when trying to invoke cmd
     # from one of the MSYS2 shells. Just get rid of it. Not needed in this standalone environment

@@ -43,7 +43,7 @@ Finally, note that other msys2 installs should not be configured to use the wind
     {
         "bellStyle": "none",
         "closeOnExit": "always",
-        "commandline": "%USERPROFILE%\\bin\\zsh.exe --login -i",
+        "commandline": "%USERPROFILE%\\.shellconfig\\msys2launchers\bin\\zsh.exe --login -i",
         "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37b}",
         "name": "zsh (native)",
         "startingDirectory": "%USERPROFILE%"
@@ -51,7 +51,7 @@ Finally, note that other msys2 installs should not be configured to use the wind
     {
         "bellStyle": "none",
         "closeOnExit": "always",
-        "commandline": "%USERPROFILE%\\bin\\bash.exe --login -i",
+        "commandline": "%USERPROFILE%\\.shellconfig\\msys2launchers\\bin\\bash.exe --login -i",
         "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37a}",
         "name": "bash (native)",
         "startingDirectory": "%USERPROFILE%"
