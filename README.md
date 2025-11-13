@@ -57,6 +57,7 @@ Finally, note that other msys2 installs should not be configured to use the wind
         "startingDirectory": "%USERPROFILE%"
     }
     ```
+- Add `%USERPROFILE%\.shellconig\msys2launchers` to your users PATH variable
 
 ## Shell Startup Files
 

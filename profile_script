@@ -69,6 +69,10 @@ export LC_ALL=en_US.UTF-8
 
 # Aliases are normally loaded by bashrc / zshrc. But if not bash or zsh
 # this won't happen. Thus, load them here.
+# dircolors are also usually handled with bashrc / zshrc
 if [ -z "$ZSH_VERSION" ] && [ -z "$BASH_VERSION" ]; then
     . $HOME/.shellconfig/aliases
+    if type dircolors > /dev/null 2>&1 && [ -f ~/.shellconfig/dir_colors ]; then
+        eval `dircolors ~/.shellconfig/dir_colors`
+    fi 
 fi

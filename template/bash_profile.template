@@ -1,2 +1,4 @@
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
+
 source ~/.profile
 [[ $- == *i* ]] && source ~/.bashrc

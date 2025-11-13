@@ -1,3 +1,4 @@
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
 
 # Load general profile
 . "$HOME/.shellconfig/profile_script"

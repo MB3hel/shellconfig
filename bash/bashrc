@@ -83,8 +83,8 @@ plugins+=(bash-preexec)
 source "$OSH"/oh-my-bash.sh
 
 # Load ls colors AFTER on my bash
-if type dircolors > /dev/null 2>&1 && [ -f ~/.dircolors ]; then
-    eval `dircolors ~/.dircolors`
+if type dircolors > /dev/null 2>&1 && [ -f ~/.shellconfig/dir_colors ]; then
+    eval `dircolors ~/.shellconfig/dir_colors`
 fi
 
 # Make duplicate tab work in windows terminal using WSL

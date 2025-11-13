@@ -1,3 +1,4 @@
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
 
 # Load generic bash configuration
 . ~/.shellconfig/bash/bashrc

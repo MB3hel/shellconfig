@@ -1,3 +1,4 @@
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
 
 # Load generic zsh configuration
 . ~/.shellconfig/zsh/zshrc
