@@ -1,0 +1,7 @@
+# *** THIS FILE IS A MIN SHELLCONFIG REPO TEMPLATE ***
+
+# Load generic bash configuration
+. ~/.shellconfig-min/bashrc
+
+# System specifics below
+

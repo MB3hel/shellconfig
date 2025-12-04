@@ -1,0 +1,4 @@
+# *** THIS FILE IS A MIN SHELLCONFIG REPO TEMPLATE ***
+
+source ~/.shellconfig-min/bash_profile
+
