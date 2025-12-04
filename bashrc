@@ -1,5 +1,5 @@
 ####################################################################################################
-# General setup (based on Fedora default .bashrc)
+# General setup (based on Ubuntu & Fedora default .bashrc)
 ####################################################################################################
 
 # Source global definitions
@@ -13,6 +13,15 @@ then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
+
+# Enable system provided completions
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
 
 # In case system configs set anything here
 unset CDPATH
