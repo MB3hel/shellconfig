@@ -61,6 +61,7 @@ PCOLOR="$fg_bold[green]"
 if [ "$(uname -o)" = "Msys" ]; then
     PCOLOR="$fg[yellow]"
 fi
+unset PS1
 PROMPT="\$(__prompt_arrow)"
 if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
@@ -78,5 +79,21 @@ fi
 
 # Load aliases / functions used in both zsh and bash
 . ~/.shellconfig/aliases
+
+# Make duplicate tab work in windows terminal using WSL
+if type "wslpath" > /dev/null 2>&1; then
+    keep_current_path() {
+        printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+    }
+    precmd_functions+=(keep_current_path)
+fi
+
+# Make duplicate tab work in windows terminal using MSYS2
+if [ "$(uname -o)" = "Msys" ]; then
+    keep_current_path() {
+        printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"
+    }
+    precmd_functions+=(keep_current_path)
+fi
 
 
