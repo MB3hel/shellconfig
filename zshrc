@@ -26,6 +26,12 @@ bindkey "^[OA" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 bindkey "^[OB" down-line-or-beginning-search
 
+# Home & end keys
+bindkey "^[OH" beginning-of-line
+bindkey "^[[H" beginning-of-line
+bindkey "^[OF" end-of-line
+bindkey "^[[F" end-of-line
+
 # Custom prompt
 autoload -U colors && colors
 setopt PROMPT_SUBST
