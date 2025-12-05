@@ -1,9 +1,12 @@
+# This file must remain compatible with both bash and zsh
+# It will be sourced by plasma in whichever is the user's login shell
+
 
 # Due to how plasma sources this file, we can't use the 'normal' way of
 # managing the ssh agent used in the standard profile script. This is because
 # the exit hook will run once plasma is done with this env script
 # Instead, we need to start the agent and use a shutdown file to kill it
-if [ -z "$SSH_AUTH_SOCK" ] && [ "$(uname -o)" != "Msys" ]; then
+if [ -z "$SSH_AUTH_SOCK" ]; then
     # Luanch agent now
     eval `ssh-agent` > /dev/null
     
@@ -12,16 +15,13 @@ if [ -z "$SSH_AUTH_SOCK" ] && [ "$(uname -o)" != "Msys" ]; then
 fi
 
 
-# Plasma on wayland does not source profile (like what used to happen with
-# GNOME wayland). However, plasma can run scripts to set env vars on startup
-# This is linked to one and used to ensure plasma wayland logins have env vars
-# set in profile like any other login (x11, gnome, ssh, tty, etc) would
-. $HOME/.profile
+# Make sure environment variable settings apply as expected in plasma wayland session
+# This script will run in the user's login shell, so the expected profile script will be sourced
+[ -n "$BASH_VERSION" ] && . $HOME/.bash_profile
+[ -n "$ZSH_VERSION" ] && . $HOME/.zprofile
 
 
-# On plasma, setup to use GUI askpass that integrates with kde wallet
-# If systemd is used by plasma to start ssh-agent this will work similar to
-# how gnome does by default
+# On plasma, setup to use GUI askpass
 if type ksshaskpass > /dev/null 2>&1; then
     export SSH_ASKPASS=ksshaskpass
     export SSH_ASKPASS_REQUIRE=prefer

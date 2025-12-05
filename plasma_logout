@@ -1,5 +1,9 @@
+# This file must remain compatible with both bash and zsh
+# It will be sourced by plasma in whichever is the user's login shell
+
 
 # Kill an SSH agent if it was started by the plasma_profile script
 if [ "$SSH_AGENT_STARTED_BY_PLASMA_ENV" = "1" ]; then
     ssh-agent -k > /dev/null 2>&1
 fi
+

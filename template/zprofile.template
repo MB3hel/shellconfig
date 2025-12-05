@@ -1,5 +1,0 @@
-# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
-
-emulate sh
-. ~/.profile
-emulate zsh

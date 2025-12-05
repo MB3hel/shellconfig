@@ -1,4 +1,15 @@
-# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE RevB ***
 
-source ~/.profile
-[[ $- == *i* ]] && source ~/.bashrc
+# Load the shared bash profile settings first
+source ~/.shellconfig/bash_profile
+
+
+
+# System-specifics here (before bashrc is loaded) 
+# Eg export PATH="/some/dir/:$PATH"
+
+
+
+# Finally, attempt to load bashrc in case this is an interactive login shell
+source ~/.bashrc
+

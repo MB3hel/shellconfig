@@ -1,15 +1,20 @@
-# This script is sourced AFTER shell RC scripts (bashrc / zshrc)
-# Unlike profile, which is sourced before.
-# This means that these aliases will overwrite any defined 
-# by oh-my-zsh, oh-my-bash, AND any defined in bashrc / zshrc.
+# This file must remain compatible with both bash and zsh
 
-# Note: this file may also be loaded by the profile script
-# If the shell is not bash or zsh. This is likely sh in such as case.
-# Thus, MAINTAIN POSIX SHELL COMPATABILITY in this file!
-
+# General aliases
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+
+# Pickup changes to SSH agent when attaching to tmux from new login
+# This does nothing on windows. SSH_AUTH_SOCK not used on windows
+fixssh(){
+    if [ "$(uname -o)" != "Msys" ]; then
+        eval `tmux showenv -s SSH_AUTH_SOCK`
+        eval `tmux showenv -s SSH_AGENT_PID`
+    fi
+}
+
+# open and trash functions / aliases (OS specific)
 if [ "$(uname -o)" = "Msys" ]; then
     alias open=msys2_open.sh 
     trash(){
@@ -25,6 +30,8 @@ elif [ "$(uname -o)" != "Darwin" ]; then
     alias open='xdg-open'
     alias trash='gio trash'
 fi
+
+# openwin for WSL
 if type "wslpath" > /dev/null 2>&1; then
     # Use inside WSL to open a file in the WINDOWS program not the LINUX program for that file type
     openwin(){
@@ -32,6 +39,8 @@ if type "wslpath" > /dev/null 2>&1; then
         cmd.exe /c start "" "$target" > /dev/null 2>&1
     }
 fi
+
+# MSYS2 specific stuff (winlaunch and tmux fix)
 if [ "$(uname -o)" = "Msys" ]; then
     # In MSYS2 sometimes we need to launch without the environment changes made by MSYS2
     # Note that the ORIGINAL_ variables are set by MSYS2 not by this profile script
@@ -87,11 +96,3 @@ if [ "$(uname -o)" = "Msys" ]; then
     create_wlalias msys2                    # MSYS2 launcher from scoop
 fi
 
-# Pickup changes to SSH agent when attaching to tmux from new login
-# This does nothing on windows. SSH_AUTH_SOCK not used on windows
-fixssh(){
-    if [ "$(uname -o)" != "Msys" ]; then
-        eval `tmux showenv -s SSH_AUTH_SOCK`
-        eval `tmux showenv -s SSH_AGENT_PID`
-    fi
-}

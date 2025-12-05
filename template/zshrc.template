@@ -1,6 +1,0 @@
-# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
-
-# Load generic zsh configuration
-. ~/.shellconfig/zsh/zshrc
-
-# zsh specific stuff below. Environment vars should go in ~/.profile

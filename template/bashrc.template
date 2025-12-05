@@ -1,6 +1,17 @@
-# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE RevB ***
 
-# Load generic bash configuration
-. ~/.shellconfig/bash/bashrc
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
 
-# bash specific stuff below. Environment vars should go in ~/.profile
+# Load the shared bashrc first
+. ~/.shellconfig/bashrc
+
+
+
+# System specific additions to bashrc go here
+# Note that environment variables should go in ~/.bash_profile
+# unless they are changes only for interactive shells.
+

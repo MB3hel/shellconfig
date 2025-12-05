@@ -1,9 +1,0 @@
-# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE ***
-
-# Load general profile
-. "$HOME/.shellconfig/profile_script"
-
-
-# Place system specific variables below
-# Note that path modification functions are available as
-# append_path, prepend_path, and remove_path
