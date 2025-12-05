@@ -35,6 +35,10 @@ bindkey "^[[F" end-of-line
 # Delete key
 bindkey "^[[3~" delete-char
 
+# Insert key
+bindkey "^[[2~" overwrite-mode
+bindkey "^[[H" overwrite-mode
+
 # Custom prompt
 autoload -U colors && colors
 setopt PROMPT_SUBST
