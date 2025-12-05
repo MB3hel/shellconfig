@@ -16,28 +16,34 @@ setopt appendhistory
 autoload -Uz compinit && compinit
 source ~/.shellconfig/completion.zsh
 
-# Search history with up/down keys
+# Used to search history with up/down keys
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search
-bindkey "^[OA" up-line-or-beginning-search
-bindkey "^[[B" down-line-or-beginning-search
-bindkey "^[OB" down-line-or-beginning-search
 
-# Home & end keys
-bindkey "^[OH" beginning-of-line
-bindkey "^[[H" beginning-of-line
-bindkey "^[OF" end-of-line
-bindkey "^[[F" end-of-line
+# Keybinds (mostly based on debian's settings)
+bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search    # Up
+bindkey "${terminfo[kcud1]}" down-line-or-beginning-search  # Down
+bindkey "${terminfo[kcub1]}" backward-char                  # Left
+bindkey "${terminfo[kcuf1]}" forward-char                   # Right
+bindkey "${terminfo[kbs]}"   backward-delete-char           # Backspace
+bindkey "${terminfo[kdch1]}" delete-char                    # Del
+bindkey "${terminfo[kich1]}" overwrite-mode                 # Insert
+bindkey "${terminfo[khome]}" beginning-of-line              # Home
+bindkey "${terminfo[kend]}"  end-of-line                    # End
 
-# Delete key
-bindkey "^[[3~" delete-char
-
-# Insert key
-bindkey "^[[2~" overwrite-mode
-bindkey "^[[H" overwrite-mode
+# Put terminal in application mode while zle active so that terminfo values valid
+function zle-line-init () {
+    emulate -L zsh
+    printf '%s' ${terminfo[smkx]}
+}
+function zle-line-finish () {
+    emulate -L zsh
+    printf '%s' ${terminfo[rmkx]}
+}
+zle -N zle-line-init
+zle -N zle-line-finish
 
 # Custom prompt
 autoload -U colors && colors
@@ -74,7 +80,7 @@ PCOLOR="$fg_bold[green]"
 if [ "$(uname -o)" = "Msys" ]; then
     PCOLOR="$fg[yellow]"
 fi
-unset PS1
+unset PS1 # In case system profile/rc sets this
 PROMPT="\$(__prompt_arrow)"
 if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
@@ -108,5 +114,3 @@ if [ "$(uname -o)" = "Msys" ]; then
     }
     precmd_functions+=(keep_current_path)
 fi
-
-
