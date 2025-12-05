@@ -74,3 +74,13 @@ fi
 # Load aliases / functions used in both zsh and bash
 . ~/.shellconfig/aliases
 
+# Make duplicate tab work in windows terminal using WSL
+if type "wslpath" > /dev/null 2>&1; then
+    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
+fi
+
+# Make duplicate tab work in windows terminal using WSL
+if [ "$(uname -o)" = "Msys" ]; then
+    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
+fi
+
