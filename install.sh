@@ -43,6 +43,6 @@ install-template "$DIR/template/bashrc.template" ~/.bashrc
 if [ -f ~/.profile ]; then
     echo "Remove  $HOME/.profile"
     mv ~/.profile ~/.profile.bak
-    echo "# *** USE ~/.bash_profile OR ~/.zprofile INSTEAD!!!"
+    echo "# *** USE ~/.bash_profile OR ~/.zprofile INSTEAD!!!" >> ~/.profile.bak
 fi
 
