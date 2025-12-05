@@ -1,0 +1,10 @@
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE RevB ***
+
+# Load the shared zsh profile settings first
+source ~/.shellconfig/zprofile
+
+
+
+# System-specifics here 
+# Eg export PATH="/some/dir/:$PATH"
+

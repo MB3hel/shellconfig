@@ -1,0 +1,11 @@
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE RevB ***
+
+# Load the shared zshrc first
+. ~/.shellconfig/zshrc
+
+
+
+# System specific additions to bashrc go here
+# Note that environment variables should go in ~/.zprofile
+# unless they are changes only for interactive shells.
+

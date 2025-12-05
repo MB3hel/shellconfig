@@ -37,6 +37,8 @@ install-template(){
 # Install bash & zsh shell config templates
 install-template "$DIR/template/bash_profile.template" ~/.bash_profile
 install-template "$DIR/template/bashrc.template" ~/.bashrc
+install-template "$DIR/template/zprofile.template" ~/.zprofile
+install-template "$DIR/template/zshrc.template" ~/.zshrc
 
 # Older versions of shellconfig relied heavily on ~/.profile. This is no longer the case
 # So to avoid confusing myself, get rid of it
