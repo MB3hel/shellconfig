@@ -54,7 +54,7 @@ __prompt_git(){
     local git_dirty=""
     if [ ! -z "$git_branch" ]; then
         git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
-        printf "(\001\e[01;36m\002${git_branch}\001\e[00m\002\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
+        printf "(%%{\e[01;36m%%}${git_branch}%%{\e[00m%%}%%{\e[01;31m%%}${git_dirty}%%{\e[00m%%})"
     fi
 }
 PROMPT="\$(__prompt_arrow)"
