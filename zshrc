@@ -57,9 +57,13 @@ __prompt_git(){
         printf "(%%{\e[01;36m%%}${git_branch}%%{\e[00m%%}%%{\e[01;31m%%}${git_dirty}%%{\e[00m%%})"
     fi
 }
+PCOLOR="$fg_bold[green]"
+if [ "$(uname -o)" = "Msys" ]; then
+    PCOLOR="$fg[yellow]"
+fi
 PROMPT="\$(__prompt_arrow)"
 PROMPT+="\$(__prompt_venv)"
-PROMPT+="[%{$fg_bold[green]%}%n@%m:%{$fg_bold[blue]%}%1~%{$reset_color%}]"
+PROMPT+="[%{$PCOLOR%}%n@%m:%{$fg_bold[blue]%}%1~%{$reset_color%}]"
 PROMPT+="\$(__prompt_git)"
 PROMPT+="%% "
 

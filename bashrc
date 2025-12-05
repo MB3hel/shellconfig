@@ -54,9 +54,13 @@ __prompt_git(){
         printf "(\001\e[01;36m\002${git_branch}\001\e[00m\002\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
     fi
 }
+PCOLOR="\001\e[32;01m\002"
+if [ "$(uname -o)" = "Msys" ]; then
+    PCOLOR="\001\e[00;33m\002"
+fi
 PS1="\$(__prompt_arrow)"
 PS1+="\$(__prompt_venv)"
-PS1+="[\001\e[32;01m\002\u@\h:\001\e[34;01m\002\W\001\e[00m\002]"
+PS1+="[$PCOLOR\u@\h:\001\e[34;01m\002\W\001\e[00m\002]"
 PS1+="\$(__prompt_git)"
 PS1+="\$ "
 export VIRTUAL_ENV_DISABLE_PROMPT=1
