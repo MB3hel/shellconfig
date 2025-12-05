@@ -16,11 +16,9 @@ fi
 # $1 = template
 # $2 = destination
 install-template(){
-    # Only install template if the same template was not previously installed
-    # If the first line of the template is changed, a new version will be installed
-    local temp_l1="$(head -1 "$1")"
+    local temp_l1="$(grep "$1" -e 'SHELLCONFIG REPO TEMPLATE')"
     local dest_l1=""
-    [ -f "$2" ] && dest_l1="$(head -1 "$2")"
+    [ -f "$2" ] && dest_l1="$(grep "$2" -e 'SHELLCONFIG REPO TEMPLATE')"
     if [ -f "$2" ] && [ "$temp_l1" = "$dest_l1" ]; then
         echo "Skip    $2 (already a template)"
         return 0

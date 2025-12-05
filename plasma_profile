@@ -1,19 +1,11 @@
 # This file must remain compatible with both bash and zsh
 # It will be sourced by plasma in whichever is the user's login shell
 
-
 # Due to how plasma sources this file, we can't use the 'normal' way of
 # managing the ssh agent used in the standard profile script. This is because
 # the exit hook will run once plasma is done with this env script
 # Instead, we need to start the agent and use a shutdown file to kill it
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    # Luanch agent now
-    eval `ssh-agent` > /dev/null
-    
-    # Set this so the shutdown script knows it should kill the agent
-    export SSH_AGENT_STARTED_BY_PLASMA_ENV=1
-fi
-
+eval `ssh-agent` > /dev/null
 
 # Make sure environment variable settings apply as expected in plasma wayland session
 # This script will run in the user's login shell, so the expected profile script will be sourced
