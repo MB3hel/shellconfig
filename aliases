@@ -1,9 +1,12 @@
 # This file must remain compatible with both bash and zsh
 
 # General aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+alias ls='ls --color=auto'
+alias la='ls -A --color=auto'
+alias ll='ls -alF --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # Pickup changes to SSH agent when attaching to tmux from new login
 # This does nothing on windows. SSH_AUTH_SOCK not used on windows
