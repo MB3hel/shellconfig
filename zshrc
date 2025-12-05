@@ -32,6 +32,9 @@ bindkey "^[[H" beginning-of-line
 bindkey "^[OF" end-of-line
 bindkey "^[[F" end-of-line
 
+# Delete key
+bindkey "^[[3~" delete-char
+
 # Custom prompt
 autoload -U colors && colors
 setopt PROMPT_SUBST
