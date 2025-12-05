@@ -79,7 +79,7 @@ if type "wslpath" > /dev/null 2>&1; then
     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
 fi
 
-# Make duplicate tab work in windows terminal using WSL
+# Make duplicate tab work in windows terminal using MSYS2
 if [ "$(uname -o)" = "Msys" ]; then
     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
 fi

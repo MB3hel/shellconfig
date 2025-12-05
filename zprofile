@@ -1,10 +1,12 @@
 # Global zprofile
-if [ -f /etc/zsh/zprofile ]; then
-    . /etc/zsh/zprofile
-fi
-if [ -f /etc/zprofile ]; then
-    . /etc/zprofile
-fi
+# This will have already been done in correct sequence by zsh
+# DO NOT DO IT AGAIN OR THINGS MAY BREAK
+# if [ -f /etc/zsh/zprofile ]; then
+#     . /etc/zsh/zprofile
+# fi
+# if [ -f /etc/zprofile ]; then
+#     . /etc/zprofile
+# fi
 
 # Launch an SSH agent unless the OS is already running one.
 # On windows, SSH_AUTH_SOCK is not used, so we always assume the agent is running.
