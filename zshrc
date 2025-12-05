@@ -62,6 +62,10 @@ if [ "$(uname -o)" = "Msys" ]; then
     PCOLOR="$fg[yellow]"
 fi
 PROMPT="\$(__prompt_arrow)"
+if [[ -f /etc/debian_chroot ]]; then
+    chroot_name=$(cat /etc/debian_chroot)
+    PROMPT+="($chroot_name)"
+fi
 PROMPT+="\$(__prompt_venv)"
 PROMPT+="[%{$PCOLOR%}%n@%m:%{$fg_bold[blue]%}%1~%{$reset_color%}]"
 PROMPT+="\$(__prompt_git)"

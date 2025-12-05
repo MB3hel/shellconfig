@@ -59,6 +59,10 @@ if [ "$(uname -o)" = "Msys" ]; then
     PCOLOR="\001\e[00;33m\002"
 fi
 PS1="\$(__prompt_arrow)"
+if [[ -f /etc/debian_chroot ]]; then
+    chroot_name=$(cat /etc/debian_chroot)
+    PS1+="($chroot_name)"
+fi
 PS1+="\$(__prompt_venv)"
 PS1+="[$PCOLOR\u@\h:\001\e[34;01m\002\W\001\e[00m\002]"
 PS1+="\$(__prompt_git)"
