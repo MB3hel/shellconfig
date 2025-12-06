@@ -50,30 +50,22 @@ autoload -U colors && colors
 setopt PROMPT_SUBST
 __prompt_arrow(){
     if [ $? -ne 0 ]; then
-        local c="\e[01;31m"
+        echo -ne "%{\e[01;31m%}→%{\e[00m%}"
     else
-        local c="\e[01;32m"
+        echo -ne "%{\e[01;32m%}→%{\e[00m%}"
     fi
-    printf "%%{${c}%%}→%%{\e[00m%%}"
 }
 __prompt_venv(){
-    local venv_name=""
-    if [ -n "$VIRTUAL_ENV" ]; then
-        venv_name="${VIRTUAL_ENV##*/}"
-        printf "($venv_name)"
-    fi
+    [ -n "$VIRTUAL_ENV" ] && echo -ne "(${VIRTUAL_ENV##*/})"
 }
 __prompt_git(){
     # symbolic-ref will work for branch names (even with no commits), but not 
     # detached head. Fallback to rev-parse which will work for detached head
-    local git_branch="$(git symbolic-ref --short HEAD 2> /dev/null)"
-    if [ -z "$git_branch" ]; then
-        git_branch="$(git rev-parse --short HEAD 2> /dev/null)"
-    fi
+    local git_branch="$(git symbolic-ref --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null)"
     local git_dirty=""
     if [ ! -z "$git_branch" ]; then
-        git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
-        printf "(%%{\e[01;36m%%}${git_branch}%%{\e[00m%%}%%{\e[01;31m%%}${git_dirty}%%{\e[00m%%})"
+        git status --porcelain 2> /dev/null | sed q1 > /dev/null || git_dirty=" ✗"
+        echo -ne "(%{\e[01;36m%}${git_branch}%{\e[01;31m%}${git_dirty}%{\e[00m%})"
     fi
 }
 PCOLOR="$fg_bold[green]"
@@ -90,6 +82,7 @@ PROMPT+="\$(__prompt_venv)"
 PROMPT+="[%{$PCOLOR%}%n@%m:%{$fg_bold[blue]%}%1~%{$reset_color%}]"
 PROMPT+="\$(__prompt_git)"
 PROMPT+="%% "
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # Configure ls colors
 if type dircolors > /dev/null 2>&1; then
