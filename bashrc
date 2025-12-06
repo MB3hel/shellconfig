@@ -25,6 +25,9 @@ bind '"\e[B": history-search-forward' 2>&1
 # Controls behavior of pasting multiple lines
 bind 'set enable-bracketed-paste on' 2>&1
 
+# Case insensitive tab completion
+bind 'set completion-ignore-case on' 2>&1
+
 # Custom prompt
 __prompt_arrow(){
     if [ $? -ne 0 ]; then
