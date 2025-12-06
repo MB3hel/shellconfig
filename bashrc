@@ -28,30 +28,22 @@ bind 'set enable-bracketed-paste on' 2>&1
 # Custom prompt
 __prompt_arrow(){
     if [ $? -ne 0 ]; then
-        local c="\e[01;31m"
+        echo -ne "\001\e[01;31m\002→\001\e[00m\002"
     else
-        local c="\e[01;32m"
+        echo -ne "\001\e[01;32m\002→\001\e[00m\002"
     fi
-    echo -ne "\001${c}\002→\001\e[00m\002"
 }
 __prompt_venv(){
-    local venv_name=""
-    if [ -n "$VIRTUAL_ENV" ]; then
-        venv_name="${VIRTUAL_ENV##*/}"
-        printf "($venv_name)"
-    fi
+    [ -n "$VIRTUAL_ENV" ] && echo -ne "(${VIRTUAL_ENV##*/})"
 }
 __prompt_git(){
     # symbolic-ref will work for branch names (even with no commits), but not 
     # detached head. Fallback to rev-parse which will work for detached head
-    local git_branch="$(git symbolic-ref --short HEAD 2> /dev/null)"
-    if [ -z "$git_branch" ]; then
-        git_branch="$(git rev-parse --short HEAD 2> /dev/null)"
-    fi
+    local git_branch="$(git symbolic-ref --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null)"
     local git_dirty=""
     if [ ! -z "$git_branch" ]; then
-        git_dirty="$([[ -z $(git status --porcelain 2> /dev/null) ]] || printf " ✗")"
-        printf "(\001\e[01;36m\002${git_branch}\001\e[00m\002\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
+        git status --porcelain 2> /dev/null | sed q1 > /dev/null || git_dirty=" ✗"
+        echo -ne "(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
     fi
 }
 PCOLOR="\001\e[32;01m\002"
