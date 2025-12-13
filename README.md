@@ -16,11 +16,13 @@ cd ~/.shellconfig
 
 ## Windows Install
 
-- On windows, a standalone instances of msys2 is used. It is recommended to avoid installing packages in this standalone environment using pacman.
-- First, run `msys2_install.cmd`
-- Next open `C:\Users\USERNAME\standalonemsys2\msys.exe`
+On windows, a standalone instances of msys2 is used. It is recommended to avoid installing packages in this standalone environment using pacman (intent is that msys2 provides a shell and standard Linux/Unix utilities, but everything else is native windows eg from scoop)
+
+- Clone the repo as shown in the non-windows installation instructions, but do not run `install.sh` yet
+- Run `msys2_install.cmd`
+- Open `C:\Users\USERNAME\standalonemsys2\msys2.exe`
 - Install zsh if desired `pacman -S zsh`
-- Follow the General install instructions above
+- Run `install.sh`
 - (Optional) Add `%USERPROFILE%\.shellconig\msys2launchers\bin` to your user's PATH variable
 - (Optional) Add windows terminal profiles if desired:
     ```
