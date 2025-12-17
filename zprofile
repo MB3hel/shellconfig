@@ -22,4 +22,6 @@ fi
 export EDITOR="nvim"
 export LANG=en_US.UTF-8
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
-
+if [ "$(uname -o)" = "Msys" ] && ! type msys2_open.sh > /dev/null 2>&1; then
+    export PATH="$HOME/.shellconfig/msys2bin:$PATH"
+fi

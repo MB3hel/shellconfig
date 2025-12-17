@@ -20,15 +20,7 @@ fixssh(){
 # open and trash functions / aliases (OS specific)
 if [ "$(uname -o)" = "Msys" ]; then
     alias open=msys2_open.sh 
-    trash(){
-        if [ $# -lt 1 ]; then
-            echo "$0 item1 [item2 [item3 ...]]"
-        else
-            for f in "$@"; do
-                recycler.exe "$(cygpath -w "$f")"
-            done
-        fi
-    }
+    alias trash=msys2_trash.sh
 elif [ "$(uname -o)" != "Darwin" ]; then
     alias open='xdg-open'
     alias trash='gio trash'
