@@ -55,6 +55,13 @@ pacman -S zsh
 }
 ```
 
+## Windows Install (No MSYS2)
+
+To install using git for windows's bash, follow the same steps with the following changes
+- Skip `msys2_install.cmd`
+- Use `bash-from-git.cmd` instead of `bash.cmd` during installation and in windows terminal profile
+- zsh is not available
+
 ## Shell Startup Files
 
 This repo configures both bash and zsh to behave in a similar way: login shells source the profile script. Interactive shells source the rc script. This is default behavior for zsh. However, bash by default would not source the rc for interactive login shells. Here it does. Essentially
