@@ -5,8 +5,9 @@ My Unix shell configurations.
 
 ## Install (Anything but Windows)
 
-- Linux/BSD prerequisites: bash, zsh
-- macOS prerequisites: brew and newer bash installed from brew
+Linux/BSD prerequisites: git, bash, zsh
+
+macOS prerequisites: git, bash (newer version from brew)
 
 ```sh
 git clone git@github.com:MB3hel/shellconfig.git ~/.shellconfig
@@ -14,35 +15,45 @@ cd ~/.shellconfig
 ./install.sh
 ```
 
-## Windows Install
+## Windows Install (using MSYS2 - Recommended)
 
-On windows, a standalone instances of msys2 is used. It is recommended to avoid installing packages in this standalone environment using pacman (intent is that msys2 provides a shell and standard Linux/Unix utilities, but everything else is native windows eg from scoop)
+Windows prerequisites: git
 
-- Clone the repo as shown in the non-windows installation instructions, but do not run `install.sh` yet
-- Run `msys2_install.cmd`
-- Open `C:\Users\USERNAME\standalonemsys2\msys2.exe`
-- Install zsh if desired `pacman -S zsh`
-- Run `install.sh`
-- (Optional) Add `%USERPROFILE%\.shellconig\msys2launchers\bin` to your user's PATH variable
-- (Optional) Add windows terminal profiles if desired:
-    ```
-    {
-        "bellStyle": "none",
-        "closeOnExit": "always",
-        "commandline": "%USERPROFILE%\\.shellconfig\\msys2launchers\bin\\zsh.exe --login -i",
-        "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37b}",
-        "name": "zsh (native)",
-        "startingDirectory": "%USERPROFILE%"
-    },
-    {
-        "bellStyle": "none",
-        "closeOnExit": "always",
-        "commandline": "%USERPROFILE%\\.shellconfig\\msys2launchers\\bin\\bash.exe --login -i",
-        "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37a}",
-        "name": "bash (native)",
-        "startingDirectory": "%USERPROFILE%"
-    }
-    ```
+```sh
+# Start in CMD
+cd /d "%USERPROFILE%"
+git clone git@github.com:MB3hel/shellconfig.git .shellconfig
+cd .shellconfig
+.\msys2_install.cmd
+.\msys2bin\bash.cmd --login -i
+
+# Now in bash
+pacman -S zsh
+./install.sh
+```
+
+(Optional) Add `%USERPROFILE%\.shellconig\msys2bin` to your user's PATH variable (allows running bash.cmd or zsh.cmd from windows shells)
+
+(Optional) Add windows terminal profiles if desired:
+
+```
+{
+    "bellStyle": "none",
+    "closeOnExit": "always",
+    "commandline": "%USERPROFILE%\\.shellconfig\\msys2bin\\zsh.cmd --login -i",
+    "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37b}",
+    "name": "zsh (native)",
+    "startingDirectory": "%USERPROFILE%"
+},
+{
+    "bellStyle": "none",
+    "closeOnExit": "always",
+    "commandline": "%USERPROFILE%\\.shellconfig\\msys2bin\\bash.cmd --login -i",
+    "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37a}",
+    "name": "bash (native)",
+    "startingDirectory": "%USERPROFILE%"
+}
+```
 
 ## Shell Startup Files
 
