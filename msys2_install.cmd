@@ -12,10 +12,10 @@ IF EXIST "%USERPROFILE%\standalonemsys2\" (
 
 :: Download and extract
 PUSHD "%TEMP%"
-curl -LO "https://github.com/msys2/msys2-installer/releases/latest/download/msys2-base-x86_64-latest.tar.xz"
+curl -LO "https://github.com/msys2/msys2-installer/releases/latest/download/msys2-base-x86_64-latest.tar.zstd"
 mkdir "%USERPROFILE%\standalonemsys2\"
 cd "%USERPROFILE%\standalonemsys2\"
-tar -xf "%TEMP%\msys2-base-x86_64-latest.tar.xz" --strip-components=1
+tar -xf "%TEMP%\msys2-base-x86_64-latest.tar.zstd" --strip-components=1
 POPD
 
 :: Edit some settings. Windows doesn't have sed, but msys2 does!
