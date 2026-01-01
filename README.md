@@ -17,7 +17,11 @@ cd ~/.shellconfig
 
 ## Windows Install (using MSYS2 - Recommended)
 
-Windows prerequisites: git
+*Note: MSYS2 is not a prerequisite. It will be installed in a minimal standalone instance by following the instructions below. The MSYS2 installation should not have many packages installed using pacman. Install native windows versions of tools instead (eg using scoop package manager) except for software only available through MSYS2.*
+
+Windows prerequisites: git, zstd (included in windows 11, but not 10), tar (included in windows 10 & 11)
+
+*It is recommended to install windows prerequisites using scoop if not included by the os*
 
 ```sh
 # Start in CMD
@@ -28,11 +32,11 @@ cd .shellconfig
 .\msys2bin\bash.cmd --login -i
 
 # Now in bash
-pacman -S zsh
+pacman -S zsh tmux
 ./install.sh
 ```
 
-(Optional) Add `%USERPROFILE%\.shellconig\msys2bin` to your user's PATH variable (allows running bash.cmd or zsh.cmd from windows shells)
+(Optional) Add `%USERPROFILE%\.shellconfig\msys2bin` to your user's PATH variable (allows running bash.cmd or zsh.cmd from windows shells)
 
 (Optional) Add windows terminal profiles if desired:
 
@@ -56,6 +60,8 @@ pacman -S zsh
 ```
 
 ## Windows Install (No MSYS2)
+
+*This is an alternate method using git for window's own builtin bash shell. It is less flexible than the MSYS2 method and only recommended on systems where you cannot install MSYS2*
 
 To install using git for windows's bash, follow the same steps with the following changes
 - Skip `msys2_install.cmd`
@@ -81,4 +87,7 @@ If no SSH agent is already running, login shells will start one that can be shar
 
 The SSH agent will be terminated at logout to ensure keys are locked.
 
+On windows, no SSH agent is managed by the shell as it is assumed the ssh agent will be running as a system service instead.
+
 Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to unlock keys once until log out.
+
