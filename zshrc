@@ -32,6 +32,8 @@ bindkey "${terminfo[kdch1]}" delete-char                    # Del
 bindkey "${terminfo[kich1]}" overwrite-mode                 # Insert
 bindkey "${terminfo[khome]}" beginning-of-line              # Home
 bindkey "${terminfo[kend]}"  end-of-line                    # End
+bindkey "${terminfo[kLFT5]}" backward-word                  # Ctrl+Left
+bindkey "${terminfo[kRIT5]}" forward-word                   # Ctrl+Right
 
 # Put terminal in application mode while zle active so that terminfo values valid
 function zle-line-init () {
