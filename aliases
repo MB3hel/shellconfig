@@ -17,6 +17,18 @@ fixssh(){
     fi
 }
 
+# When in tmux, make commands known to use ssh run fixssh first
+# This avoids needing to manually run fixssh
+fixssh-wrapper(){
+    fixssh > /dev/null 2>&1
+    "$@"
+}
+if [ -n "$TMUX" ]; then
+    alias git="fixssh-wrapper git"
+    alias ssh="fixssh-wrapper ssh"
+    alias scp="fixssh-wrapper scp"
+fi
+
 # open and trash functions / aliases (OS specific)
 if [ "$(uname -o)" = "Msys" ]; then
     alias open=msys2_open.sh 
