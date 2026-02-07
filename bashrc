@@ -31,13 +31,13 @@ bind 'set completion-ignore-case on' 2>&1
 # Custom prompt
 __prompt_arrow(){
     if [ $? -ne 0 ]; then
-        echo -ne "\001\e[01;31m\002→\001\e[00m\002"
+        printf "\001\e[01;31m\002→\001\e[00m\002"
     else
-        echo -ne "\001\e[01;32m\002→\001\e[00m\002"
+        printf "\001\e[01;32m\002→\001\e[00m\002"
     fi
 }
 __prompt_venv(){
-    [ -n "$VIRTUAL_ENV" ] && echo -ne "(${VIRTUAL_ENV##*/})"
+    [ -n "$VIRTUAL_ENV" ] && printf "(${VIRTUAL_ENV##*/})"
 }
 __prompt_git(){
     # symbolic-ref will work for branch names (even with no commits), but not 
@@ -46,7 +46,7 @@ __prompt_git(){
     local git_dirty=""
     if [ ! -z "$git_branch" ]; then
         git status --porcelain 2> /dev/null | sed q1 > /dev/null || git_dirty=" ✗"
-        echo -ne "(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
+        printf "(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
     fi
 }
 PCOLOR="\001\e[32;01m\002"

@@ -52,13 +52,13 @@ autoload -U colors && colors
 setopt PROMPT_SUBST
 __prompt_arrow(){
     if [ $? -ne 0 ]; then
-        echo -ne "%{\e[01;31m%}→%{\e[00m%}"
+        printf "%%{\e[01;31m%%}→%%{\e[00m%%}"
     else
-        echo -ne "%{\e[01;32m%}→%{\e[00m%}"
+        printf "%%{\e[01;32m%%}→%%{\e[00m%%}"
     fi
 }
 __prompt_venv(){
-    [ -n "$VIRTUAL_ENV" ] && echo -ne "(${VIRTUAL_ENV##*/})"
+    [ -n "$VIRTUAL_ENV" ] && printf "(${VIRTUAL_ENV##*/})"
 }
 __prompt_git(){
     # symbolic-ref will work for branch names (even with no commits), but not 
@@ -67,7 +67,7 @@ __prompt_git(){
     local git_dirty=""
     if [ ! -z "$git_branch" ]; then
         git status --porcelain 2> /dev/null | sed q1 > /dev/null || git_dirty=" ✗"
-        echo -ne "(%{\e[01;36m%}${git_branch}%{\e[01;31m%}${git_dirty}%{\e[00m%})"
+        printf "(%%{\e[01;36m%%}${git_branch}%%{\e[01;31m%%}${git_dirty}%%{\e[00m%%})"
     fi
 }
 PCOLOR="$fg_bold[green]"
