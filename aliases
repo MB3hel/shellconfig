@@ -8,6 +8,14 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+# On many linux distros, "vim" is compiled without X11 support (and thus no support for clipboard
+# integration). In such cases "gvim" is usually provided by another package and will have X11
+# and clipboard support
+# When available, alias vim to gvim (run without the GUI)
+if type gvim > /dev/null 2>&1; then
+    alias vim="gvim -v"
+fi
+
 # Pickup changes to SSH agent when attaching to tmux from new login
 # This does nothing on windows. SSH_AUTH_SOCK not used on windows
 fixssh(){
