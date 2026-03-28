@@ -2,6 +2,20 @@
 # No such file exists on any distro I know of. They all just use /etc/profile which
 # bash will already handle
 
+# uname -o is used extensively in these scripts. Real macOS supports it
+# but the darling compatibility layer does not.
+if type sw_vers > /dev/null 2>&1 && [ -n "$(sw_vers | grep Darling)" ]; then
+    uname(){
+        local args=("$@")
+        for i in "${args[@]}"; do
+            if [ "${args[$i]}" = "-o" ]; then
+                args[$i]="-s"
+            fi
+        done
+        uname "${args[@]}"
+    }
+fi
+
 # Launch an SSH agent unless the OS is already running one.
 # On windows, SSH_AUTH_SOCK is not used, so we always assume the agent is running.
 if [ -z "$SSH_AUTH_SOCK" ] && [ "$(uname -o)" != "Msys" ]; then
