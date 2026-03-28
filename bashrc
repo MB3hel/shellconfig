@@ -45,7 +45,9 @@ __prompt_git(){
     local git_branch="$(git symbolic-ref --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null)"
     local git_dirty=""
     if [ ! -z "$git_branch" ]; then
-        git status --porcelain 2> /dev/null | sed q1 > /dev/null || git_dirty=" ✗"
+        if [ -z "$PROMPT_NO_GIT_STATUS" ]; then
+            git status --porcelain 2> /dev/null | sed q1 > /dev/null || git_dirty=" ✗"
+        fi
         printf "(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
     fi
 }
