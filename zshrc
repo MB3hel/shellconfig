@@ -57,8 +57,9 @@ __prompt_arrow(){
         printf "%%{\e[01;32m%%}→%%{\e[00m%%}"
     fi
 }
-__prompt_venv(){
+__prompt_environment(){
     [ -n "$VIRTUAL_ENV" ] && printf "(${VIRTUAL_ENV##*/})"
+    [ -n "$CONTAINER_ID" ] && printf "(${CONTAINER_ID})"
 }
 __prompt_git(){
     # symbolic-ref will work for branch names (even with no commits), but not 
@@ -82,7 +83,7 @@ if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
     PROMPT+="($chroot_name)"
 fi
-PROMPT+="\$(__prompt_venv)"
+PROMPT+="\$(__prompt_environment)"
 PROMPT+="[%{$PCOLOR%}%n@%m:%{$fg_bold[blue]%}%1~%{$reset_color%}]"
 PROMPT+="\$(__prompt_git)"
 PROMPT+="%% "
