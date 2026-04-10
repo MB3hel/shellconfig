@@ -27,7 +27,8 @@ if [ -z "$SSH_AUTH_SOCK" ] && [ "$(uname -o)" != "Msys" ]; then
 fi
 
 # Default environment settings (system specific ~/.bash_profile can override these)
-export EDITOR="nvim"
+type vim > /dev/null 2>&1 && export EDITOR="vim"
+type nvim > /dev/null 2>&1 && export EDITOR="nvim"
 export LANG=en_US.UTF-8
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 if [ "$(uname -o)" = "Msys" ] && ! type msys2_open.sh > /dev/null 2>&1; then
