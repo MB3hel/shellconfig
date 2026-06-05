@@ -59,6 +59,8 @@ pacman -S zsh tmux
 }
 ```
 
+Opacity is usually set to 80 in "Defaults" for WT w/ acrylic 
+
 ## Windows Install (No MSYS2)
 
 *This is an alternate method using git for window's own builtin bash shell. It is less flexible than the MSYS2 method and only recommended on systems where you cannot install MSYS2*
