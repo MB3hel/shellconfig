@@ -23,7 +23,12 @@ if type sw_vers > /dev/null 2>&1 && [ -n "$(sw_vers | grep Darling)" ]; then
 fi
 
 # Launch an SSH agent unless the OS is already running one.
-if ! ssh-add -l > /dev/null 2>&1; then
+# openssh ssh-add -l exit codes:
+#   0 = Agent is running and has keys
+#   1 = Agent is running but has no keys
+#   2 = Agent is not running
+ssh-add -l > /dev/null 2>&1
+if [ $? -gt 1 ]; then
     # Luanch agent now
     eval `ssh-agent` > /dev/null
 
