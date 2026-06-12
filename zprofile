@@ -23,10 +23,9 @@ if type sw_vers > /dev/null 2>&1 && [ -n "$(sw_vers | grep Darling)" ]; then
 fi
 
 # Launch an SSH agent unless the OS is already running one.
-# On windows, SSH_AUTH_SOCK is not used, so we always assume the agent is running.
-if [ -z "$SSH_AUTH_SOCK" ] && [ "$(uname -o)" != "Msys" ]; then
+if ! ssh-add -l > /dev/null 2>&1; then
     # Luanch agent now
-     eval `ssh-agent` > /dev/null
+    eval `ssh-agent` > /dev/null
 
     # Kill SSH agent on logout of this shell
     trap 'ssh-agent -k > /dev/null 2>&1' EXIT
