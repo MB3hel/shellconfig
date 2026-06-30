@@ -39,3 +39,6 @@ if [ "$(uname -o)" = "Msys" ] && ! type msys2_open.sh > /dev/null 2>&1; then
     export PATH="$HOME/.shellconfig/msys2bin:$PATH"
 fi
 
+# Homebrew for tools, packages, versions, etc not in os repos
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+
