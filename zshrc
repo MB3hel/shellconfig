@@ -23,17 +23,17 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 
 # Keybinds (mostly based on debian's settings)
-bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search    # Up
-bindkey "${terminfo[kcud1]}" down-line-or-beginning-search  # Down
-bindkey "${terminfo[kcub1]}" backward-char                  # Left
-bindkey "${terminfo[kcuf1]}" forward-char                   # Right
-bindkey "${terminfo[kbs]}"   backward-delete-char           # Backspace
-bindkey "${terminfo[kdch1]}" delete-char                    # Del
-bindkey "${terminfo[kich1]}" overwrite-mode                 # Insert
-bindkey "${terminfo[khome]}" beginning-of-line              # Home
-bindkey "${terminfo[kend]}"  end-of-line                    # End
-bindkey "${terminfo[kLFT5]}" backward-word                  # Ctrl+Left
-bindkey "${terminfo[kRIT5]}" forward-word                   # Ctrl+Right
+bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search    2>/dev/null # Up
+bindkey "${terminfo[kcud1]}" down-line-or-beginning-search  2>/dev/null # Down
+bindkey "${terminfo[kcub1]}" backward-char                  2>/dev/null # Left
+bindkey "${terminfo[kcuf1]}" forward-char                   2>/dev/null # Right
+bindkey "${terminfo[kbs]}"   backward-delete-char           2>/dev/null # Backspace
+bindkey "${terminfo[kdch1]}" delete-char                    2>/dev/null # Del
+bindkey "${terminfo[kich1]}" overwrite-mode                 2>/dev/null # Insert
+bindkey "${terminfo[khome]}" beginning-of-line              2>/dev/null # Home
+bindkey "${terminfo[kend]}"  end-of-line                    2>/dev/null # End
+bindkey "${terminfo[kLFT5]}" backward-word                  2>/dev/null # Ctrl+Left
+bindkey "${terminfo[kRIT5]}" forward-word                   2>/dev/null # Ctrl+Right
 
 # Put terminal in application mode while zle active so that terminfo values valid
 function zle-line-init () {
