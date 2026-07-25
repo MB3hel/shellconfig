@@ -43,3 +43,5 @@ fi
 [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ] && \
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 
+# Enable windows symlinks in msys2 (requires developer mode)
+[ "$(uname -o)" = "Msys" ] && export MSYS='winsymlinks:nativestrict'
