@@ -39,6 +39,7 @@ __prompt_arrow(){
 __prompt_environment(){
     [ -n "$VIRTUAL_ENV" ] && printf "(${VIRTUAL_ENV##*/})"
     [ -n "$CONTAINER_ID" ] && printf "(${CONTAINER_ID})"
+    [ -n "$MSYSTEM" ] && [[ "$(cygpath -m '/')" == *scoop* ]]  && printf "(${MSYSTEM,,})"
 }
 __prompt_git(){
     # symbolic-ref will work for branch names (even with no commits), but not 
