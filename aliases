@@ -7,6 +7,7 @@ alias ll='ls -alF --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+alias db='distrobox'
 
 if [ "$(uname -o)" != "Msys" ] && [ "$(uname -o)" != "Darwin" ]; then 
     # On many linux distros, "vim" is compiled without X11 support (and thus no support for clipboard
