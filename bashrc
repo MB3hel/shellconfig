@@ -36,22 +36,39 @@ __prompt_arrow(){
         printf "\001\e[01;32m\002→\001\e[00m\002"
     fi
 }
+__PROMPT_MSYS_ENVIRONMENT=""
+[ -n "$MSYSTEM" ] && [[ "$(cygpath -m '/')" == *scoop* ]] && __PROMPT_MSYS_ENVIRONMENT="(${MSYSTEM:l})"
 __prompt_environment(){
-    [ -n "$VIRTUAL_ENV" ] && printf "(${VIRTUAL_ENV##*/})"
+    [ -n "$__PROMPT_MSYS_ENVIRONMENT" ] && printf "(${__PROMPT_MSYS_ENVIRONMENT})"
     [ -n "$CONTAINER_ID" ] && printf "(${CONTAINER_ID})"
-    [ -n "$MSYSTEM" ] && [[ "$(cygpath -m '/')" == *scoop* ]]  && printf "(${MSYSTEM,,})"
+    [ -n "$VIRTUAL_ENV" ] && printf "(${VIRTUAL_ENV##*/})"
 }
 __prompt_git(){
-    # symbolic-ref will work for branch names (even with no commits), but not 
-    # detached head. Fallback to rev-parse which will work for detached head
-    local git_branch="$(git symbolic-ref --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null)"
+    # Note: minimize git command invocations because launching git on windows is slow
+    # enough to be noticeable. Use one git status command to get all info needed for prompt
+    local git_branch=""
     local git_dirty=""
-    if [ ! -z "$git_branch" ]; then
-        if [ -z "$PROMPT_NO_GIT_STATUS" ]; then
-            git status --porcelain 2> /dev/null | sed q1 > /dev/null || git_dirty=" ✗"
-        fi
-        printf "(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
-    fi
+    while read -r line_type line_contents line_contents2; do
+        case "$line_type" in 
+            '#'*)
+                case "$line_contents" in
+                    'branch.oid')
+                        # First 12 chars of hash
+                        git_branch="${line_contents2:0:7}"
+                        ;;
+                    'branch.head')
+                        # Branch name, unless in detached head state (in which case hash is kept)
+                        [ "$line_contents2" = "(detached)" ] || git_branch="$line_contents2"
+                        ;;
+                esac
+                ;;
+            '1'*|'2'*|'u'*|'?'*)
+                git_dirty=" ✗"
+                break
+                ;;
+        esac
+    done < <(git status --porcelain=v2 --branch 2>/dev/null)
+    [ ! -z "$git_branch" ] && printf "(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
 }
 PCOLOR="\001\e[32;01m\002"
 if [ "$(uname -o)" = "Msys" ]; then
