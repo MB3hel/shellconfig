@@ -93,3 +93,8 @@ On windows, no SSH agent is managed by the shell as it is assumed the ssh agent 
 
 Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to unlock keys once until log out.
 
+## Why is it slow on windows
+
+The answer is almost always: Antivirus. Windows defender, etc.
+Excluding both where you have git installed and the standlone msys2 folder helps quite a bit
+
