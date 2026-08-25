@@ -94,7 +94,7 @@ __prompt_arrow(){
     fi
 }
 precmd_functions+=(__prompt_arrow)
-
+PS1+="%{%1G%}"  # Add an empty string, but tell zle it takes up one character to account for the arrow
 
 # Environment prefixes
 # MSYS2
