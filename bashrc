@@ -28,7 +28,26 @@ bind 'set enable-bracketed-paste on' 2>&1
 # Case insensitive tab completion
 bind 'set completion-ignore-case on' 2>&1
 
+# --------------------------------------------------------------------------------------------------
 # Custom prompt
+# --------------------------------------------------------------------------------------------------
+
+# General settings
+PS1=""
+unset PROMPT
+
+# Make duplicate tab work in windows terminal using WSL
+if type "wslpath" > /dev/null 2>&1; then
+    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
+fi
+
+# Make duplicate tab work in windows terminal using MSYS2
+if [ "$(uname -o)" = "Msys" ]; then
+    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
+fi
+
+
+# Red or green arrow at start of prompt (using precmd functions so it is printed before prompt)
 __prompt_arrow(){
     if [ $? -ne 0 ]; then
         printf "\001\e[01;31m\002→\001\e[00m\002"
@@ -36,13 +55,31 @@ __prompt_arrow(){
         printf "\001\e[01;32m\002→\001\e[00m\002"
     fi
 }
-__PROMPT_MSYS_ENVIRONMENT=""
-[ -n "$MSYSTEM" ] && [[ "$(cygpath -m '/')" == *scoop* ]] && __PROMPT_MSYS_ENVIRONMENT="(${MSYSTEM:l})"
-__prompt_environment(){
-    [ -n "$__PROMPT_MSYS_ENVIRONMENT" ] && printf "(${__PROMPT_MSYS_ENVIRONMENT})"
-    [ -n "$CONTAINER_ID" ] && printf "(${CONTAINER_ID})"
-    [ -n "$VIRTUAL_ENV" ] && printf "(${VIRTUAL_ENV##*/})"
-}
+PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__prompt_arrow'
+
+
+# Environment prefixes
+# MSYS2
+if [ -n "$MSYSTEM" ] && [[ "$(cygpath -m '/')" == *scoop* ]]; then
+    PS1+="(${MSYSTEM:l})"
+fi
+# docker / podman containers
+if [ -n "$CONTAINER_ID" ]; then
+    PS1+="($CONTAINER_ID)"
+fi
+# schroots
+if [[ -f /etc/debian_chroot ]]; then
+    chroot_name=$(cat /etc/debian_chroot)
+    PS1+="($chroot_name)"
+fi
+# python venvs
+VIRTUAL_ENV_DISABLE_PROMPT=1
+PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__VIRTUAL_ENV_FWD_SLASH=${VIRTUAL_ENV//\\//}'
+PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__VIRTUAL_ENV_BASENAME=${__VIRTUAL_ENV_FWD_SLASH##*/}'
+PS1+='${__VIRTUAL_ENV_BASENAME:+($__VIRTUAL_ENV_BASENAME)}'
+
+
+# Git status for prompt
 __prompt_git(){
     # Note: minimize git command invocations because launching git on windows is slow
     # enough to be noticeable. Use one git status command to get all info needed for prompt
@@ -70,21 +107,19 @@ __prompt_git(){
     done < <(git status --porcelain=v2 --branch 2>/dev/null)
     [ ! -z "$git_branch" ] && printf "(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
 }
+
+
+# Different color for native windows prompts
 PCOLOR="\001\e[32;01m\002"
 if [ "$(uname -o)" = "Msys" ]; then
     PCOLOR="\001\e[00;33m\002"
 fi
-PS1="\$(__prompt_arrow)"
-if [[ -f /etc/debian_chroot ]]; then
-    chroot_name=$(cat /etc/debian_chroot)
-    PS1+="($chroot_name)"
-fi
-PS1+="\$(__prompt_environment)"
 PS1+="[$PCOLOR\u@\h:\001\e[34;01m\002\W\001\e[00m\002]"
 PS1+="\$(__prompt_git)"
 PS1+="\$ "
-export VIRTUAL_ENV_DISABLE_PROMPT=1
-unset PROMPT
+
+# --------------------------------------------------------------------------------------------------
+
 
 # Configure ls colors
 if type dircolors > /dev/null 2>&1; then
@@ -93,14 +128,4 @@ fi
 
 # Load aliases / functions used in both zsh and bash
 . ~/.shellconfig/aliases
-
-# Make duplicate tab work in windows terminal using WSL
-if type "wslpath" > /dev/null 2>&1; then
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
-fi
-
-# Make duplicate tab work in windows terminal using MSYS2
-if [ "$(uname -o)" = "Msys" ]; then
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
-fi
 
