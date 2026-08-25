@@ -16,6 +16,11 @@ setopt appendhistory
 autoload -Uz compinit && compinit
 source ~/.shellconfig/completion.zsh
 
+# Fix tab completion of msys unix style paths
+if [ "$(uname -o)" = "Msys" ]; then
+    zstyle ':completion:*' fake-files /: "/:$(mount | sed -rn 's#^[A-Z]: on /([a-z]).*#\1#p' | tr '\n' ' ')"
+fi
+
 # Used to search history with up/down keys
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
