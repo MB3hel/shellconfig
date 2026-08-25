@@ -81,11 +81,13 @@ if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
     PS1+="($chroot_name)"
 fi
-# python venvs
-VIRTUAL_ENV_DISABLE_PROMPT=1
-PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__VIRTUAL_ENV_FWD_SLASH=${VIRTUAL_ENV//\\//}'
-PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__VIRTUAL_ENV_BASENAME=${__VIRTUAL_ENV_FWD_SLASH##*/}'
-PS1+='${__VIRTUAL_ENV_BASENAME:+($__VIRTUAL_ENV_BASENAME)}'
+# python venvs (fixup to get rid of space)
+__fixup_venv(){
+    if [ "$VIRTUAL_ENV" != "$__LAST_VIRTUAL_ENV" ]; then
+        PS1="${VIRTUAL_ENV_PROMPT% }${_OLD_VIRTUAL_PS1}"
+    fi
+}
+PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__fixup_venv'
 
 
 # Git status for prompt
