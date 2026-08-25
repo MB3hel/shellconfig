@@ -62,18 +62,18 @@ unset PROMPT # In case system profile/rc sets this
 
 # Make duplicate tab work in windows terminal using WSL
 if type "wslpath" > /dev/null 2>&1; then
-    keep_current_path() {
+    __wt_dup_path() {
         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
     }
-    precmd_functions+=(keep_current_path)
+    precmd_functions+=(__wt_dup_path)
 fi
 
 # Make duplicate tab work in windows terminal using MSYS2
 if [ "$(uname -o)" = "Msys" ]; then
-    keep_current_path() {
+    __wt_dup_path() {
         printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"
     }
-    precmd_functions+=(keep_current_path)
+    precmd_functions+=(__wt_dup_path)
 fi
 
 
