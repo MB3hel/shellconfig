@@ -84,7 +84,9 @@ fi
 # python venvs (fixup to get rid of space)
 __fixup_venv(){
     if [ "$VIRTUAL_ENV" != "$__LAST_VIRTUAL_ENV" ]; then
-        PS1="${VIRTUAL_ENV_PROMPT% }${_OLD_VIRTUAL_PS1}"
+        __VENV_PREFIX="${PS1%"$_OLD_VIRTUAL_PS1"}"
+        PS1="${__VENV_PREFIX% }${_OLD_VIRTUAL_PS1}"
+        __LAST_VIRTUAL_ENV="$VIRTUAL_ENV"
     fi
 }
 PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__fixup_venv'
