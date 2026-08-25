@@ -36,6 +36,15 @@ bind 'set completion-ignore-case on' 2>&1
 PS1=""
 unset PROMPT
 
+# Alternative to cygpath -w b/c it can be slow if windows defender doesn't exclude msys2 install
+# but shell implementation doesn't spawn new processes
+__msys_to_winpath(){
+    local winpath="${1:1}"                  # remove leading slash
+    winpath="${winpath//\//\\}"             # convert '/' to '\\'
+    winpath="${winpath^}"                   # Capitalize first letter (drive letter)
+    echo "${winpath:0:1}:${winpath:1}"      # First char (drive letter) ':' rest of path
+}
+
 # Make duplicate tab work in windows terminal using WSL
 if type "wslpath" > /dev/null 2>&1; then
     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
@@ -43,7 +52,7 @@ fi
 
 # Make duplicate tab work in windows terminal using MSYS2
 if [ "$(uname -o)" = "Msys" ]; then
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"'
+    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(__msys_to_winpath "$PWD")"'
 fi
 
 

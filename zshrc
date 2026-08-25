@@ -60,6 +60,14 @@ PS1=""
 unset PROMPT # In case system profile/rc sets this
 
 
+# Alternative to cygpath -w b/c it can be slow if windows defender doesn't exclude msys2 install
+# but shell implementation doesn't spawn new processes
+__msys_to_winpath(){
+    local winpath="${1:1}"                  # remove leading slash
+    winpath="${winpath//\//\\\\}"           # convert '/' to '\\'
+    echo "${(C)winpath:0:1}:${winpath:1}" # First char (drive letter caps) ':' rest of path
+}
+
 # Make duplicate tab work in windows terminal using WSL
 if type "wslpath" > /dev/null 2>&1; then
     __wt_dup_path() {
@@ -71,7 +79,7 @@ fi
 # Make duplicate tab work in windows terminal using MSYS2
 if [ "$(uname -o)" = "Msys" ]; then
     __wt_dup_path() {
-        printf "\e]9;9;%s\e\\" "$(cygpath -w "$PWD")"
+        printf "\e]9;9;%s\e\\" "$(__msys_to_winpath "$PWD")"
     }
     precmd_functions+=(__wt_dup_path)
 fi
