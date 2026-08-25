@@ -56,15 +56,28 @@ if [ "$(uname -o)" = "Msys" ]; then
 fi
 
 
-# Red or green arrow at start of prompt (using precmd functions so it is printed before prompt)
+# Red or green arrow at start of prompt
+# Relocate it dynamically in case something else prepends to PS1
 __prompt_arrow(){
+    # Set __PROMPT_ARROW based on exit status of last command
     if [ $? -ne 0 ]; then
-        printf "\001\e[01;31m\002→\001\e[00m\002"
+        __PROMPT_ARROW="$(printf "\001\e[01;31m\002→\001\e[00m\002")"
     else
-        printf "\001\e[01;32m\002→\001\e[00m\002"
+        __PROMPT_ARROW="$(printf "\001\e[01;32m\002→\001\e[00m\002")"
     fi
+
+    # Apply fixup to venv prefix to remove space BEFORE
+    # further modifying the PS1
+    __fixup_venv
+
+    # Remove '${__PROMPT_ARROW}' from PS1
+    PS1="${PS1/'${__PROMPT_ARROW}'/}"
+
+    # Prepend '${__PROMPT_AROW}' to PS1 so it is always in front
+    # even eg after python venv prepends to PS1
+    PS1='${__PROMPT_ARROW}'"$PS1"
 }
-PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__prompt_arrow'
+PROMPT_COMMAND="__prompt_arrow; $PROMPT_COMMAND"
 
 
 # Environment prefixes
@@ -83,13 +96,15 @@ if [[ -f /etc/debian_chroot ]]; then
 fi
 # python venvs (fixup to get rid of space)
 __fixup_venv(){
+    local venv_prefix=""
     if [ "$VIRTUAL_ENV" != "$__LAST_VIRTUAL_ENV" ]; then
-        __VENV_PREFIX="${PS1%"$_OLD_VIRTUAL_PS1"}"
-        PS1="${__VENV_PREFIX% }${_OLD_VIRTUAL_PS1}"
         __LAST_VIRTUAL_ENV="$VIRTUAL_ENV"
+        venv_prefix="${PS1%"$_OLD_VIRTUAL_PS1"}"    # extract prefix
+        [ "$venv_prefix" = "$PS1" ] && return 0     # return if no prefix found
+        venv_prefix="${venv_prefix% }"              # remove space
+        PS1="${PS1/"$venv_prefix "/"$venv_prefix"}" # replace version with space
     fi
 }
-PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'__fixup_venv'
 
 
 # Git status for prompt
