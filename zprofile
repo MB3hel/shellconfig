@@ -37,10 +37,10 @@ if [ $? -gt 1 ]; then
 fi
 
 # Default environment settings (system specific ~/.bash_profile can override these)
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 type vim > /dev/null 2>&1 && export EDITOR="vim"
 type nvim > /dev/null 2>&1 && export EDITOR="nvim"
 export LANG=en_US.UTF-8
-export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 if [ "$(uname -o)" = "Msys" ] && ! type msys2_open.sh > /dev/null 2>&1; then
     export PATH="$HOME/.shellconfig/msys2bin:$PATH"
 fi
