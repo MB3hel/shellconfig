@@ -90,16 +90,29 @@ if [ "$(uname -o)" = "Msys" ]; then
 fi
 
 
-# Red or green arrow at start of prompt (using precmd functions so it is printed before prompt)
-__prompt_arrow(){
+__prompt_construct(){
+    # Set __PROMPT_ARROW based on exit status of last command
+    # Green arrow on exit status 0, else red
     if [ $? -ne 0 ]; then
-        print -nP "%{\e[01;31m%}→%{\e[00m%}"
+        __PROMPT_ARROW="$(printf "%%{\e[01;31m%%}→%%{\e[00m%%}")"
     else
-        print -nP "%{\e[01;32m%}→%{\e[00m%}"
+        __PROMPT_ARROW="$(printf "%%{\e[01;32m%%}→%%{\e[00m%%}")"
     fi
+
+    # Apply fixup to venv prefix to remove space BEFORE
+    # further modifying the PS1
+    __fixup_venv
+
+    # Remove '${__PROMPT_ARROW}' from PS1
+    PS1="${PS1//\$\{__PROMPT_ARROW\}/}"
+
+    # Prepend '${__PROMPT_ARROW}' to PS1 so it is always in front
+    # even eg after python venv prepends to PS1
+    PS1='${__PROMPT_ARROW}'"$PS1"
+
 }
-precmd_functions+=(__prompt_arrow)
-PS1+="%{%1G%}"  # Add an empty string, but tell zle it takes up one character to account for the arrow
+precmd_functions=(__prompt_construct $precmd_functions)
+
 
 # Environment prefixes
 # MSYS2
@@ -117,13 +130,16 @@ if [[ -f /etc/debian_chroot ]]; then
 fi
 # python venvs (fixup to get rid of space)
 __fixup_venv(){
+    local venv_prefix=""
     if [ "$VIRTUAL_ENV" != "$__LAST_VIRTUAL_ENV" ]; then
-        __VENV_PREFIX="${PS1%"$_OLD_VIRTUAL_PS1"}"
-        PS1="${__VENV_PREFIX% }${_OLD_VIRTUAL_PS1}"
         __LAST_VIRTUAL_ENV="$VIRTUAL_ENV"
+        venv_prefix="${PS1%"$_OLD_VIRTUAL_PS1"}"    # extract prefix
+        [ "$venv_prefix" = "$PS1" ] && return 0     # return if no prefix found
+        venv_prefix="${venv_prefix% }"              # remove space
+        PS1="${PS1/"$venv_prefix "/"$venv_prefix"}" # replace version with space
     fi
 }
-precmd_functions+=(__fixup_venv)
+
 
 # Git status for prompt
 __prompt_git(){

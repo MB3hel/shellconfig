@@ -55,11 +55,9 @@ if [ "$(uname -o)" = "Msys" ]; then
     PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(__msys_to_winpath "$PWD")"'
 fi
 
-
-# Red or green arrow at start of prompt
-# Relocate it dynamically in case something else prepends to PS1
-__prompt_arrow(){
+__prompt_construct(){
     # Set __PROMPT_ARROW based on exit status of last command
+    # Green arrow on exit status 0, else red
     if [ $? -ne 0 ]; then
         __PROMPT_ARROW="$(printf "\001\e[01;31m\002→\001\e[00m\002")"
     else
@@ -77,7 +75,7 @@ __prompt_arrow(){
     # even eg after python venv prepends to PS1
     PS1='${__PROMPT_ARROW}'"$PS1"
 }
-PROMPT_COMMAND="__prompt_arrow; $PROMPT_COMMAND"
+PROMPT_COMMAND="__prompt_construct; $PROMPT_COMMAND"
 
 
 # Environment prefixes
