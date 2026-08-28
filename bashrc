@@ -35,6 +35,7 @@ bind 'set completion-ignore-case on' 2>&1
 # General settings
 PS1=""
 unset PROMPT
+unset PROMPT_COMMAND # see bash_profile template
 
 # Alternative to cygpath -w b/c it can be slow if windows defender doesn't exclude msys2 install
 # but shell implementation doesn't spawn new processes

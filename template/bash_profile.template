@@ -1,15 +1,19 @@
-# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE RevB ***
+# *** THIS FILE IS A SHELLCONFIG REPO TEMPLATE RevC ***
 
 # Load the shared bash profile settings first
 source ~/.shellconfig/bash_profile
+
+# Abuse PROMPT_COMMAND to source bashrc AFTER bash_profile finishes running
+# This allows anything to be appended to this file, and bashrc will still
+# always run afterwards. This ensures the order is ALWAYS bash_profile -> bashrc
+# and matches zprofile -> zshrc ordering of zsh
+# bashrc will unset this the first time it runs so bashrc is sourced only once
+case $- in
+    *i*) PROMPT_COMMAND="source ~/.bashrc" ;;
+esac
 
 
 
 # System-specifics here (before bashrc is loaded) 
 # Eg export PATH="/some/dir/:$PATH"
-
-
-
-# Finally, attempt to load bashrc in case this is an interactive login shell
-source ~/.bashrc
 
