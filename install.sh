@@ -78,7 +78,7 @@ if [ "$(uname -o)" != "Msys" ] && [ "$(uname -o)" != "Darwin" ]; then
 fi
 
 # Link shellconfig into the msys2 installed by scoop
-if [ "$(uname -o)" ]; then
+if [ "$(uname -o)" = "Msys" ]; then
     export MSYS='winsymlinks:nativestrict'
     mkdir -p "$HOME/scoop/persist/msys2/home/$USER"
     install-link "$HOME/.shellconfig" "$HOME/scoop/persist/msys2/home/$USER/.shellconfig"
