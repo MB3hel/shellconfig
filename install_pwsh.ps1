@@ -1,0 +1,10 @@
+#!/usr/bin/env pwsh
+
+# Unlike bash/zsh templates, the pwsh template is not intended to be modified further by users
+# since it gets synced on windows. So no need to implement the template system like install.sh
+# has. Can just always copy the latest one
+
+cp $PSScriptRoot/template/Microsoft.PowerShell_profile.ps1 $PROFILE
+if (-not (Test-Path -Path "$HOME/.pwsh_profile.ps1")) {
+    New-Item -Path "$HOME/.pwsh_profile.ps1" -ItemType "File" -Value "# System specifics go below`n"
+}
