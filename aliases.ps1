@@ -19,9 +19,9 @@ function InvokeGvimV() {
 }
 if (-not ($IsWindows -or $IsMacOS)){
     # Some linux distros split the vim package
-    if (Get-Command "vimx" -ErrorAction SilentlyContinue) {
+    if (Get-Command -CommandType Application -TotalCount 1 "vimx" -ErrorAction SilentlyContinue) {
         New-Alias vim InvokeVimx
-    } elseif (Get-Command "gvim" -ErrorAction SilentlyContinue) {
+    } elseif (Get-Command -CommandType Application -TotalCount 1 "gvim" -ErrorAction SilentlyContinue) {
         New-Alias vim InvokeGvimV
     }
 }
@@ -44,15 +44,15 @@ if(-not $IsWindows) {
     }
     function InvokeFixSshGit(){
         fixssh >$null 2>&1
-        & (Get-Command -CommandType Application git)[0].Source @args
+        & (Get-Command -CommandType Application -TotalCount 1 git)[0].Source @args
     }
     function InvokeFixSshSsh(){
         fixssh >$null 2>&1
-        & (Get-Command -CommandType Application ssh)[0].Source @args
+        & (Get-Command -CommandType Application -TotalCount 1 ssh)[0].Source @args
     }
     function InvokeFixSshScp(){
         fixssh >$null 2>&1
-        & (Get-Command -CommandType Application scp)[0].Source @args
+        & (Get-Command -CommandType Application -TotalCount 1 scp)[0].Source @args
     }
     if($Env:TMUX){
         New-Alias git InvokeFixSshGit

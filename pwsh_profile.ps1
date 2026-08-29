@@ -12,7 +12,7 @@ if($IsWindows){
         }
     }
 }
-if($IsLinux -and (Get-Command "wslpath" -ErrorAction SilentlyContinue)) {
+if($IsLinux -and (Get-Command -CommandType Application -TotalCount 1 "wslpath" -ErrorAction SilentlyContinue)) {
     function DoPromptWinTermDuplicate() {
         $loc = Get-Location
         $winloc = & "wslpath" -w $loc
@@ -23,7 +23,7 @@ if($IsLinux -and (Get-Command "wslpath" -ErrorAction SilentlyContinue)) {
  
     }
 }
-$_orig_git_cmd = (Get-Command -CommandType Application git)[0].Source
+$_orig_git_cmd = (Get-Command -CommandType Application -TotalCount 1 git)[0].Source
 function DoPromptGitInfo {
     # Minimize git command invocations because launching git on windows is slow
     # enough to be noticeable. Use one git status command to get all info needed for prompt
@@ -71,9 +71,7 @@ function prompt {
     $lastSuccess = $global:?
 
     # Support for windows terminal duplicate tab
-    if (Get-Command -Name "DoPromptWinTermDuplicate" -CommandType Function -ErrorAction SilentlyContinue) {
-        DoPromptWinTermDuplicate
-    }
+    try { DoPromptWinTermDuplicate } catch {  }
 
     # Green / red arrow depending on last command exit code
     Write-Host "→" -NoNewline -ForegroundColor $(if ($lastSuccess) { "Green" } else { "Red" })
