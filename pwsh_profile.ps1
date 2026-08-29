@@ -7,13 +7,14 @@
 
 
 # Custom prompt. Matches bash / zsh prompts, but uses '>' at the end not '$' or '%'
+$_orig_git_cmd = (Get-Command -CommandType Application git)[0].Source
 function DoPromptGitInfo {
     # Minimize git command invocations because launching git on windows is slow
     # enough to be noticeable. Use one git status command to get all info needed for prompt
     # Not using posh-git because I use this in contexts where I can't install modules
     $git_banch = ""
     $git_dirty = ""
-    git status --porcelain=v2 --branch | ForEach-Object {
+    & "$_orig_git_cmd" status --porcelain=v2 --branch | ForEach-Object {
         $line_type, $line_contents, $line_contents2 = $_ -split '\s+', 3
         if($line_type -eq "#") {
             if($line_contents -eq "branch.oid"){
@@ -73,7 +74,7 @@ function prompt {
 
     # Git status portion
     DoPromptGitInfo
-    
+
     # End of prompt right before command is typed
     return "> "
 }

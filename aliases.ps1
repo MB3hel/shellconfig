@@ -31,32 +31,28 @@ if(-not $IsWindows) {
     # All this handles tmux detach then reattach with different ssh agent
     # See aliases file for more details. These are pwsh port
     function fixssh() {
-        echo "A"
         $auth_sock = tmux showenv -s SSH_AUTH_SOCK 2>$null
-        echo "B"
         if($auth_sock){
             $name, $value = $auth_sock -split '=', 2
             Set-Content -Path "env:\$name" -Value $value
         }
-        echo "C"
         $agent_pid = tmux showenv -s SSH_AGENT_PID 2>$null
         if($agent_pid){
             $name, $value = $agent_pid -split '=', 2
             Set-Content -Path "env:\$name" -Value $value
         }
-        echo "D"
     }
     function InvokeFixSshGit(){
         fixssh >$null 2>&1
-        & (Get-Command -CommandType Application git)[0] @args
+        & (Get-Command -CommandType Application git)[0].Source @args
     }
     function InvokeFixSshSsh(){
         fixssh >$null 2>&1
-        & (Get-Command -CommandType Application ssh)[0] @args
+        & (Get-Command -CommandType Application ssh)[0].Source @args
     }
     function InvokeFixSshScp(){
         fixssh >$null 2>&1
-        & (Get-Command -CommandType Application scp)[0] @args
+        & (Get-Command -CommandType Application scp)[0].Source @args
     }
     if($Env:TMUX){
         New-Alias git InvokeFixSshGit
