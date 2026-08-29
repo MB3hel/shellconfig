@@ -1,5 +1,5 @@
 # Powershell profile script common portions across all machines / platforms
-
+# This is designed for pwsh 7.x cross platform (not just windows)
 
 
 # TODO: Make windows terminal duplicate tab work including in WSL
@@ -60,24 +60,8 @@ function prompt {
     return "> "
 }
 
-
-
-# Aliases
-New-Alias open ii
-function which{
-    (Get-Command @args | Format-Table -HideTableHeaders -Property CommandType, Name, Source | Out-String).Trim()
-}
-function ln ($target, $link) {
-	New-Item -Path $link -ItemType SymbolicLink -Value $target
-}
-# TODO: Vim alias to vimx or gvim -v
-# TODO: fixssh aliases
-# TODO: Trash aliases
-# TODO: openwin for WSL
-
-
-# Env vars
-# TODO: set editor
+# Load aliases
+. $PsScriptRoot/aliases.ps1
 
 
 # Better tab completion and history search
@@ -88,4 +72,10 @@ Set-PSReadLineOption -HistorySearchCursorMovesToEnd:$true
 Set-PSReadLineOption -ShowToolTips:$False
 Set-PSReadLineOption -PredictionSource None
 Set-PSReadlineOption -BellStyle None
+
+
+# Fix some colors that use dark grey by default. Hard to read
+# on almost black terminal background (such as when window transparency
+# is turned on)
+Set-PSReadLineOption -Colors @{ "Parameter" = "Gray"; "Operator" = "Gray" }
 
