@@ -60,7 +60,6 @@ zle -N zle-line-finish
 # General settings
 autoload -U colors && colors
 setopt PROMPT_SUBST
-unsetopt promptcr
 PS1=""
 unset PROMPT # In case system profile/rc sets this
 
