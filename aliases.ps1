@@ -67,11 +67,12 @@ if ($IsWindows) {
     Add-Type -AssemblyName Microsoft.VisualBasic
     function trash() {
          foreach ($f in $args) {
-            if (Test-Path -LiteralPath $f) {
-                if (Test-Path -LiteralPath $argument -PathType Leaf) {
-                    [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($f,'OnlyErrorDialogs','SendToRecycleBin')
-                } elseif (Test-Path -LiteralPath $argument -PathType Container) {
-                    [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($f,'OnlyErrorDialogs','SendToRecycleBin')
+            $fabs = Convert-Path "$f"
+            if (Test-Path -LiteralPath $fabs) {
+                if (Test-Path -LiteralPath $fabs -PathType Leaf) {
+                    [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($fabs,'OnlyErrorDialogs','SendToRecycleBin')
+                } elseif (Test-Path -LiteralPath $fabs -PathType Container) {
+                    [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory($fabs,'OnlyErrorDialogs','SendToRecycleBin')
                 }
             }
         }
