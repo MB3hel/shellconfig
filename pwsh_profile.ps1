@@ -12,6 +12,17 @@ if($IsWindows){
         }
     }
 }
+if($IsLinux -and (Get-Command "wslpath" -ErrorAction SilentlyContinue)) {
+    function DoPromptWinTermDuplicate() {
+        $loc = Get-Location
+        $winloc = & "wslpath" -w $loc
+        Write-Host -NoNewline "$([char]27)]9;12$([char]7)"
+        if ($loc.Provider.Name -eq "FileSystem"){
+            Write-Host -NoNewline "$([char]27)]9;9;`"$($winloc)`"$([char]7)"
+        }
+ 
+    }
+}
 $_orig_git_cmd = (Get-Command -CommandType Application git)[0].Source
 function DoPromptGitInfo {
     # Minimize git command invocations because launching git on windows is slow
