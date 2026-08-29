@@ -82,7 +82,11 @@ if($IsLinux) {
         gio trash @args
     }
     New-Alias trash InvokeGioTrash
+    if (Get-Command -CommandType Application -TotalCount 1 "wslpath" -ErrorAction SilentlyContinue) {
+        function openwin() {
+            $target = & "wslpath" -w $args[0]
+            cmd.exe /c start "" "$target" >$null 2>&1
+        }
+    }
 }
-
-# TODO: openwin for WSL
  
