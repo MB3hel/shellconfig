@@ -32,12 +32,30 @@ function DoPromptGitInfo {
         Write-Host -NoNewline ")"
     }
 }
+function DoPromptEnvironment {
+    if($Env:CONTAINER_ID){
+        Write-Host -NoNewline "($Env:CONTAINER_ID)"
+    }
+    if(Test-Path -Path "/etc/debian_chroot" -PathType Leaf) {
+        $chroot = Get-Content -Path "/etc/debian_chroot" -TotalCount 1
+        Write-Host -NoNewline "($chroot)"
+    }
+    if($Env:VIRTUAL_ENV) {
+        if($Env:VIRTUAL_ENV_PROMPT) {
+            Write-Host -NoNewline "($Env:VIRTUAL_ENV_PROMPT)"
+        } else {
+            $venv_dir = Split-Path "$Env:VIRTUAL_ENV" -Leaf
+            Write-Host -NoNewline "($venv_dir)"
+        }
+    }
+}
 function prompt {
     # Green / red arrow depending on last command exit code
     $lastSuccess = $global:?
         Write-Host "→" -NoNewline -ForegroundColor $(if ($lastSuccess) { "Green" } else { "Red" })
 
-    # TODO: deal with python venvs
+    # Environment sections (eg containers, venvs, etc)
+    DoPromptEnvironment
 
     # Base prompt
     $user = [System.Environment]::UserName
@@ -59,6 +77,9 @@ function prompt {
     # End of prompt right before command is typed
     return "> "
 }
+
+# Disable default venv prompt, will handle custom
+$Env:VIRTUAL_ENV_DISABLE_PROMPT = "1"
 
 # Load aliases
 . $PsScriptRoot/aliases.ps1
