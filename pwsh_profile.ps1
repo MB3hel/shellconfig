@@ -2,11 +2,16 @@
 # This is designed for pwsh 7.x cross platform (not just windows)
 
 
-# TODO: Make windows terminal duplicate tab work including in WSL
-
-
-
 # Custom prompt. Matches bash / zsh prompts, but uses '>' at the end not '$' or '%'
+if($IsWindows){
+    function DoPromptWinTermDuplicate() {
+        $loc = Get-Location
+        Write-Host -NoNewline "$([char]27)]9;12$([char]7)"
+        if ($loc.Provider.Name -eq "FileSystem"){
+            Write-Host -NoNewline "$([char]27)]9;9;`"$($loc.Path)`"$([char]7)"
+        }
+    }
+}
 $_orig_git_cmd = (Get-Command -CommandType Application git)[0].Source
 function DoPromptGitInfo {
     # Minimize git command invocations because launching git on windows is slow
@@ -51,9 +56,16 @@ function DoPromptEnvironment {
     }
 }
 function prompt {
-    # Green / red arrow depending on last command exit code
+    # Capture last command success / fail
     $lastSuccess = $global:?
-        Write-Host "→" -NoNewline -ForegroundColor $(if ($lastSuccess) { "Green" } else { "Red" })
+
+    # Support for windows terminal duplicate tab
+    if (Get-Command -Name "DoPromptWinTermDuplicate" -CommandType Function -ErrorAction SilentlyContinue) {
+        DoPromptWinTermDuplicate
+    }
+
+    # Green / red arrow depending on last command exit code
+    Write-Host "→" -NoNewline -ForegroundColor $(if ($lastSuccess) { "Green" } else { "Red" })
 
     # Environment sections (eg containers, venvs, etc)
     DoPromptEnvironment
