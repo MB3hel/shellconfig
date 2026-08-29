@@ -122,3 +122,17 @@ Set-PSReadlineOption -BellStyle None
 # is turned on)
 Set-PSReadLineOption -Colors @{ "Parameter" = "Gray"; "Operator" = "Gray" }
 
+
+# Git tab completion via git-completion module
+# Only if module is installed. Can't install modules on all systems
+if (Get-Module -ListAvailable -Name "git-completion") {
+   Register-ArgumentCompleter -CommandName gitk -Native -ScriptBlock {
+        param($wordToComplete, $CommandAst, $CursorPosition)
+        return (Complete-Gitk -CommandAst $CommandAst -CursorPosition $CursorPosition)
+    }
+    Register-ArgumentCompleter -CommandName git -Native -ScriptBlock {
+        param($wordToComplete, $CommandAst, $CursorPosition)
+        return (Complete-Git -CommandAst $CommandAst -CursorPosition $CursorPosition)
+    } 
+}
+

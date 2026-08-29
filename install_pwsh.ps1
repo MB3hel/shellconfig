@@ -7,5 +7,7 @@
 [System.IO.Directory]::CreateDirectory((Split-Path $PROFILE)) | Out-Null
 cp $PSScriptRoot/template/Microsoft.PowerShell_profile.ps1 $PROFILE
 if (-not (Test-Path -Path "$HOME/.pwsh_profile.ps1")) {
-    New-Item -Path "$HOME/.pwsh_profile.ps1" -ItemType "File" -Value "# System specifics go below`n"
+    New-Item -Path "$HOME/.pwsh_profile.ps1" -ItemType "File" -Value "# System specifics go below`n" > $null
 }
+echo "It is HIGHLY recommended to run Install-Module git-completion if able to install modules"
+
