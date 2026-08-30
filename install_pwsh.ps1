@@ -9,5 +9,17 @@ cp $PSScriptRoot/template/Microsoft.PowerShell_profile.ps1 $PROFILE
 if (-not (Test-Path -Path "$HOME/.pwsh_profile.ps1")) {
     New-Item -Path "$HOME/.pwsh_profile.ps1" -ItemType "File" -Value "# System specifics go below`n" > $null
 }
+New-Item -ItemType Directory -Force -Path "$Env:LOCALAPPDATA/Microsoft/Windows Terminal/Fragments/mb3hel.shellconfig/" | Out-Null
+if($IsWindows){
+    $pwsh_link = "$Env:LOCALAPPDATA/Microsoft/Windows Terminal/Fragments/mb3hel.shellconfig/pwsh.json"
+    $pwsh_target = "$PSScriptRoot/win_terminal/pwsh.json"
+    try {
+        echo "TRY SYMLINK"
+        New-Item -ItemType SymbolicLink -Path $pwsh_link -Target $pwsh_target -ErrorAction Stop | Out-Null
+    } catch {
+        # Fallback on copy for systems where dev mode is not enabled
+        Copy-Item -Path $pwsh_target -Destination $pwsh_link -Force
+    }
+}
 echo "It is HIGHLY recommended to run Install-Module git-completion if able to install modules"
 

@@ -39,11 +39,11 @@ install-template(){
 # $1 = target (absolute paths only)
 # $2 = destination (link name)
 install-link(){
-    if [ -f "$2" ] && [ "$(readlink "$2")" = "$1" ]; then
+    if [ -e "$2" ] && [ "$(readlink "$2")" = "$(realpath "$1")" ]; then
         echo "Skip    $2 (already linked)"
         return 0
     fi
-
+ 
     echo "Link    $2"
     if [ -f "$2" ]; then
         mv "$2" "$2.bak"
@@ -77,10 +77,18 @@ if [ "$(uname -o)" != "Msys" ] && [ "$(uname -o)" != "Darwin" ]; then
     install-link "$DIR/konsole_tango.colorscheme" ~/.local/share/konsole/Tango.colorscheme
 fi
 
-# Link shellconfig into the msys2 installed by scoop
+# Windows only tweaks
 if [ "$(uname -o)" = "Msys" ]; then
+    # Symlink .shellconfig into msys2 installed via scoop
+    # Do this with real symlink only. Do not fallback on copies
     export MSYS='winsymlinks:nativestrict'
     mkdir -p "$HOME/scoop/persist/msys2/home/$USER"
     install-link "$HOME/.shellconfig" "$HOME/scoop/persist/msys2/home/$USER/.shellconfig"
+
+    # Install win terminal profile fragments
+    export MSYS='winsymlinks:native' # Try real symlink first, fallback on copy
+    mkdir -p "$LOCALAPPDATA/Microsoft/Windows Terminal/Fragments/mb3hel.shellconfig/"
+    install-link "$DIR/win_terminal/bash.json" "$LOCALAPPDATA/Microsoft/Windows Terminal/Fragments/mb3hel.shellconfig/bash.json"
+    install-link "$DIR/win_terminal/zsh.json" "$LOCALAPPDATA/Microsoft/Windows Terminal/Fragments/mb3hel.shellconfig/zsh.json"
 fi
 

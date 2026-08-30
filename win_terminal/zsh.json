@@ -1,0 +1,16 @@
+{
+    "profiles": {
+        "list": 
+        [
+            {
+                "closeOnExit": "always",
+                "colorScheme": "Tango Dark",
+                "commandline": "%USERPROFILE%\\.shellconfig\\msys2bin\\zsh.cmd --login -i",
+                "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37b}",
+                "name": "zsh (native)",
+                "startingDirectory": "%USERPROFILE%",
+                "pathTranslationStyle": "msys2"
+            }
+        ]
+    }
+}

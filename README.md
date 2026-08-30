@@ -40,28 +40,6 @@ pacman -S zsh tmux
 
 (Optional) Add `%USERPROFILE%\.shellconfig\msys2bin` to your user's PATH variable (allows running bash.cmd or zsh.cmd from windows shells)
 
-(Optional) Add windows terminal profiles if desired:
-
-```
-{
-    "bellStyle": "none",
-    "closeOnExit": "always",
-    "commandline": "%USERPROFILE%\\.shellconfig\\msys2bin\\zsh.cmd --login -i",
-    "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37b}",
-    "name": "zsh (native)",
-    "startingDirectory": "%USERPROFILE%"
-},
-{
-    "bellStyle": "none",
-    "closeOnExit": "always",
-    "commandline": "%USERPROFILE%\\.shellconfig\\msys2bin\\bash.cmd --login -i",
-    "guid": "{a9bab809-8bec-4bbf-886b-8c352a43d37a}",
-    "name": "bash (native)",
-    "startingDirectory": "%USERPROFILE%"
-}
-```
-
-Opacity is usually set to 80 in "Defaults" for WT w/ acrylic 
 
 ### Windows Install (No MSYS2)
 
@@ -111,3 +89,31 @@ Excluding both where you have git installed and the standlone msys2 folder helps
 
 Will create a `~/.pwsh_profile.ps1` script for system specifics
 
+
+## Terminal Emulator Settings
+
+Settings I change over defaults. Not automatically applied via install scripts.
+Profiles for windows terminal and konsole will be installed via the install.sh and install_pwsh.ps1 scripts though.
+
+### Windows Terminal
+
+- Startup:
+    - Default profile = zsh (native)
+    - Launch size: 120 x 34
+- Rendering:
+    - In VirtualBox VMs, enable software rendering (lower latency when typing)
+- Actions:
+    - Unmap Ctrl+C from copy text
+    - Unmap Enter from copy text
+    - Remap duplicate tab to Ctrl+Shift+T
+    - Unmap Ctrl+V from paste
+- New Tab Menu
+    - Order zsh (native), bash (native), pwsh, cmd, WSL distros
+- Profile Defaults
+    - Appearance > Color Scheme: Tango Dark
+    - Appearance > Font: Cascadia Mono 11pt
+    - Appearance > Cursor shape: Bar
+    - Appearance > BG Opacity: 80% w/ acrylic
+    - Advanced > Bell: None
+    - Advanced > Display menu on right-click on
+- Hide other profiles (azure, windows powershell, visual studio, etc)
