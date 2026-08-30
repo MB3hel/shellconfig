@@ -93,7 +93,8 @@ __prompt_venv(){
         if [ -n "$VIRTUAL_ENV_PROMPT" ]; then
             printf "($VIRTUAL_ENV_PROMPT)"
         else
-            printf "("${VIRTUAL_ENV##*/}")"
+            __VENV_NO_BACKSLASH="${VIRTUAL_ENV//'\'//}"
+            printf "("${__VENV_NO_BACKSLASH##*/}")"
         fi
     fi
 }
