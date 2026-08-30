@@ -1,9 +1,11 @@
 # Shell Config
 
-My Unix shell configurations.
+My cross platform shell configurations for zsh, bash, and powershell
 
 
-## Install (Anything but Windows)
+## Install Bash / Zsh
+
+### Anything but Windows
 
 Linux/BSD prerequisites: git, bash, zsh
 
@@ -15,7 +17,7 @@ cd ~/.shellconfig
 ./install.sh
 ```
 
-## Windows Install (using MSYS2 - Recommended)
+### Windows Install (using MSYS2 - Recommended)
 
 *Note: MSYS2 is not a prerequisite. It will be installed in a minimal standalone instance by following the instructions below. The MSYS2 installation should not have many packages installed using pacman. Install native windows versions of tools instead (eg using scoop package manager) except for software only available through MSYS2.*
 
@@ -61,7 +63,7 @@ pacman -S zsh tmux
 
 Opacity is usually set to 80 in "Defaults" for WT w/ acrylic 
 
-## Windows Install (No MSYS2)
+### Windows Install (No MSYS2)
 
 *This is an alternate method using git for window's own builtin bash shell. It is less flexible than the MSYS2 method and only recommended on systems where you cannot install MSYS2*
 
@@ -70,7 +72,7 @@ To install using git for windows's bash, follow the same steps with the followin
 - Use `bash-from-git.cmd` instead of `bash.cmd` during installation and in windows terminal profile
 - zsh is not available
 
-## Shell Startup Files
+### Shell Startup Files
 
 This repo configures both bash and zsh to behave in a similar way: login shells source the profile script. Interactive shells source the rc script. This is default behavior for zsh. However, bash by default would not source the rc for interactive login shells. Here it does. Essentially
 
@@ -83,7 +85,7 @@ This repo configures both bash and zsh to behave in a similar way: login shells 
 
 Environment variables should be set / modified in whichever profile script is your user's login shell (see chsh command). The rc files should not modify variables unless making changes that should only apply to interactive sessions. Because of this a new login is often needed to see changes.
 
-## SSH Agent
+### SSH Agent
 
 If no SSH agent is already running, login shells will start one that can be shared by any interactive shell launched from within that shell (eg GUI terminal emulators or tmux). On macOS and GNOME, an SSH agent will already be running.
 
@@ -93,8 +95,19 @@ On windows, no SSH agent is managed by the shell as it is assumed the ssh agent 
 
 Note: Adding `AddKeysToAgent yes` to `~/.ssh/config` will make so you only have to unlock keys once until log out.
 
-## Why is it slow on windows
+### Why is it slow on windows
 
 The answer is almost always: Antivirus. Windows defender, etc.
 Excluding both where you have git installed and the standlone msys2 folder helps quite a bit
+
+
+## Install Powershell
+
+- Install powershell 7.x+ (pwsh) not windows powershell
+- On macOS and Liunx, homebrew works well for this
+- On windows, scoop
+- Run `install_pwsh.ps1`
+- Install the optional modules it recommends
+
+Will create a `~/.pwsh_profile.ps1` script for system specifics
 
