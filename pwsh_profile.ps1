@@ -97,7 +97,7 @@ function prompt {
     }
     $prompt += "["
     if($IsWindows) {
-        $prompt += "$($PSStyle.Foreground.DarkYellow)$user@${hostname}:$($PSStyle.Reset)"
+        $prompt += "$($PSStyle.Foreground.Yellow)$user@${hostname}:$($PSStyle.Reset)"
     } else {
         $prompt += "$($PSStyle.Foreground.BrightGreen)$user@${hostname}:$($PSStyle.Reset)"
     }
