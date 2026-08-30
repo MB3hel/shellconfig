@@ -60,8 +60,8 @@ zle -N zle-line-finish
 # General settings
 autoload -U colors && colors
 setopt PROMPT_SUBST
-PS1=""
 unset PROMPT # In case system profile/rc sets this
+PS1='${__PROMPT_ARROW}'
 
 
 # Alternative to cygpath -w b/c it can be slow if windows defender doesn't exclude msys2 install
@@ -88,6 +88,15 @@ if [ "$(uname -o)" = "Msys" ]; then
     precmd_functions+=(__wt_dup_path)
 fi
 
+__prompt_venv(){
+    if [ -n "$VIRTUAL_ENV" ]; then
+        if [ -n "$VIRTUAL_ENV_PROMPT" ]; then
+            printf "($VIRTUAL_ENV_PROMPT)"
+        else
+            printf "("${VIRTUAL_ENV##*/}")"
+        fi
+    fi
+}
 
 __prompt_construct(){
     # Set __PROMPT_ARROW based on exit status of last command
@@ -97,18 +106,6 @@ __prompt_construct(){
     else
         __PROMPT_ARROW="$(printf "%%{\e[01;32m%%}→%%{\e[00m%%}")"
     fi
-
-    # Apply fixup to venv prefix to remove space BEFORE
-    # further modifying the PS1
-    __fixup_venv
-
-    # Remove '${__PROMPT_ARROW}' from PS1
-    PS1="${PS1//\$\{__PROMPT_ARROW\}/}"
-
-    # Prepend '${__PROMPT_ARROW}' to PS1 so it is always in front
-    # even eg after python venv prepends to PS1
-    PS1='${__PROMPT_ARROW}'"$PS1"
-
 }
 precmd_functions=(__prompt_construct $precmd_functions)
 
@@ -127,18 +124,8 @@ if [[ -f /etc/debian_chroot ]]; then
     chroot_name=$(cat /etc/debian_chroot)
     PS1+="($chroot_name)"
 fi
-# python venvs (fixup to get rid of space)
-__fixup_venv(){
-    local venv_prefix=""
-    if [ "$VIRTUAL_ENV" != "$__LAST_VIRTUAL_ENV" ]; then
-        __LAST_VIRTUAL_ENV="$VIRTUAL_ENV"
-        venv_prefix="${PS1%"$_OLD_VIRTUAL_PS1"}"    # extract prefix
-        [ "$venv_prefix" = "$PS1" ] && return 0     # return if no prefix found
-        venv_prefix="${venv_prefix% }"              # remove space
-        PS1="${PS1/"$venv_prefix "/"$venv_prefix"}" # replace version with space
-    fi
-}
-
+PS1+='$(__prompt_venv)'
+VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # Git status for prompt
 __prompt_git(){
