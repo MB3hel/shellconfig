@@ -43,41 +43,48 @@ function DoPromptGitInfo {
         }
     }
     if($git_branch){
-        Write-Host -NoNewline "("
-        Write-Host -NoNewline -ForegroundColor Cyan $git_branch
-        Write-Host -NoNewline -ForegroundColor Red $git_dirty
-        Write-Host -NoNewline ")"
+        return "($($PSStyle.Foreground.BrightCyan)$git_branch$($PSStyle.Foreground.BrightRed)$git_dirty$($PSStyle.Reset))"
     }
+    return ""
 }
 function DoPromptEnvironment {
+    $out = ""
     if($Env:CONTAINER_ID){
-        Write-Host -NoNewline "($Env:CONTAINER_ID)"
+        $out += "($Env:CONTAINER_ID)"
     }
     if(Test-Path -Path "/etc/debian_chroot" -PathType Leaf) {
         $chroot = Get-Content -Path "/etc/debian_chroot" -TotalCount 1
-        Write-Host -NoNewline "($chroot)"
+        $out += "($chroot)"
     }
     if($Env:VIRTUAL_ENV) {
         if($Env:VIRTUAL_ENV_PROMPT) {
-            Write-Host -NoNewline "($Env:VIRTUAL_ENV_PROMPT)"
+            $out += "($Env:VIRTUAL_ENV_PROMPT)"
         } else {
             $venv_dir = Split-Path "$Env:VIRTUAL_ENV" -Leaf
-            Write-Host -NoNewline "($venv_dir)"
+            $out += "($venv_dir)"
         }
     }
+    return $out
 }
 function prompt {
     # Capture last command success / fail
     $lastSuccess = $global:?
+    
+    # Construct prompt in string so it is all printed when ready for command
+    $prompt = ""
 
     # Support for windows terminal duplicate tab
     try { DoPromptWinTermDuplicate } catch {  }
-
+    
     # Green / red arrow depending on last command exit code
-    Write-Host "→" -NoNewline -ForegroundColor $(if ($lastSuccess) { "Green" } else { "Red" })
+    if($lastSuccess) {
+        $prompt += "$($PSStyle.Foreground.BrightGreen)→$($PSStyle.Reset)"
+    } else {
+        $prompt += "$($PSStyle.Foreground.BrightRed)→$($PSStyle.Reset)"
+    }
 
     # Environment sections (eg containers, venvs, etc)
-    DoPromptEnvironment
+    $prompt += DoPromptEnvironment
 
     # Base prompt
     $user = [System.Environment]::UserName
@@ -88,16 +95,21 @@ function prompt {
     } else {
         $curloc = Split-Path $curlocfull -Leaf
     }
-    Write-Host "[" -NoNewline
-    Write-Host "$user@${hostname}:" -NoNewline -ForegroundColor $(if ($IsWindows) { "DarkYellow" } else { "Green" })
-    Write-Host "$curloc" -NoNewline -ForegroundColor Blue
-    Write-host "]" -NoNewline
+    $prompt += "["
+    if($IsWindows) {
+        $prompt += "$($PSStyle.Foreground.DarkYellow)$user@${hostname}:$($PSStyle.Reset)"
+    } else {
+        $prompt += "$($PSStyle.Foreground.BrightGreen)$user@${hostname}:$($PSStyle.Reset)"
+    }
+    $prompt += "$($PSStyle.Foreground.BrightBlue)$curloc$($PSStyle.Reset)"
+    $prompt += "]"
 
     # Git status portion
-    DoPromptGitInfo
+    $prompt += DoPromptGitInfo
 
     # End of prompt right before command is typed
-    return "> "
+    $prompt += "> "
+    return $prompt
 }
 
 # Disable default venv prompt, will handle custom
