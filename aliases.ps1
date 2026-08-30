@@ -2,8 +2,10 @@
 function which{
     (Get-Command @args | Format-Table -HideTableHeaders -Property CommandType, Name, Source | Out-String).Trim()
 }
-function ln ($target, $link) {
-	New-Item -Path $link -ItemType SymbolicLink -Value $target
+if($IsWindows){
+    function ln ($target, $link) {
+	    New-Item -Path $link -ItemType SymbolicLink -Value $target
+    }
 }
 if(-not $IsWindows) {
     # Use alias same as on windows by default instead of ls application

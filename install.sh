@@ -45,7 +45,7 @@ install-link(){
     fi
  
     echo "Link    $2"
-    if [ -f "$2" ]; then
+    if [[ -e "$2" || -L "$2" ]]; then
         mv "$2" "$2.bak"
     fi
     ln -s "$1" "$2"
@@ -74,7 +74,9 @@ if [ "$(uname -o)" != "Msys" ] && [ "$(uname -o)" != "Darwin" ]; then
     install-template "$DIR/template/plasma_logout.sh.template" ~/.config/plasma-workspace/shutdown/plasma_logout.sh
     chmod +x ~/.config/plasma-workspace/shutdown/plasma_logout.sh
     mkdir -p ~/.local/share/konsole/
-    install-link "$DIR/konsole_tango.colorscheme" ~/.local/share/konsole/Tango.colorscheme
+    install-link "$DIR/konsole/Tango.colorscheme" ~/.local/share/konsole/Tango.colorscheme
+    install-link "$DIR/konsole/00-zsh.profile" ~/.local/share/konsole/00-zsh.profile
+    install-link "$DIR/konsole/01-bash.profile" ~/.local/share/konsole/01-bash.profile
 fi
 
 # Windows only tweaks
