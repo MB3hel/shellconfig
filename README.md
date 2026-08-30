@@ -117,3 +117,11 @@ Profiles for windows terminal and konsole will be installed via the install.sh a
     - Advanced > Bell: None
     - Advanced > Display menu on right-click on
 - Hide other profiles (azure, windows powershell, visual studio, etc)
+
+### Konsole
+
+- Set installed zsh profile as default profile
+- General > Remember widow size off (lets profile control)
+- Tab bars / splitters > Behavior > Put new tabs after current
+- 
+
