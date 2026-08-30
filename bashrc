@@ -37,76 +37,27 @@ PS1=""
 unset PROMPT
 unset PROMPT_COMMAND # see bash_profile template
 
-# Alternative to cygpath -w b/c it can be slow if windows defender doesn't exclude msys2 install
-# but shell implementation doesn't spawn new processes
-__msys_to_winpath(){
-    local winpath="${1:1}"                  # remove leading slash
-    winpath="${winpath//\//\\}"             # convert '/' to '\\'
-    winpath="${winpath^}"                   # Capitalize first letter (drive letter)
-    echo "${winpath:0:1}:${winpath:1}"      # First char (drive letter) ':' rest of path
-}
 
-# Make duplicate tab work in windows terminal using WSL
 if type "wslpath" > /dev/null 2>&1; then
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"'
+    # Make duplicate tab work in windows terminal using WSL
+    __wt_dup_path() {
+        printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+    }
 fi
-
-# Make duplicate tab work in windows terminal using MSYS2
 if [ "$(uname -o)" = "Msys" ]; then
-    PROMPT_COMMAND=${PROMPT_COMMAND:+"$PROMPT_COMMAND; "}'printf "\e]9;9;%s\e\\" "$(__msys_to_winpath "$PWD")"'
+    # Alternative to cygpath -w b/c it can be slow if windows defender doesn't exclude msys2 install
+    # but shell implementation doesn't spawn new processes
+    __msys_to_winpath(){
+        local winpath="${1:1}"                  # remove leading slash
+        winpath="${winpath//\//\\}"             # convert '/' to '\\'
+        winpath="${winpath^}"                   # Capitalize first letter (drive letter)
+        echo "${winpath:0:1}:${winpath:1}"      # First char (drive letter) ':' rest of path
+    }
+    # Make duplicate tab work in windows terminal using MSYS2
+    __wt_dup_path() {
+        printf "\e]9;9;%s\e\\" "$(__msys_to_winpath "$PWD")"
+    }
 fi
-
-__prompt_construct(){
-    # Set __PROMPT_ARROW based on exit status of last command
-    # Green arrow on exit status 0, else red
-    if [ $? -ne 0 ]; then
-        __PROMPT_ARROW="$(printf "\001\e[01;31m\002→\001\e[00m\002")"
-    else
-        __PROMPT_ARROW="$(printf "\001\e[01;32m\002→\001\e[00m\002")"
-    fi
-
-    # Apply fixup to venv prefix to remove space BEFORE
-    # further modifying the PS1
-    __fixup_venv
-
-    # Remove '${__PROMPT_ARROW}' from PS1
-    PS1="${PS1/'${__PROMPT_ARROW}'/}"
-
-    # Prepend '${__PROMPT_AROW}' to PS1 so it is always in front
-    # even eg after python venv prepends to PS1
-    PS1='${__PROMPT_ARROW}'"$PS1"
-}
-PROMPT_COMMAND="__prompt_construct; $PROMPT_COMMAND"
-
-
-# Environment prefixes
-# MSYS2
-if [ -n "$MSYSTEM" ] && [[ "$(cygpath -m '/')" == *scoop* ]]; then
-    PS1+="(${MSYSTEM:l})"
-fi
-# docker / podman containers
-if [ -n "$CONTAINER_ID" ]; then
-    PS1+="($CONTAINER_ID)"
-fi
-# schroots
-if [[ -f /etc/debian_chroot ]]; then
-    chroot_name=$(cat /etc/debian_chroot)
-    PS1+="($chroot_name)"
-fi
-# python venvs (fixup to get rid of space)
-__fixup_venv(){
-    local venv_prefix=""
-    if [ "$VIRTUAL_ENV" != "$__LAST_VIRTUAL_ENV" ]; then
-        __LAST_VIRTUAL_ENV="$VIRTUAL_ENV"
-        venv_prefix="${PS1%"$_OLD_VIRTUAL_PS1"}"    # extract prefix
-        [ "$venv_prefix" = "$PS1" ] && return 0     # return if no prefix found
-        venv_prefix="${venv_prefix% }"              # remove space
-        PS1="${PS1/"$venv_prefix "/"$venv_prefix"}" # replace version with space
-    fi
-}
-
-
-# Git status for prompt
 __prompt_git(){
     # Note: minimize git command invocations because launching git on windows is slow
     # enough to be noticeable. Use one git status command to get all info needed for prompt
@@ -132,8 +83,44 @@ __prompt_git(){
                 ;;
         esac
     done < <(git status --porcelain=v2 --branch 2>/dev/null)
-    [ ! -z "$git_branch" ] && printf "(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
+    [ ! -z "$git_branch" ] && PS1+="(\001\e[01;36m\002${git_branch}\001\e[01;31m\002${git_dirty}\001\e[00m\002)"
 }
+__prompt_environment(){
+    [ -n "$CONTAINER_ID" ] && PS1+="($CONTAINER_ID)"
+    [ -n "$__DEB_CHROOT" ] && PS1+="($__DEB_CHROOT)"
+    [ -n "$__MSYS_ENV" ] && PS1+="($__MSYS_ENV)"
+    if [ -n "$VIRTUAL_ENV" ]; then
+        if [ -n "$VIRTUAL_ENV_PROMPT" ]; then
+            PS1+="($VIRTUAL_ENV_PROMPT)"
+        else
+            PS1+="($(basename "$VIRTUAL_ENV"))"
+        fi
+    fi
+}
+__prompt_construct(){
+    # Set __PROMPT_ARROW based on exit status of last command
+    # Green arrow on exit status 0, else red
+    if [ $? -ne 0 ]; then
+        PS1="\001\e[01;31m\002→\001\e[00m\002"
+    else
+        PS1="\001\e[01;32m\002→\001\e[00m\002"
+    fi
+    __wt_dup_path 2>/dev/null || true
+    __prompt_environment 
+    PS1+="[$PCOLOR\u@\h:\001\e[34;01m\002\W\001\e[00m\002]"
+    __prompt_git
+    PS1+="\$ "
+}
+PROMPT_COMMAND="__prompt_construct; $PROMPT_COMMAND"
+
+# Static environment prefixes
+if [ -n "$MSYSTEM" ] && [[ "$(cygpath -m '/')" == *scoop* ]]; then
+    __MSYS_ENV="(${MSYSTEM:l})" # Cache this to avoid repeated cygpath
+fi
+if [[ -f /etc/debian_chroot ]]; then
+    __DEB_CHROOT="($chroot_name)" # Cahce this to avoid repeated file reads
+fi
+VIRTUAL_ENV_DISABLE_PROMPT="1"
 
 
 # Different color for native windows prompts
@@ -141,9 +128,6 @@ PCOLOR="\001\e[32;01m\002"
 if [ "$(uname -o)" = "Msys" ]; then
     PCOLOR="\001\e[00;33m\002"
 fi
-PS1+="[$PCOLOR\u@\h:\001\e[34;01m\002\W\001\e[00m\002]"
-PS1+="\$(__prompt_git)"
-PS1+="\$ "
 
 # --------------------------------------------------------------------------------------------------
 
@@ -155,4 +139,9 @@ fi
 
 # Load aliases / functions used in both zsh and bash
 . ~/.shellconfig/aliases
+
+
+# Do this once when bashrc is loaded because of how bash_profile uses PROMPT_COMMAND
+__prompt_construct
+
 
