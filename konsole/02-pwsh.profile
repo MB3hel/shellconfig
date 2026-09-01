@@ -4,7 +4,7 @@ ColorScheme=Tango
 Font=Noto Sans Mono,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 
 [Cursor Options]
-CursorShape=1
+CursorShape=0
 
 [General]
 Command=/home/linuxbrew/.linuxbrew/bin/pwsh -nologo
