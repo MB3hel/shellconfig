@@ -6,6 +6,12 @@ if($IsWindows){
     function ln ($target, $link) {
 	    New-Item -Path $link -ItemType SymbolicLink -Value $target
     }
+    function tmux(){
+        $ZshArgs = ($args | ForEach-Object { 
+                if ($_ -match '\s') { "`"$_`"" } else { $_ } 
+        }) -join ' ' -replace '"', '\\\"'
+        zsh.cmd --login -c "script -q -O /dev/null -c `\`"tmux $ZshArgs`\`""
+    }
 }
 if(-not $IsWindows) {
     # Use alias same as on windows by default instead of ls application
